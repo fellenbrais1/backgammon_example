@@ -2,19 +2,19 @@ const PIECE_RADIUS = 18;
 const PIECE_DIAMETER = PIECE_RADIUS + PIECE_RADIUS;
 const VERTICAL_TOLERANCE = 4;
 
-const pieces = document.querySelectorAll('.piece');
-const coordsField = document.querySelector('#coords');
-const pointField = document.querySelector('#point');
-const startingField = document.querySelector('#starting');
+const pieces = document.querySelectorAll(".piece");
+const coordsField = document.querySelector("#coords");
+const pointField = document.querySelector("#point");
+const startingField = document.querySelector("#starting");
 
 let region, point;
 
-const boardElement = document.getElementById('board');
+const boardElement = document.getElementById("board");
 const boardLeftOffset = boardElement.getBoundingClientRect().left;
 const boardTopOffset = boardElement.getBoundingClientRect().top;
 //console.log('boardLeftOffset = ', boardLeftOffset, ', boardTopOffset = ', boardTopOffset);
 
-console.log('Using Firebase in app.js:', window.firebaseApp);
+console.log("Using Firebase in app.js:", window.firebaseApp);
 const db = window.database;
 console.log(db);
 
@@ -47,8 +47,8 @@ class CoordinateMapper {
   }
 }
 
-let activePlayer = 'w';
-let myPlayer = 'w';
+let activePlayer = "w";
+let myPlayer = "w";
 let currentMove = {};
 
 const mapper = new CoordinateMapper();
@@ -61,13 +61,13 @@ defineCoordMap();
 //  - 26 represents white-bar
 const board = {
   contents: Array.from({ length: 27 }, () => ({
-    color: '',
+    color: "",
     occupied: [],
   })),
 
   diceThrows: [0, 0, 0, 0],
 
-  onTheMove: '', // piece id that is currently on the move
+  onTheMove: "", // piece id that is currently on the move
 
   // populate dice throws
   throwDice(numberOfDice) {
@@ -90,15 +90,15 @@ const board = {
   // Method to update a specific point by index
   updatePoint(index, newContent) {
     if (index < 0 || index >= this.contents.length) {
-      console.error('Index out of bounds');
+      console.error("Index out of bounds");
       return;
     }
     this.contents[index] = { ...this.contents[index], ...newContent };
   },
 
   resetPiecesPosition(piece) {
-    piece.style.top = '';
-    piece.style.left = '6px';
+    piece.style.top = "";
+    piece.style.left = "6px";
   },
 
   // Method to reset the board
@@ -109,39 +109,39 @@ const board = {
     }));
 
     // Starting positions
-    this.contents[1].occupied = ['r1'];
-    this.contents[2].occupied = ['r2'];
+    this.contents[1].occupied = ["r1"];
+    this.contents[2].occupied = ["r2"];
     this.contents[3].occupied = [];
     this.contents[4].occupied = [];
     this.contents[5].occupied = [];
-    this.contents[6].occupied = ['w1', 'w2', 'w3', 'w4', 'w5'];
+    this.contents[6].occupied = ["w1", "w2", "w3", "w4", "w5"];
     this.contents[7].occupied = [];
-    this.contents[8].occupied = ['w6', 'w7', 'w8'];
+    this.contents[8].occupied = ["w6", "w7", "w8"];
     this.contents[9].occupied = [];
     this.contents[10].occupied = [];
     this.contents[11].occupied = [];
-    this.contents[12].occupied = ['r3', 'r4', 'r5', 'r6', 'r7'];
-    this.contents[13].occupied = ['w9', 'w10', 'w11', 'w12', 'w13'];
+    this.contents[12].occupied = ["r3", "r4", "r5", "r6", "r7"];
+    this.contents[13].occupied = ["w9", "w10", "w11", "w12", "w13"];
     this.contents[14].occupied = [];
     this.contents[15].occupied = [];
     this.contents[16].occupied = [];
-    this.contents[17].occupied = ['r8', 'r9', 'r10'];
+    this.contents[17].occupied = ["r8", "r9", "r10"];
     this.contents[18].occupied = [];
-    this.contents[19].occupied = ['r11', 'r12', 'r13', 'r14', 'r15'];
+    this.contents[19].occupied = ["r11", "r12", "r13", "r14", "r15"];
     this.contents[20].occupied = [];
     this.contents[21].occupied = [];
     this.contents[22].occupied = [];
     this.contents[23].occupied = [];
-    this.contents[24].occupied = ['w14', 'w15'];
+    this.contents[24].occupied = ["w14", "w15"];
   },
 
   movePiece(player, fromPoint, toPoint) {
     this.contents[toPoint].occupied.push(board.onTheMove);
-    board.onTheMove = ''; // finished moving
+    board.onTheMove = ""; // finished moving
   },
 
   updatePointOccupation(pointNumber) {
-    const pieceNumberId = 'pieceNumber' + pointNumber;
+    const pieceNumberId = "pieceNumber" + pointNumber;
     const pointsNumber = document.getElementById(pieceNumberId);
 
     let occupied = this.contents[pointNumber].occupied.length;
@@ -151,17 +151,17 @@ const board = {
     let limit = pointNumber < 25 ? 5 : 1; // 5 points without occupied number, 1 on bars (points 25 and 26)
 
     if (occupied <= limit) {
-      pointsNumber.textContent = '';
+      pointsNumber.textContent = "";
     } else {
-      pointsNumber.textContent = '' + occupied;
-      if (pointColor == 'w') pointsNumber.style.color = 'gray';
-      if (pointColor == 'r') pointsNumber.style.color = 'white';
+      pointsNumber.textContent = "" + occupied;
+      if (pointColor == "w") pointsNumber.style.color = "gray";
+      if (pointColor == "r") pointsNumber.style.color = "white";
     }
   },
 
   colorOfPoint(pointNumber) {
     if (this.contents[pointNumber].occupied.length == 0) {
-      return '';
+      return "";
     } else {
       return this.contents[pointNumber].occupied[0][0];
     }
@@ -182,16 +182,14 @@ export function startGame() {
   drawBoard();
 }
 
-board.resetBoard();
-drawBoard();
-setupMouseEvents();
+startGame();
 
 let isPieceDragging = false; // Global flag to track if a piece is being dragged
 
 function setupMouseEvents() {
   // Install event listeners on each piece
   pieces.forEach((piece) => {
-    piece.addEventListener('mousedown', (e) => {
+    piece.addEventListener("mousedown", (e) => {
       if (isPieceDragging) {
         // If a piece is already being dragged, ignore this event
         return;
@@ -207,12 +205,12 @@ function setupMouseEvents() {
 
       // Check if the piece is movable
       if (!isPieceMovable(piece, pt, pos)) {
-        console.log('Movement disallowed.');
+        console.log("Movement disallowed.");
         return; // Exit the handler if the piece cannot be moved
       }
 
       // Bring the current piece to the front
-      piece.style.zIndex = '1000'; // Set a high z-index value
+      piece.style.zIndex = "1000"; // Set a high z-index value
 
       // Record the starting point of the move
       let point = identifyPoint(e.pageX, e.pageY);
@@ -226,8 +224,8 @@ function setupMouseEvents() {
       board.updatePointOccupation(point);
 
       // Store the starting position
-      let startX = piece.style.left || '0px';
-      let startY = piece.style.top || '0px';
+      let startX = piece.style.left || "0px";
+      let startY = piece.style.top || "0px";
 
       // Set the global flag to indicate a piece is being dragged
       isPieceDragging = true;
@@ -236,9 +234,9 @@ function setupMouseEvents() {
       const onMouseMove = (event) => {
         // Update the piece's position based on mouse movement
         piece.style.left =
-          event.pageX - piece.offsetWidth / 2 - boardLeftOffset + 'px';
+          event.pageX - piece.offsetWidth / 2 - boardLeftOffset + "px";
         piece.style.top =
-          event.pageY - piece.offsetHeight / 2 - boardTopOffset + 'px';
+          event.pageY - piece.offsetHeight / 2 - boardTopOffset + "px";
         // coordsField.value = event.pageX + ', ' + event.pageY;
         let point = identifyPoint(event.pageX, event.pageY);
         // pointField.value = point;
@@ -246,15 +244,15 @@ function setupMouseEvents() {
       };
 
       // Attach the mousemove event listener to the document
-      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener("mousemove", onMouseMove);
 
       // Define the mouseup event handler
       const onMouseUp = (event) => {
         // Remove the mousemove event listener to stop tracking mouse movements
-        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener("mousemove", onMouseMove);
 
         // Reset the piece's z-index and remove highlights
-        piece.style.zIndex = '';
+        piece.style.zIndex = "";
         applyHighlight(0, 0);
 
         // Record the ending point of the move
@@ -269,7 +267,7 @@ function setupMouseEvents() {
       };
 
       // Attach the mouseup event listener to the document
-      document.addEventListener('mouseup', onMouseUp, { once: true });
+      document.addEventListener("mouseup", onMouseUp, { once: true });
     });
   });
 }
@@ -316,14 +314,14 @@ async function applyMove(piece, move) {
     move.to == 25 ||
     move.to == 26 ||
     move.to == move.from ||
-    (myPlayer == 'w' && move.to > move.from) ||
-    (myPlayer == 'r' && move.to < move.from) ||
-    (toColor != '' && toColor != myPlayer && toOccupied > 1)
+    (myPlayer == "w" && move.to > move.from) ||
+    (myPlayer == "r" && move.to < move.from) ||
+    (toColor != "" && toColor != myPlayer && toOccupied > 1)
   ) {
     //console.log('Returning piece');
     // return back to beginning
     board.contents[move.from].occupied.push(board.onTheMove);
-    board.onTheMove = '';
+    board.onTheMove = "";
     let posToOccupy = board.contents[move.from].occupied.length;
     let [x, y] = getPieceCoords(move.from, posToOccupy);
     await animateMovePiece(piece, x, y, 0.5);
@@ -341,7 +339,7 @@ async function applyMove(piece, move) {
     await animateMovePiece(piece, x, y, 0.5);
 
     // animate the blot to the bar. Red bar = 25, White bar = 26
-    let barPoint = myPlayer == 'r' ? 26 : 25;
+    let barPoint = myPlayer == "r" ? 26 : 25;
     let pieceId = board.contents[move.to].occupied[0];
     board.onTheMove = pieceId;
     board.movePiece(activePlayer, move.to, barPoint);
@@ -386,9 +384,9 @@ function applyHighlight(point, state) {
 
     if (point == pt && state == 1) {
       // Check if the element exists
-      element.style.backgroundColor = 'orange'; // Set the background color
+      element.style.backgroundColor = "orange"; // Set the background color
     } else {
-      element.style.backgroundColor = 'white';
+      element.style.backgroundColor = "white";
     }
   }
 }
@@ -426,8 +424,8 @@ function animateMovePiece(piece, targetX, targetY, speed) {
       const progress = Math.min(elapsed / duration, 1); // Cap at 1 (100%)
 
       // Set the new position based on progress
-      piece.style.left = initialX + deltaX * progress + 'px';
-      piece.style.top = initialY + deltaY * progress + 'px';
+      piece.style.left = initialX + deltaX * progress + "px";
+      piece.style.top = initialY + deltaY * progress + "px";
 
       if (progress < 1) {
         requestAnimationFrame(animate); // Continue animation
@@ -516,7 +514,7 @@ function identifyPoint(x, y) {
     point = 0;
   }
 
-  if (activePlayer == 'r') {
+  if (activePlayer == "r") {
     // reverse board
     if (point >= 1 && point <= 24) {
       if (point >= 13) {
@@ -708,7 +706,7 @@ function isPieceMovable(piece, pt, pos) {
 
   // if piece is not being moved from a valid position
   if (piece == 0 && pos == 0) {
-    console.log('Not moving from a valid position');
+    console.log("Not moving from a valid position");
     return false;
   }
 
