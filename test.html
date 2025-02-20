@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Skill Level Dropdown</title>
+    <style>
+      .accordion {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 10px;
+        width: 190px; /* Match your desired width */
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 16px;
+        transition: 0.4s;
+        border: 1px solid black; /* Added border */
+        border-radius: 2px; /* Added border-radius */
+      }
+
+      .active,
+      .accordion:hover {
+        background-color: #ccc;
+      }
+
+      .panel {
+        padding: 0 10px;
+        display: none;
+        background-color: white;
+        overflow: hidden;
+        border: 1px solid black; /* Added border */
+        border-top: none; /* Remove top border to connect seamlessly */
+        border-radius: 0 0 2px 2px; /* Rounded bottom corners */
+        width: 190px; /* Match your desired width */
+      }
+
+      .panel p {
+        margin: 5px 0; /* Adjust spacing as needed */
+      }
+
+      /* Optional styling for the dropdown arrow */
+      .accordion:after {
+        content: "\0279"; /* Unicode character for "plus" sign (+) */
+        font-family: monospace;
+        color: #777;
+        float: right;
+        margin-left: 5px;
+        transition: transform 0.2s ease;
+      }
+
+      .active:after {
+        content: "\2212"; /* Unicode character for "minus" sign (-) */
+        transform: rotate(180deg);
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Skill Level</h2>
+
+    <button class="accordion">Select Skill Level</button>
+    <div class="panel">
+      <p>Beginner</p>
+      <p>Advanced</p>
+      <p>Master</p>
+    </div>
+
+    <script>
+      var acc = document.getElementsByClassName("accordion");
+      var i;
+
+      for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+          this.classList.toggle("active");
+          var panel = this.nextElementSibling;
+          if (panel.style.display === "block") {
+            panel.style.display = "none";
+          } else {
+            panel.style.display = "block";
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
