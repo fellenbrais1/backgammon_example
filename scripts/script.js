@@ -10,11 +10,19 @@ console.log(`script.js running`);
 /////////////////////////////////////////////////////////////////////////////////////////
 // IMPORTS
 
-import { startGame } from "../scripts/app.js";
-import { welcomeNameForm } from "../scripts/welcome.js";
+// import { startGame } from "../scripts/app.js";
+import {
+  welcomeNameForm,
+  checkForLocalStorageObject,
+} from "../scripts/welcome.js";
+import { clearLocalStorage, testForLocalStorageData } from "./localStorage.js";
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
+
+// Debug button elements
+const testButton1 = document.querySelector(".test_button1");
+const testButton2 = document.querySelector(".test_button2");
 
 // Game board elements
 const imbedGame = document.getElementById("content_container");
@@ -23,11 +31,14 @@ const boardMessage = document.querySelector(".board_message");
 // Welcome section elements
 const welcomeSection = document.querySelector(".welcome_section");
 
+// Welcome return section elements
+const welcomeReturnSection = document.querySelector(".welcome_return_section");
+
 // Ad section elements
+const adNotification = document.querySelector(".ad_notification");
+const adSection = document.querySelector(".adbox");
 const currentAdLink = document.querySelector(".ad_link");
 const currentAdPicture = document.querySelector(".ad_picture");
-const adSection = document.querySelector(".adbox");
-const adNotification = document.querySelector(".ad_notification");
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // SOUNDS
@@ -91,9 +102,20 @@ let currentAdNumber = 0;
 // Window listeners
 window.addEventListener("load", () => {
   showMain();
+  testForLocalStorageData();
   imbedGame.classList.add("show");
   imbedGame.classList.remove("no_pointer_events");
   setInterval(imgAdCycler, 15000);
+});
+
+// Debug button eventListeners
+testButton1.addEventListener("click", () => {
+  console.log(`Contents of localStorageObject reset to default`);
+  clearLocalStorage();
+});
+
+testButton2.addEventListener("click", () => {
+  console.log(`Dad button activated`);
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -103,16 +125,30 @@ window.addEventListener("load", () => {
 // Shows the pages main elements on load or a site reset event
 function showMain() {
   // startGame();
+  const doesUserAlreadyExist = checkForLocalStorageObject();
+  console.log(doesUserAlreadyExist);
   setTimeout(() => {
-    welcomeSection.classList.add("show");
-    adSection.classList.add("show");
+    if (doesUserAlreadyExist) {
+      welcomeReturnSection.classList.add("reveal");
+    } else {
+      welcomeSection.classList.add("reveal");
+    }
+    adSection.classList.add("reveal");
     adNotification.classList.add("show");
     boardMessage.textContent = `Have a go at moving the pieces!`;
   }, 3000);
   setTimeout(() => {
-    welcomeSection.classList.add("focus_element_thick");
+    if (doesUserAlreadyExist) {
+      welcomeReturnSection.classList.add("focus_element_thick");
+    } else {
+      welcomeSection.classList.add("focus_element_thick");
+    }
   }, 500);
   setTimeout(() => {
+    if (doesUserAlreadyExist) {
+      // TODO
+      console.log(`Focus on challenge button`);
+    }
     welcomeNameForm.classList.add("focus_element");
   }, 500);
 }
