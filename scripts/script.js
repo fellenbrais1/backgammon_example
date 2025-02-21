@@ -10,7 +10,7 @@ console.log(`script.js running`);
 /////////////////////////////////////////////////////////////////////////////////////////
 // IMPORTS
 
-// import { startGame } from "../scripts/app.js";
+import { startGame } from "../scripts/app.js";
 import { welcomeNameForm } from "../scripts/welcome.js";
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +93,6 @@ window.addEventListener("load", () => {
   showMain();
   imbedGame.classList.add("show");
   imbedGame.classList.remove("no_pointer_events");
-  // startGame();
   setInterval(imgAdCycler, 15000);
 });
 
@@ -103,6 +102,7 @@ window.addEventListener("load", () => {
 // Main display functions
 // Shows the pages main elements on load or a site reset event
 function showMain() {
+  // startGame();
   setTimeout(() => {
     welcomeSection.classList.add("show");
     adSection.classList.add("show");
