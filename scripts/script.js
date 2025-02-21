@@ -4,7 +4,7 @@
 // NOTES
 // Handles webpage logic and connects to the game logic in app.js
 
-"use strict";
+'use strict';
 console.log(`script.js running`);
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -14,82 +14,82 @@ console.log(`script.js running`);
 import {
   welcomeNameForm,
   checkForLocalStorageObject,
-} from "../scripts/welcome.js";
-import { clearLocalStorage, testForLocalStorageData } from "./localStorage.js";
+} from '../scripts/welcome.js';
+import { clearLocalStorage, testForLocalStorageData } from './localStorage.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
 
 // Debug button elements
-const testButton1 = document.querySelector(".test_button1");
-const testButton2 = document.querySelector(".test_button2");
+const testButton1 = document.querySelector('.test_button1');
+const testButton2 = document.querySelector('.test_button2');
 
 // Game board elements
-const imbedGame = document.getElementById("content_container");
-const boardMessage = document.querySelector(".board_message");
+const imbedGame = document.getElementById('content_container');
+const boardMessage = document.querySelector('.board_message');
 
 // Welcome section elements
-const welcomeSection = document.querySelector(".welcome_section");
+const welcomeSection = document.querySelector('.welcome_section');
 
 // Welcome return section elements
-const welcomeReturnSection = document.querySelector(".welcome_return_section");
+const welcomeReturnSection = document.querySelector('.welcome_return_section');
 
 // Ad section elements
-const adNotification = document.querySelector(".ad_notification");
-const adSection = document.querySelector(".adbox");
-const currentAdLink = document.querySelector(".ad_link");
-const currentAdPicture = document.querySelector(".ad_picture");
+const adNotification = document.querySelector('.ad_notification');
+const adSection = document.querySelector('.adbox');
+const currentAdLink = document.querySelector('.ad_link');
+const currentAdPicture = document.querySelector('.ad_picture');
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // SOUNDS
 
 // Page sounds
-export const buttonClickSound = document.getElementById("button_click_sound");
+export const buttonClickSound = document.getElementById('button_click_sound');
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
 
 // Ad section variables
 const ad1 = {
-  source: "../images/cash4gold.jpg",
-  altText: "Cash 4 Gold Advertisement",
-  href: "https://www.cash4goldonline.co.uk/",
-  title: "Cash 4 Gold Online",
+  source: '../images/cash4gold.jpg',
+  altText: 'Cash 4 Gold Advertisement',
+  href: 'https://www.cash4goldonline.co.uk/',
+  title: 'Cash 4 Gold Online',
 };
 
 const ad2 = {
-  source: "../images/kier.avif",
-  altText: "Kier Starmer Advertismeent",
-  href: "https://en.wikipedia.org/wiki/Keir_Starmer",
-  title: "Kier Starmer Action Figures",
+  source: '../images/kier.avif',
+  altText: 'Kier Starmer Advertismeent',
+  href: 'https://en.wikipedia.org/wiki/Keir_Starmer',
+  title: 'Kier Starmer Action Figures',
 };
 
 const ad3 = {
-  source: "../images/chocowhopper.webp",
-  altText: "Burger King Advertisment",
-  href: "https://youtube.com/watch?v=2JaCzLZTYAE",
-  title: "The NEW Chocolate Whopper",
+  source: '../images/chocowhopper.webp',
+  altText: 'Burger King Advertisment',
+  href: 'https://youtube.com/watch?v=2JaCzLZTYAE',
+  title: 'The NEW Chocolate Whopper',
 };
 
 const ad4 = {
-  source: "../images/vizswan.jpg",
-  altText: "Viz Swan Advertisment",
-  href: "https://www.amazon.co.uk/Brainbox-Candy-Official-Advert-Birthday/dp/B0BMGXMB61",
-  title: "Retrain as a Swan Today",
+  source: '../images/vizswan.jpg',
+  altText: 'Viz Swan Advertisment',
+  href: 'https://www.amazon.co.uk/Brainbox-Candy-Official-Advert-Birthday/dp/B0BMGXMB61',
+  title: 'Retrain as a Swan Today',
 };
 
 const ad5 = {
-  source: "../images/hokusaiNuke.jpeg",
-  altText: "Japanese Nuclear Waste Advertisment",
-  href: "https://www.globaltimes.cn/page/202104/1221726.shtml",
-  title: "Japanese Nuclear Waste Near You!",
+  source: '../images/hokusaiNuke.jpeg',
+  altText: 'Japanese Nuclear Waste Advertisment',
+  href: 'https://www.globaltimes.cn/page/202104/1221726.shtml',
+  title: 'Japanese Nuclear Waste Near You!',
 };
 
 const ad6 = {
-  source: "../images/gizmo.jpg",
-  altText: "Baby Gizmo Advertismement",
-  href: "https://fastshow.fandom.com/wiki/Chanel_9_Neus",
-  title: "Baby Gizmo Action Pumpo",
+  source: '../images/gizmo.jpg',
+  altText: 'Baby Gizmo Advertismement',
+  href: 'https://fastshow.fandom.com/wiki/Chanel_9_Neus',
+  title: 'Baby Gizmo Action Pumpo',
 };
 
 const adList = [ad1, ad2, ad3, ad4, ad5, ad6];
@@ -100,21 +100,21 @@ let currentAdNumber = 0;
 // EVENT LISTENERS
 
 // Window listeners
-window.addEventListener("load", () => {
+window.addEventListener('load', () => {
   showMain();
   testForLocalStorageData();
-  imbedGame.classList.add("show");
-  imbedGame.classList.remove("no_pointer_events");
+  imbedGame.classList.add('show');
+  imbedGame.classList.remove('no_pointer_events');
   setInterval(imgAdCycler, 15000);
 });
 
 // Debug button eventListeners
-testButton1.addEventListener("click", () => {
+testButton1.addEventListener('click', () => {
   console.log(`Contents of localStorageObject reset to default`);
   clearLocalStorage();
 });
 
-testButton2.addEventListener("click", () => {
+testButton2.addEventListener('click', () => {
   console.log(`Dad button activated`);
 });
 
@@ -129,19 +129,19 @@ function showMain() {
   console.log(doesUserAlreadyExist);
   setTimeout(() => {
     if (doesUserAlreadyExist) {
-      welcomeReturnSection.classList.add("reveal");
+      welcomeReturnSection.classList.add('reveal');
     } else {
-      welcomeSection.classList.add("reveal");
+      welcomeSection.classList.add('reveal');
     }
-    adSection.classList.add("reveal");
-    adNotification.classList.add("show");
+    adSection.classList.add('reveal');
+    adNotification.classList.add('show');
     boardMessage.textContent = `Have a go at moving the pieces!`;
   }, 3000);
   setTimeout(() => {
     if (doesUserAlreadyExist) {
-      welcomeReturnSection.classList.add("focus_element_thick");
+      welcomeReturnSection.classList.add('focus_element_thick');
     } else {
-      welcomeSection.classList.add("focus_element_thick");
+      welcomeSection.classList.add('focus_element_thick');
     }
   }, 500);
   setTimeout(() => {
@@ -149,7 +149,7 @@ function showMain() {
       // TODO
       console.log(`Focus on challenge button`);
     }
-    welcomeNameForm.classList.add("focus_element");
+    welcomeNameForm.classList.add('focus_element');
   }, 500);
 }
 

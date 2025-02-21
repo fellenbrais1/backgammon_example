@@ -7,7 +7,7 @@
   margin-right: 5px;
   border: solid 2px white;
   border-radius: 25px;
-  background-image: url("../images/big_backgammon_enhanced_35pct.png");
+  background-image: url('../images/big_backgammon_enhanced_35pct.png');
   z-index: 1;
   overflow-x: hidden;
 }

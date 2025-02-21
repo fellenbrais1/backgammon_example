@@ -3,7 +3,7 @@
 // NOTES
 // Sets up and exports a local storage object for storing user's data between sessions
 
-"use strict";
+'use strict';
 
 console.log(`localStorage.js running`);
 
@@ -11,8 +11,8 @@ console.log(`localStorage.js running`);
 export const localStorage = window.localStorage;
 
 const defaultLocalStorageObject = {
-  displayName: "",
-  skillLevel: "beginner",
+  displayName: '',
+  skillLevel: 'beginner',
   languages: [],
 };
 
@@ -22,7 +22,7 @@ const defaultLocalStorageObject = {
 export function createLocalStorage() {
   const localStorageObject = { ...defaultLocalStorageObject };
   localStorage.setItem(
-    "localStorageObject",
+    'localStorageObject',
     JSON.stringify(localStorageObject)
   );
   return localStorageObject;
@@ -31,11 +31,11 @@ export function createLocalStorage() {
 // Sets the user's data on their copy of the localStorageObject
 // Exported to , called by
 export function setLocalStorage(
-  displayName = "",
-  skillLevel = "beginner",
-  languages = ["English"]
+  displayName = '',
+  skillLevel = 'beginner',
+  languages = ['English']
 ) {
-  let storedObject = localStorage.getItem("localStorageObject");
+  let storedObject = localStorage.getItem('localStorageObject');
   if (!storedObject) {
     storedObject = createLocalStorage();
   }
@@ -44,7 +44,7 @@ export function setLocalStorage(
   localStorageObject.skillLevel = skillLevel;
   localStorageObject.languages = languages;
   localStorage.setItem(
-    "localStorageObject",
+    'localStorageObject',
     JSON.stringify(localStorageObject)
   );
   return;
@@ -53,7 +53,7 @@ export function setLocalStorage(
 // Loads the data from the perviously created localStorageObject, or supplies default values if an object does not exist.
 // Exported to , called by
 export function loadLocalStorage() {
-  const storedObject = localStorage.getItem("localStorageObject");
+  const storedObject = localStorage.getItem('localStorageObject');
   if (storedObject) {
     const localStorageObject = JSON.parse(storedObject);
     return {

@@ -40,7 +40,7 @@
 
       /* Optional styling for the dropdown arrow */
       .accordion:after {
-        content: "\0279"; /* Unicode character for "plus" sign (+) */
+        content: '\0279'; /* Unicode character for 'plus' sign (+) */
         font-family: monospace;
         color: #777;
         float: right;
@@ -49,7 +49,7 @@
       }
 
       .active:after {
-        content: "\2212"; /* Unicode character for "minus" sign (-) */
+        content: '\2212'; /* Unicode character for 'minus' sign (-) */
         transform: rotate(180deg);
       }
     </style>
@@ -65,17 +65,17 @@
     </div>
 
     <script>
-      var acc = document.getElementsByClassName("accordion");
+      var acc = document.getElementsByClassName('accordion');
       var i;
 
       for (i = 0; i < acc.length; i++) {
-        acc[i].addEventListener("click", function () {
-          this.classList.toggle("active");
+        acc[i].addEventListener('click', function () {
+          this.classList.toggle('active');
           var panel = this.nextElementSibling;
-          if (panel.style.display === "block") {
-            panel.style.display = "none";
+          if (panel.style.display === 'block') {
+            panel.style.display = 'none';
           } else {
-            panel.style.display = "block";
+            panel.style.display = 'block';
           }
         });
       }
