@@ -109,8 +109,8 @@ const board = {
     }));
 
     // Starting positions
-    this.contents[1].occupied = ["r1"];
-    this.contents[2].occupied = ["r2"];
+    this.contents[1].occupied = ["r1", "r2];
+    this.contents[2].occupied = [];
     this.contents[3].occupied = [];
     this.contents[4].occupied = [];
     this.contents[5].occupied = [];
