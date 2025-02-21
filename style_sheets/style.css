@@ -56,6 +56,42 @@ html {
   background-color: var(--active_button_gold);
 }
 
+/* DEBUG BUTTON ELEMENTS */
+.test_button1,
+.test_button2 {
+  position: absolute;
+  top: 10px;
+  height: 40px;
+  width: 100px;
+  padding-top: 2px;
+  border: 2px solid white;
+  border-radius: 10px;
+  background-color: purple;
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
+.test_button1 {
+  left: 10px;
+}
+
+.test_button2 {
+  left: 120px;
+}
+
+.test_button1:hover,
+.test_button2:hover {
+  box-shadow: 0px 0px 20px white;
+}
+
+.test_button1:active,
+.test_button2:active {
+  background-color: var(--active_button_gold);
+}
+
 /* MAIN PAGE CONTAINER */
 .pagebox {
   position: relative;
@@ -144,6 +180,271 @@ html {
   font-weight: bold;
   color: black;
   padding-top: 4px;
+}
+
+/* WELCOME SECTION */
+.welcome_section {
+  height: 504px;
+  width: 250px;
+  border: 2px solid white;
+  border-radius: 25px;
+  background-color: green;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  overflow: hidden;
+}
+
+.welcome_title {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: default;
+}
+
+.welcome_text {
+  width: 240px;
+  margin-left: 2px;
+  margin-right: 2px;
+  padding-bottom: 10px;
+  color: white;
+  text-align: left;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  cursor: default;
+}
+
+.welcome_button_challenge,
+.welcome_button_challenge_return,
+.welcome_name_form {
+  height: 40px;
+  width: 220px;
+  margin-bottom: 20px;
+  padding-top: 10px;
+  margin-left: 11px;
+  border-radius: 9999px;
+  box-shadow: 0px 0px 4px var(--felt_green);
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.welcome_name_form {
+  margin-top: 4px;
+  outline: 2px solid black;
+  background-color: white;
+  color: black;
+  border-radius: 2px;
+  width: 190px;
+  margin-left: 25px;
+}
+
+#welcome_name_input {
+  color: black;
+  text-align: center;
+  font-size: 18px;
+  padding-top: 4px;
+  transform: translateY(-6px);
+  cursor: text;
+  width: 190px;
+}
+
+#you_info,
+#you_info_return {
+  border: 1px solid white;
+  width: 230px;
+  margin-left: 6px;
+  margin-bottom: 8px;
+  background: var(--button_dark_teal);
+}
+
+#you_info_return {
+  margin-bottom: 48px;
+}
+
+.you_info_text,
+.you_info_text_return {
+  padding-bottom: 0;
+  text-align: left;
+  margin-left: 12px;
+}
+
+.you_info_text_return {
+  margin-top: 48px;
+}
+
+.welcome_button_challenge,
+.welcome_button_challenge_return {
+  display: grid;
+  grid-template-columns: 160px 40px;
+  height: 70px;
+  border: 2px solid white;
+  background-color: var(--youtube_red);
+  color: white;
+}
+
+.challenge_svg {
+  transform: translateX(-40px);
+  margin-top: 6px;
+}
+
+.challenge_svg_return {
+  margin-top: 6px;
+}
+
+.welcome_button_challenge svg,
+.welcome_button_challenge_return {
+  transform: translateY(-4px);
+}
+
+.welcome_button_challenge:hover,
+.welcome_button_challenge_return:hover {
+  box-shadow: 0px 0px 20px white;
+}
+
+.welcome_button_challenge:active,
+.welcome_button_challenge_return:active {
+  background-color: var(--active_button_gold);
+}
+
+#player_info {
+  display: grid;
+  grid-template-columns: 110px 110px;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+#player_info_flags,
+#player_info_flags_return {
+  display: grid;
+  grid-template-columns: 50px 50px 50px;
+  width: 150px;
+  margin-left: 45px;
+  margin-bottom: 4px;
+}
+
+.player_flag_img {
+  margin-left: 9px;
+}
+
+.step2,
+.step3,
+.step4 {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity ease-in-out 1s;
+}
+
+/* WELCOME RETURN SECTION ELEMENTS */
+.welcome_return_section {
+  position: absolute;
+  top: 0px;
+  height: 504px;
+  width: 250px;
+  border: 2px solid white;
+  border-radius: 25px;
+  background-color: darkcyan;
+  transition: opacity 1.5s ease-in-out;
+  overflow: hidden;
+  opacity: 0;
+  /* z-index: 99; */
+}
+
+.not_you_button {
+  height: 60px;
+  width: 220px;
+  margin-left: 11px;
+  margin-bottom: 48px;
+  padding-top: 2px;
+  border: 2px solid white;
+  border-radius: 9999px;
+  background-color: purple;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+}
+
+.not_you_button:hover {
+  box-shadow: 0px 0px 20px white;
+}
+
+.not_you_button:active {
+  background-color: var(--active_button_gold);
+}
+
+/* ACCORDION ELEMENTS */
+#skill_level_accordion,
+#language_accordion {
+  display: grid;
+  grid-template-columns: 150px 40px;
+  height: 40px;
+  width: 190px;
+  margin-left: 25px;
+  margin-bottom: 24px;
+  padding: 5px;
+  padding-left: 10px;
+  border: 1px solid black;
+  border-radius: 2px;
+  background-color: #ffffff;
+  color: black;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+#skill_level_accordion:hover,
+#language_accordion:hover {
+  background-color: #ccc;
+}
+
+#skill_level_svg,
+#language_svg {
+  margin-top: 3px;
+}
+
+.skill_level_panel,
+.language_panel {
+  margin-top: -24px;
+  display: none;
+  width: 190px;
+  margin-left: 30px;
+  padding: 0 10px;
+  border: 1px solid black;
+  border-radius: 0 0 2px 2px;
+  border-top: none;
+  background-color: white;
+  color: black;
+  text-align: left;
+  overflow: hidden;
+}
+
+.skill_level_panel p,
+.language_panel p,
+#skill_level_text,
+#language_text {
+  margin: 5px 0;
+  color: black;
+  text-align: left;
+}
+
+#language_text img {
+  transform: translateY(-6px);
+}
+
+.accordion_selected {
+  background-color: lightblue;
+}
+
+.skill_choice,
+.language_choice {
+  cursor: pointer;
 }
 
 /* CHALLENGE SECTION */
@@ -285,82 +586,6 @@ html {
 
 .challenge_recieved_button_accept:active,
 .challenge_received_button_decline:active {
-  background-color: var(--active_button_gold);
-}
-
-/* FORFEIT SECTION */
-.forfeit_section {
-  position: absolute;
-  top: 127px;
-  left: 70px;
-  height: 250px;
-  width: 540px;
-  padding-top: 24px;
-  z-index: 9;
-  text-align: center;
-  background-color: green;
-  border: solid 2px white;
-  border-radius: 25px;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-  cursor: default;
-}
-
-.forfeit_block {
-  display: grid;
-  grid-template-rows: 50px 40px auto;
-}
-
-.forfeit_text {
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.forfeit_text_big {
-  font-size: 30px;
-  font-weight: bold;
-}
-
-.forfeit_text_small {
-  font-size: 16px;
-}
-
-.forfeit_button_div {
-  display: grid;
-  grid-template-columns: auto auto;
-  column-gap: 18px;
-  width: 60%;
-  margin-left: 20%;
-  padding-top: 16px;
-}
-
-.forfeit_button_yes,
-.forfeit_button_no {
-  height: 60px;
-  width: 140px;
-  margin-left: 50%;
-  padding-top: 10px;
-  border: solid 2px white;
-  border-radius: 999px;
-  background-color: var(--youtube_red);
-  transform: translateX(-50%);
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.forfeit_button_no {
-  background-color: var(--button_dark_teal);
-}
-
-.forfeit_button_yes:hover,
-.forfeit_button_no:hover {
-  box-shadow: 0px 0px 20px white;
-}
-
-.forfeit_button_yes:active,
-.forfeit_button_no:active {
   background-color: var(--active_button_gold);
 }
 
@@ -521,6 +746,10 @@ html {
   cursor: pointer;
 }
 
+.players_x_button {
+  opacity: 0;
+}
+
 /* CHAT SECTION ELEMENTS */
 .chat_section {
   display: grid;
@@ -602,212 +831,6 @@ html {
 
 .chat_display strong {
   color: black;
-}
-
-/* WELCOME SECTION */
-.welcome_section {
-  height: 504px;
-  width: 250px;
-  border: 2px solid white;
-  border-radius: 25px;
-  background-color: green;
-  opacity: 0;
-  transition: opacity 1.5s ease-in-out;
-  overflow: hidden;
-}
-
-.welcome_title {
-  margin-top: 8px;
-  margin-bottom: 8px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 20px;
-  cursor: default;
-}
-
-.welcome_text {
-  width: 240px;
-  margin-left: 2px;
-  margin-right: 2px;
-  padding-bottom: 10px;
-  color: white;
-  text-align: left;
-  font-weight: bold;
-  font-size: 16px;
-  text-align: center;
-  cursor: default;
-}
-
-.welcome_button_challenge,
-.welcome_name_form {
-  height: 40px;
-  width: 220px;
-  margin-bottom: 20px;
-  padding-top: 10px;
-  margin-left: 11px;
-  border-radius: 9999px;
-  box-shadow: 0px 0px 4px var(--felt_green);
-  color: white;
-  text-align: center;
-  font-weight: bold;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.welcome_name_form {
-  margin-top: 4px;
-  outline: 2px solid black;
-  background-color: white;
-  color: black;
-  border-radius: 2px;
-  width: 190px;
-  margin-left: 25px;
-}
-
-#welcome_name_input {
-  color: black;
-  text-align: center;
-  font-size: 18px;
-  padding-top: 4px;
-  transform: translateY(-6px);
-  cursor: text;
-  width: 190px;
-}
-
-#you_info {
-  border: 1px solid white;
-  width: 230px;
-  margin-left: 6px;
-  margin-bottom: 8px;
-  background: var(--button_dark_teal);
-}
-
-.you_info_text {
-  padding-bottom: 0;
-  text-align: left;
-  margin-left: 12px;
-}
-
-.welcome_button_challenge {
-  display: grid;
-  grid-template-columns: 160px 40px;
-  height: 70px;
-  border: 2px solid white;
-  background-color: var(--youtube_red);
-  color: white;
-}
-
-.challenge_svg {
-  transform: translateX(-40px);
-  margin-top: 6px;
-}
-
-.welcome_button_challenge svg {
-  transform: translateY(-4px);
-}
-
-.welcome_button_challenge:hover {
-  box-shadow: 0px 0px 20px white;
-}
-
-.welcome_button_challenge:active {
-  background-color: var(--active_button_gold);
-}
-
-#player_info {
-  display: grid;
-  grid-template-columns: 110px 110px;
-  text-align: center;
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
-#player_flags {
-  display: grid;
-  grid-template-columns: 50px 50px 50px;
-  width: 150px;
-  margin-left: 45px;
-  margin-bottom: 4px;
-}
-
-.player_flag_img {
-  margin-left: 9px;
-}
-
-.step2,
-.step3,
-.step4 {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity ease-in-out 1s;
-}
-
-/* ACCORDION ELEMENTS */
-#skill_level_accordion,
-#language_accordion {
-  display: grid;
-  grid-template-columns: 150px 40px;
-  height: 40px;
-  width: 190px;
-  margin-left: 25px;
-  margin-bottom: 24px;
-  padding: 5px;
-  padding-left: 10px;
-  border: 1px solid black;
-  border-radius: 2px;
-  background-color: #ffffff;
-  color: black;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.4s;
-}
-
-#skill_level_accordion:hover,
-#language_accordion:hover {
-  background-color: #ccc;
-}
-
-#skill_level_svg,
-#language_svg {
-  margin-top: 3px;
-}
-
-.skill_level_panel,
-.language_panel {
-  margin-top: -24px;
-  display: none;
-  width: 190px;
-  margin-left: 30px;
-  padding: 0 10px;
-  border: 1px solid black;
-  border-radius: 0 0 2px 2px;
-  border-top: none;
-  background-color: white;
-  color: black;
-  text-align: left;
-  overflow: hidden;
-}
-
-.skill_level_panel p,
-.language_panel p,
-#skill_level_text,
-#language_text {
-  margin: 5px 0;
-  color: black;
-  text-align: left;
-}
-
-#language_text img {
-  transform: translateY(-6px);
-}
-
-.accordion_selected {
-  background-color: lightblue;
-}
-
-.skill_choice,
-.language_choice {
-  cursor: pointer;
 }
 
 /* SETTINGS SECTION */
@@ -948,6 +971,82 @@ html {
   pointer-events: none;
 }
 
+/* FORFEIT SECTION */
+.forfeit_section {
+  position: absolute;
+  top: 127px;
+  left: 70px;
+  height: 250px;
+  width: 540px;
+  padding-top: 24px;
+  z-index: 9;
+  text-align: center;
+  background-color: green;
+  border: solid 2px white;
+  border-radius: 25px;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  cursor: default;
+}
+
+.forfeit_block {
+  display: grid;
+  grid-template-rows: 50px 40px auto;
+}
+
+.forfeit_text {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.forfeit_text_big {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.forfeit_text_small {
+  font-size: 16px;
+}
+
+.forfeit_button_div {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 18px;
+  width: 60%;
+  margin-left: 20%;
+  padding-top: 16px;
+}
+
+.forfeit_button_yes,
+.forfeit_button_no {
+  height: 60px;
+  width: 140px;
+  margin-left: 50%;
+  padding-top: 10px;
+  border: solid 2px white;
+  border-radius: 999px;
+  background-color: var(--youtube_red);
+  transform: translateX(-50%);
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.forfeit_button_no {
+  background-color: var(--button_dark_teal);
+}
+
+.forfeit_button_yes:hover,
+.forfeit_button_no:hover {
+  box-shadow: 0px 0px 20px white;
+}
+
+.forfeit_button_yes:active,
+.forfeit_button_no:active {
+  background-color: var(--active_button_gold);
+}
+
 /* FLOATING BUTTON ELEMENTS */
 .floating_buttons_main {
   display: grid;
@@ -1001,7 +1100,7 @@ html {
 }
 
 /* DICE SECTION */
-.dice_section {
+/* .dice_section {
   display: grid;
   grid-template-columns: auto auto;
   grid-template-rows: 1fr;
@@ -1113,7 +1212,7 @@ html {
 .dice_roll_button:hover,
 .dice_skip_button:hover {
   box-shadow: 0px 0px 20px white;
-}
+} */
 
 /* AD SECTION ELEMENTS */
 .adbox {
@@ -1150,37 +1249,6 @@ html {
   border-radius: 25px;
 }
 
-/* DEBUG BUTTON ELEMENTS */
-.toggle_ads_button,
-.clear_cookie_button,
-.ask_jack_button,
-.change_turn_button,
-.simulate_challenge_button {
-  position: absolute;
-  left: 5%;
-  cursor: pointer;
-}
-
-.toggle_ads_button {
-  top: 1%;
-}
-
-.clear_cookie_button {
-  top: 1%;
-}
-
-.ask_jack_button {
-  top: 3.5%;
-}
-
-.change_turn_button {
-  top: 6%;
-}
-
-.simulate_challenge_button {
-  top: 8.5%;
-}
-
 /* PAGE RESET CLASSES */
 #overlay {
   display: none;
@@ -1199,14 +1267,6 @@ html {
 /* HELPER CLASSES */
 .scroll_on {
   transform: translate(0);
-}
-
-.hidden {
-  opacity: 0;
-}
-
-.removed {
-  display: none;
 }
 
 .show {
@@ -1230,38 +1290,12 @@ html {
   border: 4px solid var(--active_button_gold);
 }
 
-.focus_button {
-  background-color: var(--active_button_gold);
-  box-shadow: 0px 0px 20px white;
-}
-
-.activated_button {
-  pointer-events: none;
-}
-
 .button_yellowify {
   background-color: var(--active_button_gold);
 }
 
 .button_greenify {
   background-color: rgb(91, 218, 91);
-}
-
-.helper_step2 {
-  top: 234px;
-  left: -130px;
-  height: 90px;
-  font-size: 18px;
-}
-
-.helper_step3 {
-  grid-template-columns: 50px 360px 50px;
-  top: 396px;
-  left: 45px;
-  height: 90px;
-  width: 460px;
-  z-index: 9;
-  font-size: 18px;
 }
 
 .grey_button {
@@ -1272,6 +1306,14 @@ html {
 .reveal {
   opacity: 1;
   pointer-events: all;
+}
+
+.no_select {
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Standard syntax */
 }
 
 /* CODE END */

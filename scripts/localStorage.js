@@ -71,4 +71,14 @@ export function loadLocalStorage() {
   }
 }
 
+export function testForLocalStorageData() {
+  const storedObject = loadLocalStorage();
+  console.log(`User localStorageObject = ${JSON.stringify(storedObject)}`);
+}
+
+export function clearLocalStorage() {
+  setLocalStorage();
+  testForLocalStorageData();
+}
+
 // CODE END
