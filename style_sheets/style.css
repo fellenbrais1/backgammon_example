@@ -254,7 +254,8 @@ html {
 }
 
 #you_info,
-#you_info_return {
+#you_info_return,
+#you_info_next {
   border: 1px solid white;
   width: 230px;
   margin-left: 6px;
@@ -267,13 +268,15 @@ html {
 }
 
 .you_info_text,
-.you_info_text_return {
+.you_info_text_return,
+.you_info_text_next {
   padding-bottom: 0;
   text-align: left;
   margin-left: 12px;
 }
 
-.you_info_text_return {
+.you_info_text_return,
+.you_info_text_next {
   margin-top: 48px;
 }
 
@@ -311,16 +314,19 @@ html {
   background-color: var(--active_button_gold);
 }
 
-#player_info {
+#player_info,
+#player_info_next {
   display: grid;
   grid-template-columns: 110px 110px;
   text-align: center;
   font-weight: bold;
   margin-bottom: 4px;
+  font-size: 14px;
 }
 
 #player_info_flags,
-#player_info_flags_return {
+#player_info_flags_return,
+#player_info_flags_next {
   display: grid;
   grid-template-columns: 50px 50px 50px;
   width: 150px;
@@ -352,7 +358,6 @@ html {
   transition: opacity 1.5s ease-in-out;
   overflow: hidden;
   opacity: 0;
-  /* z-index: 99; */
 }
 
 .not_you_button {
@@ -590,7 +595,8 @@ html {
 }
 
 /* PLAYERS SECTION */
-.players_section {
+.players_section,
+.players_section_test {
   display: none;
   grid-template-rows: 80px 130px 140px 120px;
   position: absolute;
@@ -607,7 +613,18 @@ html {
   transition: opacity 1s ease-in-out;
 }
 
-.players_display {
+.players_section_test {
+  display: grid;
+  grid-template-rows: 80px 350px 60px;
+  top: 0;
+  left: 0;
+  width: 250px;
+  opacity: 0;
+  z-index: 9999;
+}
+
+.players_display,
+.players_display_test {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: 24px;
@@ -620,6 +637,11 @@ html {
   background-color: aliceblue;
   color: black;
   overflow-y: scroll;
+}
+
+.players_display_test {
+  width: 235px;
+  height: 400px;
 }
 
 .filter_div {

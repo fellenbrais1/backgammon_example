@@ -66,6 +66,11 @@ const challengeButtonReturn = document.querySelector(
   '.welcome_button_challenge_return'
 );
 
+// Players section elements
+const playerInfoNameNext = document.querySelector('.player_info_name_next');
+const playerInfoSkillNext = document.querySelector('.player_info_skill_next');
+const playerInfoFlagsNext = document.getElementById('.player_info_flags_next');
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
 
@@ -131,8 +136,8 @@ skillBeginner.addEventListener('click', () => {
   skillBeginner.classList.add('accordion_selected');
   skillAdvanced.classList.remove('accordion_selected');
   skillMaster.classList.remove('accordion_selected');
-  skillLevelText.textContent = 'Beginner';
-  playerInfoSkill.textContent = 'BEGINNER';
+  skillLevelText.textContent = 'Beginner 🏆';
+  playerInfoSkill.textContent = 'Beginner 🏆';
   sessionSkillLevel = 'Beginner';
   step3Div.classList.add('reveal');
   closeAccordion(skillLevelPanel, skillLevelSvg);
@@ -143,8 +148,8 @@ skillAdvanced.addEventListener('click', () => {
   skillAdvanced.classList.add('accordion_selected');
   skillBeginner.classList.remove('accordion_selected');
   skillMaster.classList.remove('accordion_selected');
-  skillLevelText.textContent = 'Advanced';
-  playerInfoSkill.textContent = 'ADVANCED';
+  skillLevelText.textContent = 'Advanced 🏆🏆';
+  playerInfoSkill.textContent = 'Advanced 🏆🏆';
   sessionSkillLevel = 'Advanced';
   step3Div.classList.add('reveal');
   closeAccordion(skillLevelPanel, skillLevelSvg);
@@ -155,8 +160,8 @@ skillMaster.addEventListener('click', () => {
   skillMaster.classList.add('accordion_selected');
   skillBeginner.classList.remove('accordion_selected');
   skillAdvanced.classList.remove('accordion_selected');
-  skillLevelText.textContent = 'Master';
-  playerInfoSkill.textContent = 'MASTER';
+  skillLevelText.textContent = 'Master 🏆🏆🏆';
+  playerInfoSkill.textContent = 'Master 🏆🏆🏆';
   sessionSkillLevel = 'Master';
   step3Div.classList.add('reveal');
   closeAccordion(skillLevelPanel, skillLevelSvg);
@@ -207,6 +212,7 @@ languageChoices.forEach((current) => {
 challengeButton.addEventListener('click', () => {
   playClickSound();
   createUserData();
+  populatePlayersSectionData();
 });
 
 // Welcome back return section event listeners
@@ -217,7 +223,7 @@ notYouButton.addEventListener('click', () => {
 
 challengeButtonReturn.addEventListener('click', () => {
   playClickSound();
-  // createUserData();
+  populatePlayersSectionData();
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -240,7 +246,7 @@ function addLanguageFlags(flag = 0) {
     flag3 = '<p></p>';
   let flags = [flag1, flag2, flag3];
   let workingLanguages;
-  // Adding languages to the user storage object
+
   sessionLanguages = languagesChosen;
   if (flag === 0) {
     workingLanguages = languagesChosen;
@@ -292,7 +298,6 @@ function addLanguageFlags(flag = 0) {
   }
 }
 
-// Automatically closes the language choices accordion when three have been selected
 function threeLanguagesChosen() {
   if (languagesChosen.length === 3) {
     console.log(languagesChosen);
@@ -365,14 +370,16 @@ export function checkForLocalStorageObject() {
 }
 
 function welcomeBackPopulateFields() {
-  console.log(`Nothing`);
   const storedObject = storage.loadLocalStorage();
   playerInfoNameReturn.textContent = storedObject.displayName;
   playerInfoSkillReturn.textContent = storedObject.skillLevel;
   languagesChosenReturn = storedObject.languages;
   console.log(languagesChosenReturn);
   addLanguageFlags(1);
-  // divReturn.classList.add("reveal");
+}
+
+function populatePlayersSectionData() {
+  const storedObject = storage.loadLocalStorage();
 }
 
 // CODE END
