@@ -101,8 +101,7 @@ html {
   background-size: cover;
   background-blend-mode: multiply;
   transform: translateZ(0);
-  /* REMOVED FOR NOW */
-  /* background-image: url(../images/background_huge.webp); */
+  background-image: url(../images/background_triangles.png);
   background-color: rgba(0, 0, 0, 0.5);
 }
 
@@ -216,9 +215,10 @@ html {
   cursor: default;
 }
 
-.welcome_button_challenge,
-.welcome_button_challenge_return,
-.welcome_name_form {
+.welcome_continue_button,
+.return_continue_button,
+.welcome_name_form,
+.challenge_button {
   height: 40px;
   width: 220px;
   margin-bottom: 20px;
@@ -229,8 +229,28 @@ html {
   color: white;
   text-align: center;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 24px;
   cursor: pointer;
+}
+
+.challenge_button {
+  margin-top: 18px;
+  font-size: 18px;
+}
+
+.challenge_button p {
+  padding-bottom: 20px;
+  text-align: center;
+  text-justify: center;
+  transform: translateY(-6px);
+}
+
+.challenge_button:hover {
+  box-shadow: 0px 0px 20px white;
+}
+
+.challenge_button:active {
+  background-color: var(--active_button_gold);
 }
 
 .welcome_name_form {
@@ -267,6 +287,11 @@ html {
   margin-bottom: 48px;
 }
 
+#you_info_next {
+  margin-top: 4px;
+  margin-left: 3px;
+}
+
 .you_info_text,
 .you_info_text_return,
 .you_info_text_next {
@@ -275,42 +300,34 @@ html {
   margin-left: 12px;
 }
 
-.you_info_text_return,
-.you_info_text_next {
+.you_info_text_return {
   margin-top: 48px;
 }
 
-.welcome_button_challenge,
-.welcome_button_challenge_return {
+.welcome_continue_button,
+.return_continue_button,
+.challenge_button {
   display: grid;
-  grid-template-columns: 160px 40px;
-  height: 70px;
+  grid-template-columns: 150px 50px;
+  height: 60px;
   border: 2px solid white;
   background-color: var(--youtube_red);
   color: white;
+  padding-top: 10px;
 }
 
-.challenge_svg {
-  transform: translateX(-40px);
-  margin-top: 6px;
+.continue_svg,
+.return_continue_svg {
+  transform: translateX(0px) translateY(-6px);
 }
 
-.challenge_svg_return {
-  margin-top: 6px;
-}
-
-.welcome_button_challenge svg,
-.welcome_button_challenge_return {
-  transform: translateY(-4px);
-}
-
-.welcome_button_challenge:hover,
-.welcome_button_challenge_return:hover {
+.welcome_continue_button:hover,
+.return_continue_button:hover {
   box-shadow: 0px 0px 20px white;
 }
 
-.welcome_button_challenge:active,
-.welcome_button_challenge_return:active {
+.welcome_continue_button:active,
+.return_continue_button:active {
   background-color: var(--active_button_gold);
 }
 
@@ -347,7 +364,7 @@ html {
 }
 
 /* WELCOME RETURN SECTION ELEMENTS */
-.welcome_return_section {
+.return_section {
   position: absolute;
   top: 0px;
   height: 504px;
@@ -386,7 +403,8 @@ html {
 
 /* ACCORDION ELEMENTS */
 #skill_level_accordion,
-#language_accordion {
+#language_accordion,
+#players_language_accordion {
   display: grid;
   grid-template-columns: 150px 40px;
   height: 40px;
@@ -405,7 +423,8 @@ html {
 }
 
 #skill_level_accordion:hover,
-#language_accordion:hover {
+#language_accordion:hover,
+#players_language_accordion:hover {
   background-color: #ccc;
 }
 
@@ -414,8 +433,26 @@ html {
   margin-top: 3px;
 }
 
+#players_language_accordion {
+  grid-template-columns: 65px 20px;
+  width: 95px;
+  height: 20px;
+  font-size: 8px;
+  margin: 0;
+  margin-top: 4px;
+}
+
+#players_language_accordion p {
+  transform: translateY(-8px);
+}
+
+#players_language_svg {
+  transform: translateY(-1px);
+}
+
 .skill_level_panel,
-.language_panel {
+.language_panel,
+.players_language_panel {
   margin-top: -24px;
   display: none;
   width: 190px;
@@ -430,10 +467,20 @@ html {
   overflow: hidden;
 }
 
+.players_language_panel {
+  position: fixed;
+  z-index: 9;
+  margin-left: 0;
+  width: 95px;
+  margin-top: 0px;
+}
+
 .skill_level_panel p,
 .language_panel p,
+.players_language_panel p,
 #skill_level_text,
-#language_text {
+#language_text,
+#players_language_text {
   margin: 5px 0;
   color: black;
   text-align: left;
@@ -448,7 +495,167 @@ html {
 }
 
 .skill_choice,
-.language_choice {
+.language_choice,
+.players_langauge_choice {
+  cursor: pointer;
+}
+
+/* PLAYERS SECTION */
+.players_section {
+  display: grid;
+  grid-template-rows: 20px 20px 70px 60px 240px 60px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 504px;
+  width: 250px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 5px;
+  border: solid 2px white;
+  border-radius: 25px;
+  background-color: var(--light_felt_green);
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.players_display {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 24px;
+  width: 235px;
+  height: 240px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 2px solid white;
+  border-radius: 10px;
+  background-color: aliceblue;
+  color: black;
+  overflow-y: scroll;
+}
+
+.filter_div {
+  display: grid;
+  grid-template-columns: 65px 75px 100px;
+}
+
+.toggle_available p,
+.toggle_skill p,
+.toggle_language p {
+  margin-top: 2px;
+  font-size: 12px;
+}
+
+.toggle_available_graphic,
+.toggle_skill_graphic,
+.toggle_language_graphic {
+  position: relative;
+  height: 20px;
+  width: 36px;
+  margin-top: 4px;
+  border: solid 1px white;
+  border-radius: 9999px;
+  background-color: var(--youtube_red);
+  margin-left: 12px;
+}
+
+.slider_button {
+  position: absolute;
+  top: -3px;
+  height: 20px;
+  width: 20px;
+  border: solid 1px silver;
+  border-radius: 50%;
+  background-color: black;
+  cursor: pointer;
+}
+
+.toggled_right {
+  background-color: rgb(91, 218, 91);
+}
+
+.toggled_right_button {
+  right: 0px;
+}
+
+.toggle_skill_level_div {
+  display: grid;
+  grid-template-columns: 150px 40px;
+}
+
+.toggle_skill_level_accordion {
+  display: grid;
+  grid-template-rows: 20px 20px 20px;
+  height: 60px;
+  width: 190px;
+  margin-top: 4px;
+  border: 1px solid black;
+  color: black;
+  border-radius: 2px;
+  background-color: aliceblue;
+}
+
+.toggle_skill_level_accordion p {
+  margin-left: 4px;
+  color: black;
+  text-align: center;
+}
+
+.toggle_language_box {
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+  grid-template-rows: 20px 20px 20px;
+  height: 20px;
+  width: 95px;
+  margin-top: 4px;
+  border: 1px solid black;
+  border-radius: 2px;
+  background-color: aliceblue;
+}
+
+.toggle_language_box p {
+  margin-left: 4px;
+  color: black;
+}
+
+.language_selector_button {
+  cursor: pointer;
+}
+
+.players_friends {
+  height: 100%;
+}
+
+.player_online_display {
+  display: grid;
+  grid-template-columns: 24px auto;
+  height: 20px;
+  margin-bottom: 4px;
+  font-weight: 450;
+}
+
+.is_player_active {
+  height: 18px;
+  width: 18px;
+  border: 1px solid white;
+  border-radius: 50%;
+  background-color: rgb(91, 218, 91);
+}
+
+.player_online_display.no_pointer_events {
+  font-weight: lighter;
+}
+
+.player_ingame {
+  background-color: orange;
+}
+
+.player_offline {
+  background-color: var(--youtube_red);
+}
+
+.player_text {
+  color: black;
   cursor: pointer;
 }
 
@@ -592,184 +799,6 @@ html {
 .challenge_recieved_button_accept:active,
 .challenge_received_button_decline:active {
   background-color: var(--active_button_gold);
-}
-
-/* PLAYERS SECTION */
-.players_section,
-.players_section_test {
-  display: none;
-  grid-template-rows: 80px 130px 140px 120px;
-  position: absolute;
-  height: 504px;
-  width: 300px;
-  padding-left: 5px;
-  padding-right: 5px;
-  padding-top: 5px;
-  border: solid 2px white;
-  border-radius: 25px;
-  background-color: var(--light_felt_green);
-  opacity: 0;
-  z-index: 3;
-  transition: opacity 1s ease-in-out;
-}
-
-.players_section_test {
-  display: grid;
-  grid-template-rows: 80px 350px 60px;
-  top: 0;
-  left: 0;
-  width: 250px;
-  opacity: 0;
-  z-index: 9999;
-}
-
-.players_display,
-.players_display_test {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-auto-rows: 24px;
-  height: 100px;
-  width: 285px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border: 2px solid white;
-  border-radius: 10px;
-  background-color: aliceblue;
-  color: black;
-  overflow-y: scroll;
-}
-
-.players_display_test {
-  width: 235px;
-  height: 400px;
-}
-
-.filter_div {
-  display: grid;
-  grid-template-columns: 85px 85px 100px;
-}
-
-.toggle_online p,
-.toggle_free p,
-.toggle_language p {
-  margin-top: 2px;
-  font-size: 12px;
-}
-
-.toggle_online_graphic,
-.toggle_free_graphic,
-.toggle_language_graphic {
-  position: relative;
-  height: 20px;
-  width: 36px;
-  margin-top: 4px;
-  border: solid 1px white;
-  border-radius: 9999px;
-  background-color: var(--youtube_red);
-}
-
-.slider_button {
-  position: absolute;
-  top: -3px;
-  height: 20px;
-  width: 20px;
-  border: solid 1px silver;
-  border-radius: 50%;
-  background-color: black;
-  cursor: pointer;
-}
-
-.toggled_right {
-  background-color: rgb(91, 218, 91);
-}
-
-.toggled_right_button {
-  right: 0px;
-}
-
-.toggle_skill_level_div {
-  display: grid;
-  grid-template-columns: 150px 40px;
-}
-
-.toggle_skill_level_accordion {
-  display: grid;
-  grid-template-rows: 20px 20px 20px;
-  height: 60px;
-  width: 190px;
-  margin-top: 4px;
-  border: 1px solid black;
-  color: black;
-  border-radius: 2px;
-  background-color: aliceblue;
-}
-
-.toggle_skill_level_accordion p {
-  margin-left: 4px;
-  color: black;
-  text-align: center;
-}
-
-.toggle_language_box {
-  display: grid;
-  grid-template-columns: 4fr 1fr;
-  grid-template-rows: 20px 20px 20px;
-  height: 20px;
-  width: 100px;
-  margin-top: 4px;
-  border: 1px solid black;
-  border-radius: 2px;
-  background-color: aliceblue;
-}
-
-.toggle_language_box p {
-  margin-left: 4px;
-  color: black;
-}
-
-.language_selector_button {
-  cursor: pointer;
-}
-
-.players_friends {
-  height: 70%;
-}
-
-.player_online_display {
-  display: grid;
-  grid-template-columns: 24px auto;
-  height: 20px;
-  margin-bottom: 4px;
-  font-weight: 450;
-}
-
-.is_player_active {
-  height: 18px;
-  width: 18px;
-  border: 1px solid white;
-  border-radius: 50%;
-  background-color: rgb(91, 218, 91);
-}
-
-.player_online_display.no_pointer_events {
-  font-weight: lighter;
-}
-
-.player_ingame {
-  background-color: orange;
-}
-
-.player_offline {
-  background-color: var(--youtube_red);
-}
-
-.player_text {
-  color: black;
-  cursor: pointer;
-}
-
-.players_x_button {
-  opacity: 0;
 }
 
 /* CHAT SECTION ELEMENTS */

@@ -32,7 +32,7 @@ const boardMessage = document.querySelector('.board_message');
 const welcomeSection = document.querySelector('.welcome_section');
 
 // Welcome return section elements
-const welcomeReturnSection = document.querySelector('.welcome_return_section');
+const returnSection = document.querySelector('.return_section');
 
 // Ad section elements
 const adNotification = document.querySelector('.ad_notification');
@@ -129,7 +129,7 @@ function showMain() {
   console.log(doesUserAlreadyExist);
   setTimeout(() => {
     if (doesUserAlreadyExist) {
-      welcomeReturnSection.classList.add('reveal');
+      returnSection.classList.add('reveal');
     } else {
       welcomeSection.classList.add('reveal');
     }
@@ -139,7 +139,7 @@ function showMain() {
   }, 3000);
   setTimeout(() => {
     if (doesUserAlreadyExist) {
-      welcomeReturnSection.classList.add('focus_element_thick');
+      returnSection.classList.add('focus_element_thick');
     } else {
       welcomeSection.classList.add('focus_element_thick');
     }
@@ -172,6 +172,12 @@ function imgAdCycler() {
     currentAdPicture.alt = adList[currentAdNumber].altText;
     currentAdLink.href = adList[currentAdNumber].href;
   }, 0);
+}
+
+export function toggleClass(pageElement, property) {
+  pageElement.classList.contains(property)
+    ? pageElement.classList.remove(property)
+    : pageElement.classList.add(property);
 }
 
 // CODE END

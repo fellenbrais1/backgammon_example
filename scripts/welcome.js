@@ -10,13 +10,14 @@ console.log(`welcome.js running`);
 //////////////////////////////////////////////////////////////////////////////////////////
 // IMPORTS
 
-import { playClickSound } from './script.js';
+import { playClickSound, toggleClass } from './script.js';
 import * as storage from './localStorage.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
 
 // Player name form elements
+const welcomeSection = document.querySelector('.welcome_section');
 export const welcomeNameForm = document.querySelector('.welcome_name_form');
 const welcomeNameInput = document.getElementById('welcome_name_input');
 
@@ -39,6 +40,9 @@ const languageSvg = document.getElementById('language_svg');
 
 // Language choice elements
 const languageChoices = document.querySelectorAll('.language_choice');
+const playersLanguageChoices = document.querySelectorAll(
+  '.players_language_choice'
+);
 
 // You section elements
 const playerInfoName = document.querySelector('.player_info_name');
@@ -51,9 +55,10 @@ const step3Div = document.querySelector('.step3');
 const step4Div = document.querySelector('.step4');
 
 // Challenge button
-const challengeButton = document.querySelector('.welcome_button_challenge');
+const continueButton = document.querySelector('.welcome_continue_button');
 
 // Step return elements
+const returnSection = document.querySelector('.return_section');
 const playerInfoNameReturn = document.querySelector('.player_info_name_return');
 const playerInfoSkillReturn = document.querySelector(
   '.player_info_skill_return'
@@ -62,14 +67,41 @@ const playerInfoFlagsReturn = document.getElementById(
   'player_info_flags_return'
 );
 const notYouButton = document.querySelector('.not_you_button');
-const challengeButtonReturn = document.querySelector(
-  '.welcome_button_challenge_return'
-);
+const continueButtonReturn = document.querySelector('.return_continue_button');
 
 // Players section elements
+const playersSection = document.querySelector('.players_section');
+
 const playerInfoNameNext = document.querySelector('.player_info_name_next');
 const playerInfoSkillNext = document.querySelector('.player_info_skill_next');
-const playerInfoFlagsNext = document.getElementById('.player_info_flags_next');
+const playerInfoFlagsNext = document.getElementById('player_info_flags_next');
+const challengeButton = document.querySelector('.challenge_button');
+
+// Players section elements
+const playersXButton = document.querySelector('.players_x_button');
+const playersCurrentlyActive = document.querySelector('.players_active');
+const availablePlayerToggleGraphic = document.querySelector(
+  '.toggle_available_graphic'
+);
+const availablePlayersToggleButton = document.querySelector(
+  '.toggle_available_graphic p'
+);
+
+const skillPlayersToggleGraphic = document.querySelector(
+  '.toggle_skill_graphic'
+);
+
+const skillPlayersToggleButton = document.querySelector(
+  '.toggle_skill_graphic p'
+);
+
+// Language section elements
+const playersLanguageAccordion = document.getElementById(
+  'players_language_accordion'
+);
+const playersLanguagePanel = playersLanguageAccordion.nextElementSibling;
+const playersLanguageText = document.getElementById('players_language_text');
+const playersLanguageSvg = document.getElementById('players_language_svg');
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
@@ -78,6 +110,9 @@ const playerInfoFlagsNext = document.getElementById('.player_info_flags_next');
 let languagesChosen = [];
 let languagesChosenReturn = [];
 const maxLanguages = 3;
+
+let languageItems;
+let languageFilter = 'en';
 
 let sessionDisplayName = 'Guest';
 let sessionSkillLevel = 'Beginner';
@@ -179,6 +214,17 @@ languageAccordion.addEventListener('click', function () {
   }
 });
 
+playersLanguageAccordion.addEventListener('click', function () {
+  playClickSound();
+  if (playersLanguagePanel.style.display === 'block') {
+    playersLanguagePanel.style.display = 'none';
+    playersLanguageSvg.style.transform = 'rotate(0deg)';
+  } else {
+    playersLanguagePanel.style.display = 'block';
+    playersLanguageSvg.style.transform = 'rotate(180deg)';
+  }
+});
+
 // Language choices event listeners
 languageChoices.forEach((current) => {
   current.addEventListener('click', () => {
@@ -208,11 +254,51 @@ languageChoices.forEach((current) => {
   });
 });
 
-// Challenge button event listeners
-challengeButton.addEventListener('click', () => {
+// playersLanguageChoices.forEach((current) => {
+//   current.addEventListener('click', () => {
+//     playClickSound();
+
+//     const languageValue = current.dataset.language;
+//     const languageName = retrieveLanguageName(languageValue);
+
+//     if (current.classList.contains('accordion_selected')) {
+//       playersLanguageChoices.forEach((current2) => {
+//         current2.classList.remove('accordion_selected');
+//       });
+//       languageFilter = 'en';
+//       playersLanguageText.textContent = `Select`;
+//       closeAccordion(playersLanguagePanel, playersLanguageSvg);
+//       return;
+//     } else {
+//       playersLanguageChoices.forEach((current2) => {
+//         current2.classList.remove('accordion_selected');
+//       });
+//       current.classList.add('accordion_selected');
+//       languageFilter = languageValue;
+
+//       playersLanguageText.textContent = languageName;
+//       closeAccordion(playersLanguagePanel, playersLanguageSvg);
+//       return;
+//     }
+//   });
+// });
+
+// Continue button event listeners
+continueButton.addEventListener('click', () => {
   playClickSound();
   createUserData();
   populatePlayersSectionData();
+  welcomeSection.classList.remove('reveal');
+  playersSection.classList.add('reveal');
+  populatePlayerSectionLanguages(languagesChosen);
+});
+
+continueButtonReturn.addEventListener('click', () => {
+  playClickSound();
+  populatePlayersSectionData();
+  returnSection.classList.remove('reveal');
+  playersSection.classList.add('reveal');
+  populatePlayerSectionLanguages(languagesChosenReturn);
 });
 
 // Welcome back return section event listeners
@@ -221,9 +307,36 @@ notYouButton.addEventListener('click', () => {
   window.location.reload();
 });
 
-challengeButtonReturn.addEventListener('click', () => {
+// Players section event listeners
+playersXButton.addEventListener('click', () => {
   playClickSound();
-  populatePlayersSectionData();
+  const userConfirmed = window.confirm(
+    `Would you like to return to enter your details again?`
+  );
+  if (userConfirmed) {
+    setTimeout(() => {
+      playersSection.classList.remove('reveal');
+      storage.clearLocalStorage();
+      welcomeSection.classList.add('reveal');
+      playersLanguageText.textContent = `Select`;
+    }, 60);
+  } else {
+    return;
+  }
+});
+
+availablePlayersToggleButton.addEventListener('click', () => {
+  playClickSound();
+  // toggleOnlinePlayersOnly();
+  toggleClass(availablePlayerToggleGraphic, 'toggled_right');
+  toggleClass(availablePlayersToggleButton, 'toggled_right_button');
+});
+
+skillPlayersToggleButton.addEventListener('click', () => {
+  playClickSound();
+  // toggleFreePlayersOnly();
+  toggleClass(skillPlayersToggleGraphic, 'toggled_right');
+  toggleClass(skillPlayersToggleButton, 'toggled_right_button');
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -295,6 +408,7 @@ function addLanguageFlags(flag = 0) {
     }
   } else {
     playerInfoFlagsReturn.innerHTML = flags.join('');
+    playerInfoFlagsNext.innerHTML = flags.join('');
   }
 }
 
@@ -307,6 +421,25 @@ function threeLanguagesChosen() {
     console.log(languagesChosen);
     return;
   }
+}
+
+function retrieveLanguageName(languageData) {
+  let languageName = '';
+  switch (languageData) {
+    case 'en':
+      languageName = 'English';
+      break;
+    case 'es':
+      languageName = 'Espanol';
+      break;
+    case 'zh':
+      languageName = '中文';
+      break;
+    case 'ja':
+      languageName = '日本語';
+      break;
+  }
+  return languageName;
 }
 
 function createUserData() {
@@ -380,6 +513,98 @@ function welcomeBackPopulateFields() {
 
 function populatePlayersSectionData() {
   const storedObject = storage.loadLocalStorage();
+  playerInfoNameNext.textContent = storedObject.displayName;
+  playerInfoSkillNext.textContent = storedObject.skillLevel;
+  languagesChosenReturn = storedObject.languages;
+  console.log(languagesChosenReturn);
+  addLanguageFlags(1);
+}
+
+populatePlayersSectionData();
+
+const englishHTML = `<p
+class="players_language_choice no_select"
+data-language="en"
+title="English"
+>
+English
+</p>`;
+
+const spanishHTML = `<p
+                      class="players_language_choice no_select"
+                      data-language="es"
+                      title="Spanish"
+                    >
+                      Espanol
+                    </p>`;
+
+const chineseHTML = `<p
+                      class="players_language_choice no_select"
+                      data-language="zh"
+                      title="Chinese"
+                    >
+                      中文
+                    </p>`;
+
+const japaneseHTML = `<p
+                      class="players_language_choice no_select"
+                      data-language="ja"
+                      title="Japanese"
+                    >
+                      日本語
+                    </p>`;
+
+function populatePlayerSectionLanguages(languagesChosen) {
+  let languagesHTML = '';
+  if (languagesChosen.includes('en')) {
+    languagesHTML += englishHTML;
+  }
+  if (languagesChosen.includes('es')) {
+    languagesHTML += spanishHTML;
+  }
+  if (languagesChosen.includes('zh')) {
+    languagesHTML += chineseHTML;
+  }
+  if (languagesChosen.includes('ja')) {
+    languagesHTML += japaneseHTML;
+  }
+  console.log(languagesHTML);
+  playersLanguagePanel.innerHTML = languagesHTML;
+  languageItems = playersLanguagePanel.querySelectorAll(
+    '.players_language_choice'
+  );
+  languageItems.forEach((current) => {
+    current.addEventListener('click', () => {
+      playClickSound();
+
+      const languageValue = current.dataset.language;
+      const languageName = retrieveLanguageName(languageValue);
+
+      if (current.classList.contains('accordion_selected')) {
+        languageItems.forEach((current2) => {
+          current2.classList.remove('accordion_selected');
+        });
+        languageFilter = 'en';
+        playersLanguageText.textContent = `Select`;
+        closeAccordion(playersLanguagePanel, playersLanguageSvg);
+        return;
+      } else {
+        languageItems.forEach((current2) => {
+          current2.classList.remove('accordion_selected');
+        });
+        current.classList.add('accordion_selected');
+        languageFilter = languageValue;
+
+        playersLanguageText.textContent = languageName;
+        closeAccordion(playersLanguagePanel, playersLanguageSvg);
+        return;
+      }
+    });
+  });
+}
+
+function populatePlayersCurrentlyActive() {
+  console.log(`Populate players currently active div`);
 }
 
 // CODE END

@@ -159,12 +159,12 @@
               <div id="player_info_flags"></div>
             </div>
             <div class="step4">
-              <p class="welcome_button_challenge no_select" title="Challenge">
-                Challenge an opponent
+              <p class="welcome_continue_button no_select" title="Continue">
+                Continue
                 <svg
-                  class="challenge_svg"
-                  width="40px"
-                  height="40px"
+                  class="continue_svg"
+                  width="50px"
+                  height="50px"
                   viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -181,7 +181,7 @@
             </div>
           </section>
           <!-- WELCOME RETURN SECTION -->
-          <section class="welcome_return_section no_pointer_events">
+          <section class="return_section no_pointer_events">
             <p class="welcome_title no_select">WELCOME BACK</p>
             <p class="welcome_text you_info_text_return no_select">YOU</p>
             <div id="you_info_return">
@@ -192,15 +192,12 @@
               <div id="player_info_flags_return"></div>
             </div>
             <p class="not_you_button">Not you?<br />Click here</p>
-            <p
-              class="welcome_button_challenge_return no_select"
-              title="Challenge"
-            >
-              Challenge an opponent
+            <p class="return_continue_button no_select" title="Continue">
+              Continue
               <svg
-                class="challenge_return_svg"
-                width="40px"
-                height="40px"
+                class="return_continue_svg"
+                width="50px"
+                height="50px"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -217,64 +214,8 @@
           </section>
           <!-- PLAYERS SECTION -->
           <section class="players_section no_pointer_events">
-            <div class="player_filters">
-              <strong>FILTERS</strong>
-              <div class="filter_div">
-                <div class="toggle_online">
-                  <p>HIDE OFFLINE</p>
-                  <div class="toggle_online_graphic">
-                    <p class="slider_button"></p>
-                  </div>
-                </div>
-                <div class="toggle_free">
-                  <p>HIDE INGAME</p>
-                  <div class="toggle_free_graphic">
-                    <p class="slider_button"></p>
-                  </div>
-                </div>
-                <div class="toggle_language">
-                  <p>LANGUAGE</p>
-                  <div class="toggle_language_box">
-                    <p>ENGLISH</p>
-                    <svg
-                      class="language_selector_button"
-                      width="18px"
-                      height="18px"
-                      viewBox="0 0 48 48"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <title>Select Language</title>
-                      <g id="Layer_2" data-name="Layer 2">
-                        <g id="invisible_box" data-name="invisible box">
-                          <rect width="48" height="48" fill="none" />
-                        </g>
-                        <g id="icons_Q2" data-name="icons Q2">
-                          <path
-                            d="M24,46A22,22,0,1,0,2,24,21.9,21.9,0,0,0,24,46ZM14.3,19.8A2.5,2.5,0,0,1,16,19H32a2.5,2.5,0,0,1,1.7.8,2.1,2.1,0,0,1-.4,2.7l-7.9,7.9a1.9,1.9,0,0,1-2.8,0l-7.9-7.9A2.1,2.1,0,0,1,14.3,19.8Z"
-                          />
-                        </g>
-                      </g>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="active_friends">
-              <strong>FRIENDS</strong>
-              <div class="players_display players_friends"></div>
-            </div>
-            <div class="active_played_before">
-              <strong>PLAYED BEFORE</strong>
-              <div class="players_display players_played_before"></div>
-            </div>
-            <div class="active_players">
-              <strong>CURRENTLY ACTIVE</strong>
-              <div class="players_display players_currently_active"></div>
-            </div>
-            <div class="players_x_button x_button no_pointer_events">X</div>
-          </section>
-          <!-- PLAYERS SECTION TEST -->
-          <section class="players_section_test no_pointer_events">
+            <p class="welcome_text">CHALLENGERS</p>
+            <p class="welcome_text you_info_text no_select">YOU</p>
             <div id="you_info_next">
               <div id="player_info_next">
                 <p class="player_info_name_next no_select">Guest</p>
@@ -285,26 +226,26 @@
             <div class="player_filters">
               <strong>FILTERS</strong>
               <div class="filter_div">
-                <div class="toggle_online">
-                  <p>HIDE OFFLINE</p>
-                  <div class="toggle_online_graphic">
+                <div class="toggle_available">
+                  <p>AVAILABLE</p>
+                  <div class="toggle_available_graphic">
                     <p class="slider_button"></p>
                   </div>
                 </div>
-                <div class="toggle_free">
-                  <p>HIDE INGAME</p>
-                  <div class="toggle_free_graphic">
+                <div class="toggle_skill">
+                  <p>SAME LEVEL</p>
+                  <div class="toggle_skill_graphic">
                     <p class="slider_button"></p>
                   </div>
                 </div>
                 <div class="toggle_language">
                   <p>LANGUAGE</p>
-                  <div class="toggle_language_box">
-                    <p>ENGLISH</p>
+                  <button id="players_language_accordion">
+                    <p id="players_language_text">Select</p>
                     <svg
-                      class="language_selector_button"
-                      width="18px"
-                      height="18px"
+                      id="players_language_svg"
+                      width="14px"
+                      height="14px"
                       viewBox="0 0 48 48"
                       xmlns="http://www.w3.org/2000/svg"
                     >
@@ -320,24 +261,49 @@
                         </g>
                       </g>
                     </svg>
+                  </button>
+                  <div class="players_language_panel">
+                    <p
+                      class="players_language_choice no_select"
+                      data-language="en"
+                      title="English"
+                    >
+                      English
+                    </p>
+                    <p
+                      class="players_language_choice no_select"
+                      data-language="es"
+                      title="Spanish"
+                    >
+                      Espanol
+                    </p>
+                    <p
+                      class="players_language_choice no_select"
+                      data-language="zh"
+                      title="Chinese"
+                    >
+                      中文
+                    </p>
+                    <p
+                      class="players_language_choice no_select"
+                      data-language="ja"
+                      title="Japanese"
+                    >
+                      日本語
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
             <div class="active_friends">
-              <div class="players_display_test players_friends"></div>
+              <div class="players_display players_active"></div>
             </div>
-            <p
-              class="welcome_button_challenge_return no_select"
-              title="Challenge"
-            >
-              Challenge an opponent
+            <div class="challenge_button no_select" title="Challenge">
+              <p>Challenge opponent</p>
               <svg
-                class="challenge_return_svg"
                 width="36px"
                 height="36px"
-                viewBox="0 0 24 24"
-                fill="none"
+                viewBox="0 0 512 512"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
@@ -345,8 +311,8 @@
                   d="M19.75 14.438c59.538 112.29 142.51 202.35 232.28 292.718l3.626 3.75.063-.062c21.827 21.93 44.04 43.923 66.405 66.25-18.856 14.813-38.974 28.2-59.938 40.312l28.532 28.53 68.717-68.717c42.337 27.636 76.286 63.646 104.094 105.81l28.064-28.06c-42.47-27.493-79.74-60.206-106.03-103.876l68.936-68.938-28.53-28.53c-11.115 21.853-24.413 42.015-39.47 60.593-43.852-43.8-86.462-85.842-130.125-125.47-.224-.203-.432-.422-.656-.625C183.624 122.75 108.515 63.91 19.75 14.437zm471.875 0c-83.038 46.28-154.122 100.78-221.97 161.156l22.814 21.562 56.81-56.812 13.22 13.187-56.438 56.44 24.594 23.186c61.802-66.92 117.6-136.92 160.97-218.72zm-329.53 125.906l200.56 200.53c-4.36 4.443-8.84 8.793-13.405 13.032L148.875 153.53l13.22-13.186zm-76.69 113.28l-28.5 28.532 68.907 68.906c-26.29 43.673-63.53 76.414-106 103.907l28.063 28.06c27.807-42.164 61.758-78.174 104.094-105.81l68.718 68.717 28.53-28.53c-20.962-12.113-41.08-25.5-59.937-40.313 17.865-17.83 35.61-35.433 53.157-52.97l-24.843-25.655-55.47 55.467c-4.565-4.238-9.014-8.62-13.374-13.062l55.844-55.844-24.53-25.374c-18.28 17.856-36.602 36.06-55.158 54.594-15.068-18.587-28.38-38.758-39.5-60.625z"
                 />
               </svg>
-            </p>
-            <div class="players_x_button x_button no_pointer_events">X</div>
+            </div>
+            <div class="players_x_button x_button">X</div>
           </section>
           <!-- CHAT SECTION -->
           <section class="chat_section">
