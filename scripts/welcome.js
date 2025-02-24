@@ -12,6 +12,7 @@ console.log(`welcome.js running`);
 
 import { playClickSound, toggleClass } from './script.js';
 import * as storage from './localStorage.js';
+import * as modals from './modals.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -103,6 +104,12 @@ const playersLanguagePanel = playersLanguageAccordion.nextElementSibling;
 const playersLanguageText = document.getElementById('players_language_text');
 const playersLanguageSvg = document.getElementById('players_language_svg');
 
+// Test button elements
+const testButton2 = document.querySelector('.test_button2');
+const testButton3 = document.querySelector('.test_button3');
+const testButton4 = document.querySelector('.test_button4');
+const testButton5 = document.querySelector('.test_button5');
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
 
@@ -120,6 +127,22 @@ let sessionLanguages = [];
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // EVENT LISTENERS
+
+// Test button event listeners
+testButton3.addEventListener('click', () => {
+  playClickSound();
+  modals.changeModalContent('Challenge');
+});
+
+testButton4.addEventListener('click', () => {
+  playClickSound();
+  modals.changeModalContent('ChallengeReceived');
+});
+
+testButton5.addEventListener('click', () => {
+  playClickSound();
+  modals.changeModalContent('ForfeitRequest');
+});
 
 // Player name form event listeners
 welcomeNameForm.addEventListener('keydown', (event) => {
@@ -287,10 +310,10 @@ languageChoices.forEach((current) => {
 continueButton.addEventListener('click', () => {
   playClickSound();
   createUserData();
-  populatePlayersSectionData();
-  welcomeSection.classList.remove('reveal');
-  playersSection.classList.add('reveal');
-  populatePlayerSectionLanguages(languagesChosen);
+  if (result === true) {
+  } else {
+    return;
+  }
 });
 
 continueButtonReturn.addEventListener('click', () => {
@@ -453,28 +476,35 @@ function createUserData() {
     sessionSkillLevel !== '' &&
     sessionLanguages.length > 0
   ) {
-    const userConfirmed = window.confirm(
-      `Are you sure you want to be known as ${sessionDisplayName}?`
-    );
-    if (userConfirmed) {
-      const storageData = storage.loadLocalStorage();
-      console.log(`Storage data = ${JSON.stringify(storageData)}`);
-      storage.setLocalStorage(
-        sessionDisplayName,
-        sessionSkillLevel,
-        sessionLanguages
-      );
-      const updatedStorageData = storage.loadLocalStorage();
-      console.log(
-        `Updated storage data = ${JSON.stringify(updatedStorageData)}`
-      );
-      console.log(updatedStorageData.displayName);
-      console.log(updatedStorageData.skillLevel);
-      console.log(...updatedStorageData.languages);
-      return;
-    } else {
-      return;
-    }
+    const data = {
+      displayName: sessionDisplayName,
+      skillLevel: sessionSkillLevel,
+      languages: sessionLanguages,
+      languagesChosen: languagesChosen,
+    };
+    modals.changeModalContent('ConfirmName', data);
+    // const userConfirmed = window.confirm(
+    //   `Are you sure you want to be known as ${sessionDisplayName}?`
+    // );
+    // if (userConfirmed) {
+    //   const storageData = storage.loadLocalStorage();
+    //   console.log(`Storage data = ${JSON.stringify(storageData)}`);
+    //   storage.setLocalStorage(
+    //     sessionDisplayName,
+    //     sessionSkillLevel,
+    //     sessionLanguages
+    //   );
+    //   const updatedStorageData = storage.loadLocalStorage();
+    //   console.log(
+    //     `Updated storage data = ${JSON.stringify(updatedStorageData)}`
+    //   );
+    //   console.log(updatedStorageData.displayName);
+    //   console.log(updatedStorageData.skillLevel);
+    //   console.log(...updatedStorageData.languages);
+    //   return;
+    // } else {
+    //   return;
+    // }
   } else {
     window.alert(
       `Please make sure you have entered a name, chosen a skill level, and chosen at least one language`
@@ -511,7 +541,7 @@ function welcomeBackPopulateFields() {
   addLanguageFlags(1);
 }
 
-function populatePlayersSectionData() {
+export function populatePlayersSectionData() {
   const storedObject = storage.loadLocalStorage();
   playerInfoNameNext.textContent = storedObject.displayName;
   playerInfoSkillNext.textContent = storedObject.skillLevel;
@@ -554,7 +584,7 @@ const japaneseHTML = `<p
                       日本語
                     </p>`;
 
-function populatePlayerSectionLanguages(languagesChosen) {
+export function populatePlayerSectionLanguages(languagesChosen) {
   let languagesHTML = '';
   if (languagesChosen.includes('en')) {
     languagesHTML += englishHTML;

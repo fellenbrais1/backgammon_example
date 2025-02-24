@@ -58,7 +58,10 @@ html {
 
 /* DEBUG BUTTON ELEMENTS */
 .test_button1,
-.test_button2 {
+.test_button2,
+.test_button3,
+.test_button4,
+.test_button5 {
   position: absolute;
   top: 10px;
   height: 40px;
@@ -82,13 +85,31 @@ html {
   left: 120px;
 }
 
+.test_button3 {
+  left: 230px;
+}
+
+.test_button4 {
+  left: 340px;
+}
+
+.test_button5 {
+  left: 450px;
+}
+
 .test_button1:hover,
-.test_button2:hover {
+.test_button2:hover,
+.test_button3:hover,
+.test_button4:hover,
+.test_button5:hover {
   box-shadow: 0px 0px 20px white;
 }
 
 .test_button1:active,
-.test_button2:active {
+.test_button2:active,
+.test_button3:active,
+.test_button4:active,
+.test_button5:active {
   background-color: var(--active_button_gold);
 }
 
@@ -167,7 +188,7 @@ html {
   height: 40px;
   width: 400px;
   background-color: var(--active_button_gold);
-  z-index: 9999;
+  z-index: 8;
   border: solid 2px grey;
   border-radius: 9999px;
   opacity: 0.5;
@@ -659,45 +680,126 @@ html {
   cursor: pointer;
 }
 
+/* MODAL SECTION */
+.modal_section {
+  position: absolute;
+  display: none;
+  top: 127px;
+  left: 70px;
+  z-index: 9999;
+  text-align: center;
+  opacity: 0;
+  /* background-color: orange; */
+  transition: opacity 1s ease-in-out;
+  cursor: default;
+}
+
+/* TODO */
+/* CODE IN PROGRESS */
+
+.modal_message_section {
+  position: absolute;
+  height: 250px;
+  width: 540px;
+  border: solid 2px white;
+  border-radius: 25px;
+  z-index: 9;
+  background-color: orange;
+}
+
+.modal_section_message {
+  font-size: 20px;
+  margin-top: 24px;
+  text-align: center;
+  text-justify: center;
+  color: white;
+}
+
+.modal_section_buttons {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 120px 120px;
+}
+
+.modal_section_button1,
+.modal_section_button2 {
+  background-color: green;
+  width: 120px;
+  height: 40px;
+  border-radius: 9999px;
+  border: solid 2px white;
+}
+
+.modal_section_button2 {
+  background-color: var(--youtube_red);
+}
+
+/* PAGE RESET CLASSES */
+#overlay {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  background-color: rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
+}
+
+.modal_section::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: auto;
+}
+
 /* CHALLENGE SECTION */
 .challenge_section {
   position: absolute;
-  top: 127px;
-  left: 70px;
   height: 250px;
   width: 540px;
-  z-index: 9;
-  padding-top: 16px;
   border: solid 2px white;
   border-radius: 25px;
+  z-index: 9;
   background-color: var(--youtube_red);
-  text-align: center;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-  cursor: default;
 }
 
 .challenge_block {
   display: grid;
   grid-template-rows: 50px 40px 40px 60px;
   row-gap: 10px;
+  z-index: 9;
 }
 
 .challenge_text {
   font-size: 20px;
   color: white;
   font-weight: bold;
+  z-index: 9;
 }
 
 .challenge_text_names {
   font-size: 20px;
   color: white;
   font-weight: bold;
+  z-index: 9;
 }
 
 .challenge_text_big {
   font-size: 24px;
   font-weight: bold;
+  margin-top: 26px;
+  z-index: 9;
 }
 
 .challenge_text_small {
@@ -728,20 +830,12 @@ html {
 
 /* CHALLENGE RECEIVED SECTION */
 .challenge_received_section {
-  position: absolute;
-  top: 127px;
-  left: 70px;
   height: 250px;
   width: 540px;
-  z-index: 9;
   padding-top: 24px;
   border: solid 2px white;
   border-radius: 25px;
   background-color: purple;
-  text-align: center;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-  cursor: default;
 }
 
 .challenge_received_block {
@@ -1024,20 +1118,12 @@ html {
 
 /* FORFEIT SECTION */
 .forfeit_section {
-  position: absolute;
-  top: 127px;
-  left: 70px;
   height: 250px;
   width: 540px;
   padding-top: 24px;
-  z-index: 9;
-  text-align: center;
   background-color: green;
   border: solid 2px white;
   border-radius: 25px;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-  cursor: default;
 }
 
 .forfeit_block {
@@ -1282,6 +1368,7 @@ html {
   position: absolute;
   bottom: 510px;
   right: 75px;
+  z-index: 1;
   color: white;
   opacity: 0;
   transition: opacity 2s ease-in-out;
@@ -1298,21 +1385,6 @@ html {
   height: 100%;
   width: 100%;
   border-radius: 25px;
-}
-
-/* PAGE RESET CLASSES */
-#overlay {
-  display: none;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 9999;
-  background-color: rgba(0, 0, 0, 0.5);
-  pointer-events: auto;
 }
 
 /* HELPER CLASSES */

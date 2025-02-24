@@ -32,9 +32,9 @@
   </head>
   <body>
     <!-- MAIN PAGE ELEMENTS -->
-    <div id="overlay"></div>
     <div class="pagebox">
       <!-- MAIN DISPLAY -->
+      <!-- <div id="overlay"></div> -->
       <div class="main_display">
         <div class="main_display_left">
           <!-- WELCOME SECTION -->
@@ -450,60 +450,11 @@
           </section>
         </div>
         <div class="main_display_middle">
-          <!-- CHALLENGE SECTION -->
-          <section class="challenge_section no_pointer_events">
-            <div class="challenge_block">
-              <p class="challenge_text_big">CHALLENGE SENT</p>
-              <p class="challenge_text_names"></p>
-              <p class="challenge_text">Waiting for a response...</p>
-              <p class="challenge_button_cancel" title="Cancel Challenge">
-                Cancel
-              </p>
-            </div>
-          </section>
-          <!-- CHALLENGE RECEIVED SECTION -->
-          <section class="challenge_received_section no_pointer_events">
-            <div class="challenge_received_block">
-              <p class="challenge_received_text_big">CHALLENGE RECEIVED</p>
-              <p class="challenge_received_text">
-                {Other player} wants to play a game!
-              </p>
-              <div class="challenge_received_button_div">
-                <p
-                  class="challenge_received_button_accept"
-                  title="Cancel Challenge"
-                >
-                  Accept
-                </p>
-                <p
-                  class="challenge_received_button_decline"
-                  title="Cancel Challenge"
-                >
-                  Decline
-                </p>
-              </div>
-            </div>
-          </section>
-          <!-- FORFEIT SECTION -->
-          <section class="forfeit_section no_pointer_events">
-            <div class="forfeit_block">
-              <p class="forfeit_text_big">FORFEIT GAME?</p>
-              <p class="forfeit_text">
-                Are you sure you want to forfeit the game?
-              </p>
-              <p class="forfeit_text_small">
-                You won't get any points for the game and it will be counted as
-                a loss
-              </p>
-              <div class="forfeit_button_div">
-                <p class="forfeit_button_yes">Forfeit</p>
-                <p class="forfeit_button_no">Cancel</p>
-              </div>
-            </div>
-          </section>
+          <!-- MODAL SECTION -->
+          <section class="modal_section"></section>
           <!-- BOARD ANNOTATIONS SECTION -->
           <section class="board_annotations_section">
-            <p class="board_message">Welcome!</p>
+            <p class="board_message no_select">Welcome!</p>
           </section>
           <!-- GAME BOARD -->
           <div id="content_container" class="no_pointer_events">
@@ -656,6 +607,11 @@
       <!-- TEST BUTTONS -->
       <p class="test_button1 no_select" title="Clear localStorage">TEST 1</p>
       <p class="test_button2 no_select" title="Dad Test Button">TEST 2</p>
+      <p class="test_button3 no_select" title="Challenge Test">Ch</p>
+      <p class="test_button4 no_select" title="Challenge Received Test">
+        Ch Re
+      </p>
+      <p class="test_button5 no_select" title="Forfeit Test">For</p>
     </div>
     <!-- PAGE SOUNDS -->
     <audio id="button_click_sound" src="./sounds/mouse_click.wav"></audio>
