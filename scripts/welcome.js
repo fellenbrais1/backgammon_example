@@ -277,35 +277,6 @@ languageChoices.forEach((current) => {
   });
 });
 
-// playersLanguageChoices.forEach((current) => {
-//   current.addEventListener('click', () => {
-//     playClickSound();
-
-//     const languageValue = current.dataset.language;
-//     const languageName = retrieveLanguageName(languageValue);
-
-//     if (current.classList.contains('accordion_selected')) {
-//       playersLanguageChoices.forEach((current2) => {
-//         current2.classList.remove('accordion_selected');
-//       });
-//       languageFilter = 'en';
-//       playersLanguageText.textContent = `Select`;
-//       closeAccordion(playersLanguagePanel, playersLanguageSvg);
-//       return;
-//     } else {
-//       playersLanguageChoices.forEach((current2) => {
-//         current2.classList.remove('accordion_selected');
-//       });
-//       current.classList.add('accordion_selected');
-//       languageFilter = languageValue;
-
-//       playersLanguageText.textContent = languageName;
-//       closeAccordion(playersLanguagePanel, playersLanguageSvg);
-//       return;
-//     }
-//   });
-// });
-
 // Continue button event listeners
 continueButton.addEventListener('click', () => {
   playClickSound();
@@ -319,6 +290,16 @@ continueButton.addEventListener('click', () => {
 continueButtonReturn.addEventListener('click', () => {
   playClickSound();
   populatePlayersSectionData();
+
+  const storedObject = storage.loadLocalStorage();
+  const data = {
+    displayName: storedObject.displayName,
+    skillLevel: storedObject.skillLevel,
+    languages: storedObject.languages,
+    languagesChosen: languagesChosenReturn,
+  };
+  modals.changeModalContent('ConfirmName', data);
+
   returnSection.classList.remove('reveal');
   playersSection.classList.add('reveal');
   populatePlayerSectionLanguages(languagesChosenReturn);
@@ -483,28 +464,6 @@ function createUserData() {
       languagesChosen: languagesChosen,
     };
     modals.changeModalContent('ConfirmName', data);
-    // const userConfirmed = window.confirm(
-    //   `Are you sure you want to be known as ${sessionDisplayName}?`
-    // );
-    // if (userConfirmed) {
-    //   const storageData = storage.loadLocalStorage();
-    //   console.log(`Storage data = ${JSON.stringify(storageData)}`);
-    //   storage.setLocalStorage(
-    //     sessionDisplayName,
-    //     sessionSkillLevel,
-    //     sessionLanguages
-    //   );
-    //   const updatedStorageData = storage.loadLocalStorage();
-    //   console.log(
-    //     `Updated storage data = ${JSON.stringify(updatedStorageData)}`
-    //   );
-    //   console.log(updatedStorageData.displayName);
-    //   console.log(updatedStorageData.skillLevel);
-    //   console.log(...updatedStorageData.languages);
-    //   return;
-    // } else {
-    //   return;
-    // }
   } else {
     window.alert(
       `Please make sure you have entered a name, chosen a skill level, and chosen at least one language`

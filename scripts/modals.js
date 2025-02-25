@@ -29,6 +29,15 @@ const confirmNameHTML = `<section class='modal_message_section'><p class="modal_
               </div>
               </section>`;
 
+const goBackFromPlayersSectionHTML = `<section class='modal_message_section'><p class="modal_section_message no_select">Are you sure you want to be known as <u class='modal_name'>${sessionDisplayName}</u>?</p>
+              <div class='modal_section_buttons'>
+              <p class="modal_section_button1 no_select" title='Yes'>Yes</p>
+              <p class="modal_section_button2 no_select" title="No">
+                No
+              </p>
+              </div>
+              </section>`;
+
 const challengeModalHTML = `<section class="challenge_section">
             <div class="challenge_block">
               <p class="challenge_text_big no_select">CHALLENGE SENT</p>
