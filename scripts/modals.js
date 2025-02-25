@@ -6,6 +6,7 @@ import { playClickSound } from './script.js';
 import {
   populatePlayersSectionData,
   populatePlayerSectionLanguages,
+  playersLanguageText,
 } from './welcome.js';
 import * as storage from './localStorage.js';
 
@@ -22,17 +23,17 @@ let sessionDisplayName = '';
 
 const confirmNameHTML = `<section class='modal_message_section'><p class="modal_section_message no_select">Are you sure you want to be known as <u class='modal_name'>${sessionDisplayName}</u>?</p>
               <div class='modal_section_buttons'>
-              <p class="modal_section_button1 no_select" title='Yes'>Yes</p>
-              <p class="modal_section_button2 no_select" title="No">
+              <p class="modal_section_button1 button no_select" title='Yes'>Yes</p>
+              <p class="modal_section_button2 button no_select" title="No">
                 No
               </p>
               </div>
               </section>`;
 
-const goBackFromPlayersSectionHTML = `<section class='modal_message_section'><p class="modal_section_message no_select">Are you sure you want to be known as <u class='modal_name'>${sessionDisplayName}</u>?</p>
+const goBackFromPlayersSectionHTML = `<section class='modal_message_section'><p class="modal_section_message no_select">Would you like to return to modify your details?</p>
               <div class='modal_section_buttons'>
-              <p class="modal_section_button1 no_select" title='Yes'>Yes</p>
-              <p class="modal_section_button2 no_select" title="No">
+              <p class="modal_section_button1 button no_select" title='Yes'>Yes</p>
+              <p class="modal_section_button2 button no_select" title="No">
                 No
               </p>
               </div>
@@ -43,7 +44,7 @@ const challengeModalHTML = `<section class="challenge_section">
               <p class="challenge_text_big no_select">CHALLENGE SENT</p>
               <p class="challenge_text_names no_select"></p>
               <p class="challenge_text no_select">Waiting for a response...</p>
-              <p class="challenge_button_cancel no_select" title="Cancel Challenge">
+              <p class="challenge_button_cancel button no_select" title="Cancel Challenge">
                 Cancel
               </p>
             </div>
@@ -57,13 +58,13 @@ const challengeReceivedModalHTML = `<section class="challenge_received_section">
               </p>
               <div class="challenge_received_button_div">
                 <p
-                  class="challenge_received_button_accept no_select"
+                  class="challenge_received_button_accept button no_select"
                   title="Cancel Challenge"
                 >
                   Accept
                 </p>
                 <p
-                  class="challenge_received_button_decline no_select"
+                  class="challenge_received_button_decline button no_select"
                   title="Cancel Challenge"
                 >
                   Decline
@@ -83,8 +84,8 @@ const forfeitModalHTML = `<section class="forfeit_section">
                 a loss
               </p>
               <div class="forfeit_button_div">
-                <p class="forfeit_button_yes no_select">Forfeit</p>
-                <p class="forfeit_button_no no_select">Cancel</p>
+                <p class="forfeit_button_yes button no_select">Forfeit</p>
+                <p class="forfeit_button_no button no_select">Cancel</p>
               </div>
             </div>
           </section>`;
@@ -143,6 +144,41 @@ export function changeModalContent(tag = 'Challenge', data = '') {
         setTimeout(() => {
           removeModal();
         }, 2000);
+      });
+
+      break;
+
+    case 'Return':
+      modalSection.innerHTML = goBackFromPlayersSectionHTML;
+      modalSection.classList.add('reveal');
+
+      const returnYesButton = modalSection.querySelector(
+        '.modal_section_button1'
+      );
+      const returnNoButton = modalSection.querySelector(
+        '.modal_section_button2'
+      );
+
+      returnYesButton.addEventListener('click', () => {
+        playClickSound();
+        console.log(`Returning to the welcome section`);
+        playersSection.classList.remove('reveal');
+        welcomeSection.classList.add('reveal');
+        storage.clearLocalStorage();
+        playersLanguageText.textContent = `Select`;
+        setTimeout(() => {
+          removeModal();
+        }, 2000);
+        return;
+      });
+
+      returnNoButton.addEventListener('click', () => {
+        playClickSound();
+        console.log(`NOT returning to the welcome section`);
+        setTimeout(() => {
+          removeModal();
+        }, 2000);
+        return;
       });
 
       break;

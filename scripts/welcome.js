@@ -101,7 +101,9 @@ const playersLanguageAccordion = document.getElementById(
   'players_language_accordion'
 );
 const playersLanguagePanel = playersLanguageAccordion.nextElementSibling;
-const playersLanguageText = document.getElementById('players_language_text');
+export const playersLanguageText = document.getElementById(
+  'players_language_text'
+);
 const playersLanguageSvg = document.getElementById('players_language_svg');
 
 // Test button elements
@@ -281,10 +283,6 @@ languageChoices.forEach((current) => {
 continueButton.addEventListener('click', () => {
   playClickSound();
   createUserData();
-  if (result === true) {
-  } else {
-    return;
-  }
 });
 
 continueButtonReturn.addEventListener('click', () => {
@@ -314,19 +312,7 @@ notYouButton.addEventListener('click', () => {
 // Players section event listeners
 playersXButton.addEventListener('click', () => {
   playClickSound();
-  const userConfirmed = window.confirm(
-    `Would you like to return to enter your details again?`
-  );
-  if (userConfirmed) {
-    setTimeout(() => {
-      playersSection.classList.remove('reveal');
-      storage.clearLocalStorage();
-      welcomeSection.classList.add('reveal');
-      playersLanguageText.textContent = `Select`;
-    }, 60);
-  } else {
-    return;
-  }
+  modals.changeModalContent('Return');
 });
 
 availablePlayersToggleButton.addEventListener('click', () => {

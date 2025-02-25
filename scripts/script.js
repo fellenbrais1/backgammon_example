@@ -112,6 +112,7 @@ window.addEventListener('load', () => {
 testButton1.addEventListener('click', () => {
   console.log(`Contents of localStorageObject reset to default`);
   clearLocalStorage();
+  window.location.reload();
 });
 
 testButton2.addEventListener('click', () => {

@@ -48,14 +48,6 @@ html {
   cursor: pointer;
 }
 
-.x_button:hover {
-  box-shadow: 0px 0px 20px white;
-}
-
-.x_button:active {
-  background-color: var(--active_button_gold);
-}
-
 /* DEBUG BUTTON ELEMENTS */
 .test_button1,
 .test_button2,
@@ -95,22 +87,6 @@ html {
 
 .test_button5 {
   left: 450px;
-}
-
-.test_button1:hover,
-.test_button2:hover,
-.test_button3:hover,
-.test_button4:hover,
-.test_button5:hover {
-  box-shadow: 0px 0px 20px white;
-}
-
-.test_button1:active,
-.test_button2:active,
-.test_button3:active,
-.test_button4:active,
-.test_button5:active {
-  background-color: var(--active_button_gold);
 }
 
 /* MAIN PAGE CONTAINER */
@@ -266,14 +242,6 @@ html {
   transform: translateY(-6px);
 }
 
-.challenge_button:hover {
-  box-shadow: 0px 0px 20px white;
-}
-
-.challenge_button:active {
-  background-color: var(--active_button_gold);
-}
-
 .welcome_name_form {
   margin-top: 4px;
   outline: 2px solid black;
@@ -342,16 +310,6 @@ html {
   transform: translateX(0px) translateY(-6px);
 }
 
-.welcome_continue_button:hover,
-.return_continue_button:hover {
-  box-shadow: 0px 0px 20px white;
-}
-
-.welcome_continue_button:active,
-.return_continue_button:active {
-  background-color: var(--active_button_gold);
-}
-
 #player_info,
 #player_info_next {
   display: grid;
@@ -412,14 +370,6 @@ html {
   font-size: 18px;
   color: white;
   cursor: pointer;
-}
-
-.not_you_button:hover {
-  box-shadow: 0px 0px 20px white;
-}
-
-.not_you_button:active {
-  background-color: var(--active_button_gold);
 }
 
 /* ACCORDION ELEMENTS */
@@ -689,7 +639,6 @@ html {
   z-index: 9999;
   text-align: center;
   opacity: 0;
-  /* background-color: orange; */
   transition: opacity 1s ease-in-out;
   cursor: default;
 }
@@ -709,23 +658,30 @@ html {
 
 .modal_section_message {
   font-size: 20px;
-  margin-top: 24px;
+  margin-top: 48px;
   text-align: center;
   text-justify: center;
   color: white;
+  font-weight: bold;
 }
 
 .modal_section_buttons {
-  margin-top: 24px;
+  margin-top: 48px;
   display: grid;
-  grid-template-columns: 120px 120px;
+  grid-template-columns: 180px 180px;
+  gap: 24px;
+  margin-left: 78px;
+  cursor: pointer;
 }
 
 .modal_section_button1,
 .modal_section_button2 {
+  padding-top: 10px;
   background-color: green;
-  width: 120px;
-  height: 40px;
+  width: 180px;
+  height: 60px;
+  font-size: 24px;
+  font-weight: bold;
   border-radius: 9999px;
   border: solid 2px white;
 }
@@ -820,14 +776,6 @@ html {
   cursor: pointer;
 }
 
-.challenge_button_cancel:hover {
-  box-shadow: 0px 0px 20px white;
-}
-
-.challenge_button_cancel:active {
-  background-color: var(--active_button_gold);
-}
-
 /* CHALLENGE RECEIVED SECTION */
 .challenge_received_section {
   height: 250px;
@@ -883,16 +831,6 @@ html {
 
 .challenge_received_button_decline {
   background-color: var(--youtube_red);
-}
-
-.challenge_received_button_accept:hover,
-.challenge_received_button_decline:hover {
-  box-shadow: 0px 0px 20px white;
-}
-
-.challenge_recieved_button_accept:active,
-.challenge_received_button_decline:active {
-  background-color: var(--active_button_gold);
 }
 
 /* CHAT SECTION ELEMENTS */
@@ -1083,16 +1021,6 @@ html {
   cursor: pointer;
 }
 
-.game_button_backgammon:hover,
-.game_button_murder_mansion:hover {
-  box-shadow: 0px 0px 20px white;
-}
-
-.game_button_backgammon:active,
-.game_button_murder_mansion:active {
-  background-color: var(--active_button_gold);
-}
-
 .game_button_backgammon img,
 .game_button_murder_mansion img {
   height: 100px;
@@ -1174,16 +1102,6 @@ html {
   background-color: var(--button_dark_teal);
 }
 
-.forfeit_button_yes:hover,
-.forfeit_button_no:hover {
-  box-shadow: 0px 0px 20px white;
-}
-
-.forfeit_button_yes:active,
-.forfeit_button_no:active {
-  background-color: var(--active_button_gold);
-}
-
 /* FLOATING BUTTON ELEMENTS */
 .floating_buttons_main {
   display: grid;
@@ -1236,121 +1154,6 @@ html {
   margin: 15px;
 }
 
-/* DICE SECTION */
-/* .dice_section {
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-template-rows: 1fr;
-  position: absolute;
-  top: 324px;
-  height: 180px;
-  width: 250px;
-  border: 2px solid white;
-  border-radius: 25px;
-  background-color: var(--light_felt_green);
-  z-index: 0;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-}
-
-.dice_button_block {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  align-self: left;
-  height: 2rem;
-  width: 100%;
-  margin-top: 2%;
-  margin-bottom: 4%;
-}
-
-.dice_img_block {
-  height: 80%;
-  width: 80%;
-  margin: 0 auto;
-  padding-bottom: 24px;
-}
-
-.dice_img1,
-.dice_img2 {
-  height: 100px;
-  width: 100px;
-  margin: 0 auto;
-  border-radius: 10%;
-}
-
-.dice_img2 {
-  opacity: 1;
-}
-
-.dice_result_display1,
-.dice_result_display2,
-.dice_result_display3,
-.dice_result_display4 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 70px;
-  left: 70px;
-  width: 50px;
-  height: 50px;
-  border: 2px solid white;
-  border-radius: 50%;
-  background-color: var(--youtube_red);
-  color: white;
-  z-index: 1;
-  font-weight: bold;
-  font-size: 40px;
-  transform-origin: center;
-  transition: background-color 1s ease-in-out, transform 1s ease-in-out,
-    left 1s ease-in-out;
-  cursor: pointer;
-}
-
-.dice_result_display2 {
-  left: 190px;
-}
-
-.dice_result_display3 {
-  background-color: purple;
-  left: 15px;
-}
-
-.dice_result_display4 {
-  background-color: purple;
-  left: 135px;
-}
-
-.dice_buttons_div {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  position: absolute;
-  top: 130px;
-  left: 10px;
-  gap: 20px;
-}
-
-.dice_roll_button,
-.dice_skip_button {
-  width: 100px;
-  background-color: var(--active_button_gold);
-  color: white;
-  height: 36px;
-  padding-top: 3px;
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-  border: 2px solid white;
-  border-radius: 25px;
-  cursor: pointer;
-}
-
-.dice_roll_button:hover,
-.dice_skip_button:hover {
-  box-shadow: 0px 0px 20px white;
-} */
-
 /* AD SECTION ELEMENTS */
 .adbox {
   position: absolute;
@@ -1388,6 +1191,14 @@ html {
 }
 
 /* HELPER CLASSES */
+.button:hover {
+  box-shadow: 0px 0px 20px white;
+}
+
+.button:active {
+  background-color: var(--active_button_gold);
+}
+
 .scroll_on {
   transform: translate(0);
 }
