@@ -76,25 +76,12 @@ const playersSection = document.querySelector('.players_section');
 const playerInfoNameNext = document.querySelector('.player_info_name_next');
 const playerInfoSkillNext = document.querySelector('.player_info_skill_next');
 const playerInfoFlagsNext = document.getElementById('player_info_flags_next');
-const challengeButton = document.querySelector('.challenge_button');
+// const challengeButton = document.querySelector('.challenge_button');
 
 // Players section elements
 const playersXButton = document.querySelector('.players_x_button');
-const playersCurrentlyActive = document.querySelector('.players_active');
-const availablePlayerToggleGraphic = document.querySelector(
-  '.toggle_available_graphic'
-);
-const availablePlayersToggleButton = document.querySelector(
-  '.toggle_available_graphic p'
-);
-
-const skillPlayersToggleGraphic = document.querySelector(
-  '.toggle_skill_graphic'
-);
-
-const skillPlayersToggleButton = document.querySelector(
-  '.toggle_skill_graphic p'
-);
+const playersDisplay = document.querySelector('.players_active');
+const playersChallengeButton = document.querySelector('.challenge_button');
 
 // Language section elements
 const playersLanguageAccordion = document.getElementById(
@@ -127,6 +114,55 @@ let sessionDisplayName = 'Guest';
 let sessionSkillLevel = 'Beginner';
 let sessionLanguages = [];
 
+// TODO
+// Mock variables to test player section population
+const mockPlayer1 = {
+  displayName: 'Bob',
+  skillLevel: 'Beginner',
+  languages: ['en', 'zh'],
+  lastOnline: 1740486329,
+};
+
+const mockPlayer2 = {
+  displayName: 'Jubilee',
+  skillLevel: 'Beginner',
+  languages: ['ja', 'es'],
+  lastOnline: 1740481329,
+};
+
+const mockPlayer3 = {
+  displayName: 'Arcturus',
+  skillLevel: 'Beginner',
+  languages: ['en', 'ja'],
+  lastOnline: 1740483329,
+};
+
+const mockPlayer4 = {
+  displayName: 'Jesper',
+  skillLevel: 'Master',
+  languages: ['en'],
+  lastOnline: 1740484329,
+};
+
+const mockPlayer5 = {
+  displayName: 'Ellim',
+  skillLevel: 'Advanced',
+  languages: ['en', 'zh', 'es'],
+  lastOnline: 1740482329,
+};
+
+export let mockPlayerObjects = [
+  mockPlayer1,
+  mockPlayer2,
+  mockPlayer3,
+  mockPlayer4,
+  mockPlayer5,
+];
+
+let playersInGame = [mockPlayer3];
+let playersOnline = [mockPlayer1, mockPlayer2, mockPlayer3, mockPlayer5];
+let DOMElement;
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // EVENT LISTENERS
 
@@ -152,26 +188,23 @@ welcomeNameForm.addEventListener('keydown', (event) => {
     event.preventDefault();
     playClickSound();
     const welcomeName = welcomeNameInput.value;
-    if (welcomeName !== '') {
+    if (welcomeNameInput.value !== '') {
       if (welcomeName.length >= 3) {
         if (welcomeName.length > 12) {
-          window.alert(
-            `Please enter a display name of less than 13 characters`
-          );
+          modals.changeModalContent('NameProblem');
           return;
         } else {
           playerInfoName.textContent = welcomeName;
-          // Adding display name to the user's storage object
           sessionDisplayName = welcomeName;
           step2Div.classList.add('reveal');
           return;
         }
       } else {
-        window.alert(`Please enter a display name of at least 3 characters`);
+        modals.changeModalContent('NameProblem');
         return;
       }
     } else {
-      window.alert(`Please enter a display name to use in the game`);
+      modals.changeModalContent('NoName');
       welcomeNameInput.value = sessionDisplayName;
       return;
     }
@@ -287,8 +320,6 @@ continueButton.addEventListener('click', () => {
 
 continueButtonReturn.addEventListener('click', () => {
   playClickSound();
-  populatePlayersSectionData();
-
   const storedObject = storage.loadLocalStorage();
   const data = {
     displayName: storedObject.displayName,
@@ -297,16 +328,20 @@ continueButtonReturn.addEventListener('click', () => {
     languagesChosen: languagesChosenReturn,
   };
   modals.changeModalContent('ConfirmName', data);
+  // const data = storage.loadLocalStorage();
+  // modals.changeModalContent('ReturnConfirmName', data);
+  // populatePlayersSectionData();
+  // populatePlayers(mockPlayerObjects);
 
-  returnSection.classList.remove('reveal');
-  playersSection.classList.add('reveal');
-  populatePlayerSectionLanguages(languagesChosenReturn);
+  // returnSection.classList.remove('reveal');
+  // playersSection.classList.add('reveal');
+  // populatePlayerSectionLanguages(languagesChosenReturn);
 });
 
 // Welcome back return section event listeners
 notYouButton.addEventListener('click', () => {
-  storage.clearLocalStorage();
-  window.location.reload();
+  playClickSound();
+  modals.changeModalContent('NotYou');
 });
 
 // Players section event listeners
@@ -315,18 +350,9 @@ playersXButton.addEventListener('click', () => {
   modals.changeModalContent('Return');
 });
 
-availablePlayersToggleButton.addEventListener('click', () => {
+playersChallengeButton.addEventListener('click', () => {
   playClickSound();
-  // toggleOnlinePlayersOnly();
-  toggleClass(availablePlayerToggleGraphic, 'toggled_right');
-  toggleClass(availablePlayersToggleButton, 'toggled_right_button');
-});
-
-skillPlayersToggleButton.addEventListener('click', () => {
-  playClickSound();
-  // toggleFreePlayersOnly();
-  toggleClass(skillPlayersToggleGraphic, 'toggled_right');
-  toggleClass(skillPlayersToggleButton, 'toggled_right_button');
+  modals.changeModalContent('NoChallenger');
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -362,28 +388,24 @@ function addLanguageFlags(flag = 0) {
                 class="player_flag_img"
                 src="./images/flags/english_flag.png"
               />`;
-      console.log(`includes english`);
     }
     if (workingLanguages[i].includes('es')) {
       flags[i] = `<img
                 class="player_flag_img"
                 src="./images/flags/spanish_flag.png"
               />`;
-      console.log(`includes spanish`);
     }
     if (workingLanguages[i].includes('zh')) {
       flags[i] = `<img
                 class="player_flag_img"
                 src="./images/flags/chinese_flag.png"
               />`;
-      console.log(`includes chinese`);
     }
     if (workingLanguages[i].includes('ja')) {
       flags[i] = `<img
                 class="player_flag_img"
                 src="./images/flags/japanese_flag.png"
               />`;
-      console.log(`includes japanese`);
     }
   }
   if (flag === 0) {
@@ -433,9 +455,6 @@ function retrieveLanguageName(languageData) {
 }
 
 function createUserData() {
-  console.log(`Session display name: ${sessionDisplayName}`);
-  console.log(`Session skill level: ${sessionSkillLevel}`);
-  console.log(`Session languages: ${sessionLanguages}`);
   if (
     sessionDisplayName !== '' &&
     sessionDisplayName.length > 3 &&
@@ -451,9 +470,7 @@ function createUserData() {
     };
     modals.changeModalContent('ConfirmName', data);
   } else {
-    window.alert(
-      `Please make sure you have entered a name, chosen a skill level, and chosen at least one language`
-    );
+    modals.changeModalContent('IncompleteData');
     return;
   }
 }
@@ -467,12 +484,9 @@ export function checkForLocalStorageObject() {
     storedObject.skillLevel !== '' &&
     storedObject.languages.length > 0
   ) {
-    console.log(`Character data detected`);
-    console.log(JSON.stringify(storedObject));
     welcomeBackPopulateFields();
     return true;
   } else {
-    console.log(`No character data detected`);
     return false;
   }
 }
@@ -482,7 +496,6 @@ function welcomeBackPopulateFields() {
   playerInfoNameReturn.textContent = storedObject.displayName;
   playerInfoSkillReturn.textContent = storedObject.skillLevel;
   languagesChosenReturn = storedObject.languages;
-  console.log(languagesChosenReturn);
   addLanguageFlags(1);
 }
 
@@ -491,7 +504,6 @@ export function populatePlayersSectionData() {
   playerInfoNameNext.textContent = storedObject.displayName;
   playerInfoSkillNext.textContent = storedObject.skillLevel;
   languagesChosenReturn = storedObject.languages;
-  console.log(languagesChosenReturn);
   addLanguageFlags(1);
 }
 
@@ -543,7 +555,6 @@ export function populatePlayerSectionLanguages(languagesChosen) {
   if (languagesChosen.includes('ja')) {
     languagesHTML += japaneseHTML;
   }
-  console.log(languagesHTML);
   playersLanguagePanel.innerHTML = languagesHTML;
   languageItems = playersLanguagePanel.querySelectorAll(
     '.players_language_choice'
@@ -578,8 +589,63 @@ export function populatePlayerSectionLanguages(languagesChosen) {
   });
 }
 
-function populatePlayersCurrentlyActive() {
-  console.log(`Populate players currently active div`);
+export function populatePlayers(playerList) {
+  let HTML;
+  mockPlayerObjects.forEach((player) => {
+    let skillMarker = '🏆';
+    switch (player.skillLevel) {
+      case 'Beginner':
+        skillMarker = '🏆';
+        break;
+      case 'Advanced':
+        skillMarker = '🏆🏆';
+        break;
+      case 'Master':
+        skillMarker = '🏆🏆🏆';
+        break;
+    }
+    const specificClass = 'player_is_' + player.displayName;
+    checkPlayerOnline(player, playersOnline)
+      ? (() => {
+          checkPlayerInGame(player, playersInGame)
+            ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${player.displayName}</p><p class='player_text'>${skillMarker}</p><p class='player_text'>${player.languages}</p></div>`)
+            : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${player.displayName}</p><p class='player_text'>${skillMarker}</p><p class='player_text'>${player.languages}</p></div>`);
+        })()
+      : (HTML = `<div class='player_online_display no_pointer_events ${specificClass}'><p class='is_player_active player_offline'></p><p class='player_text'>${player.displayName}</p><p class='player_text'>${skillMarker}</p><p class='player_text'>${player.languages}</p></div>`);
+    playersDisplay.insertAdjacentHTML('afterbegin', HTML);
+  });
+  addPlayerEventListeners(playerList);
+}
+
+function checkPlayerOnline(player, playersOnline) {
+  if (playersOnline.includes(player)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function checkPlayerInGame(player, playersInGame) {
+  if (playersInGame.includes(player)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function addPlayerEventListeners(playerList) {
+  playerList.forEach((player) => {
+    const element = '.player_is_' + player.displayName;
+    DOMElement = document.querySelectorAll(element);
+    DOMElement.forEach((current) => {
+      current.addEventListener('click', () => {
+        DOMElement.forEach((current2) => {
+          current2.classList.remove('accordion_selected');
+        });
+        current.classList.toggle('accordion_selected');
+      });
+    });
+  });
 }
 
 // CODE END

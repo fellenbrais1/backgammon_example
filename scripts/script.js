@@ -9,8 +9,6 @@ console.log(`script.js running`);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // IMPORTS
-
-// import { startGame } from "../scripts/app.js";
 import {
   welcomeNameForm,
   checkForLocalStorageObject,
@@ -35,7 +33,7 @@ const welcomeSection = document.querySelector('.welcome_section');
 const returnSection = document.querySelector('.return_section');
 
 // Ad section elements
-const adNotification = document.querySelector('.ad_notification');
+export const adNotification = document.querySelector('.ad_notification');
 const adSection = document.querySelector('.adbox');
 const currentAdLink = document.querySelector('.ad_link');
 const currentAdPicture = document.querySelector('.ad_picture');

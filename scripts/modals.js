@@ -1,25 +1,45 @@
+//////////////////////////////////////////////////////////////////////////////////////////
 // CODE START
 
+// NOTES
+// Updates the HTML content of the modal element based on when it is called by changeModalContent()
 'use strict';
+console.log(`modals.js running`);
 
-import { playClickSound } from './script.js';
+//////////////////////////////////////////////////////////////////////////////////////////
+// IMPORTS
+import { playClickSound, adNotification } from './script.js';
 import {
   populatePlayersSectionData,
   populatePlayerSectionLanguages,
   playersLanguageText,
+  populatePlayers,
+  mockPlayerObjects,
 } from './welcome.js';
 import * as storage from './localStorage.js';
 
+//////////////////////////////////////////////////////////////////////////////////////////
+// DOM ELEMENT SELECTION
 const modalSection = document.querySelector('.modal_section');
 const welcomeSection = document.querySelector('.welcome_section');
-
 const playersSection = document.querySelector('.players_section');
 
-const playerInfoNameNext = document.querySelector('.player_info_name_next');
-const playerInfoSkillNext = document.querySelector('.player_info_skill_next');
-const playerInfoFlagsNext = document.getElementById('player_info_flags_next');
-
+//////////////////////////////////////////////////////////////////////////////////////////
+// VARIABLES
 let sessionDisplayName = '';
+
+// HTML variables
+const nameLengthProblemHTML = `<section class='modal_message_section'><p class="modal_section_message big_margin_top no_select">Please enter a display name between 3 and 12 characters long</p>
+<p class="modal_section_button1 button center_modal_button no_select" title='Ok'>Ok</p>
+              </section>`;
+
+const noNameHTML = `<section class='modal_message_section'><p class="modal_section_message big_margin_top no_select">Please enter a display name to use in the game</p>
+              <p class="modal_section_button1 button center_modal_button no_select" title='Ok'>Ok</p>
+                            </section>`;
+
+const incompleteDataHTML = `<section class='modal_message_section'><p class="modal_section_message big_margin_top no_select">Please make sure you have entered a name, chosen a skill level, and chosen at least one language</p>
+<p class="modal_section_button1 button center_modal_button no_select" title='Ok'>Ok</p>
+              </section>`;
 
 const confirmNameHTML = `<section class='modal_message_section'><p class="modal_section_message no_select">Are you sure you want to be known as <u class='modal_name'>${sessionDisplayName}</u>?</p>
               <div class='modal_section_buttons'>
@@ -38,6 +58,15 @@ const goBackFromPlayersSectionHTML = `<section class='modal_message_section'><p 
               </p>
               </div>
               </section>`;
+
+const notYouHTML = `<section class='modal_message_section'><p class="modal_section_message no_select">Would you like to return to modify your details?</p>
+<div class='modal_section_buttons'>
+<p class="modal_section_button1 button no_select" title='Yes'>Yes</p>
+<p class="modal_section_button2 button no_select" title="No">
+  No
+</p>
+</div>
+</section>`;
 
 const challengeModalHTML = `<section class="challenge_section">
             <div class="challenge_block">
@@ -73,6 +102,10 @@ const challengeReceivedModalHTML = `<section class="challenge_received_section">
             </div>
           </section>`;
 
+const noChallengerHTML = `<section class='modal_message_section'><p class="modal_section_message big_margin_top no_select">Please select a player to challenge, then press the challenge button, or, wait to be challenged!</p>
+<p class="modal_section_button1 button center_modal_button no_select" title='Ok'>Ok</p>
+              </section>`;
+
 const forfeitModalHTML = `<section class="forfeit_section">
             <div class="forfeit_block">
               <p class="forfeit_text_big no_select">FORFEIT GAME?</p>
@@ -90,15 +123,67 @@ const forfeitModalHTML = `<section class="forfeit_section">
             </div>
           </section>`;
 
+//////////////////////////////////////////////////////////////////////////////////////////
+// FUNCTIONS
+
+// Changes the HTML content of the modal element depending on the tag in the call to the function
+// Called by various buttons on the webpage when a modal needs to be displayed
 export function changeModalContent(tag = 'Challenge', data = '') {
   showModal();
 
   switch (tag) {
+    case 'NameProblem':
+      modalSection.innerHTML = nameLengthProblemHTML;
+      modalSection.classList.add('reveal');
+      const nameProblemYesButton = modalSection.querySelector(
+        '.modal_section_button1'
+      );
+
+      nameProblemYesButton.addEventListener('click', () => {
+        playClickSound();
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
+        return;
+      });
+      break;
+
+    case 'NoName':
+      modalSection.innerHTML = noNameHTML;
+      modalSection.classList.add('reveal');
+      const noNameYesButton = modalSection.querySelector(
+        '.modal_section_button1'
+      );
+
+      noNameYesButton.addEventListener('click', () => {
+        playClickSound();
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
+        return;
+      });
+      break;
+
+    case 'IncompleteData':
+      modalSection.innerHTML = incompleteDataHTML;
+      modalSection.classList.add('reveal');
+      const incompleteDataYesButton = modalSection.querySelector(
+        '.modal_section_button1'
+      );
+
+      incompleteDataYesButton.addEventListener('click', () => {
+        playClickSound();
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
+        return;
+      });
+      break;
+
     case 'ConfirmName':
       sessionDisplayName = data.displayName;
       modalSection.innerHTML = confirmNameHTML;
       modalSection.classList.add('reveal');
-
       const modalName = modalSection.querySelector('.modal_name');
       const confirmNameYesButton = modalSection.querySelector(
         '.modal_section_button1'
@@ -106,52 +191,80 @@ export function changeModalContent(tag = 'Challenge', data = '') {
       const confirmNameNoButton = modalSection.querySelector(
         '.modal_section_button2'
       );
-
       modalName.textContent = sessionDisplayName;
-      console.log(modalSection.innerHTML);
-      console.log(modalSection);
 
       confirmNameYesButton.addEventListener('click', () => {
         playClickSound();
-        console.log(`Known as ${sessionDisplayName}`);
+        // const storageData = storage.loadLocalStorage();
+        storage.setLocalStorage(
+          data.displayName,
+          data.skillLevel,
+          data.languages
+        );
+        // const updatedStorageData = storage.loadLocalStorage();
+        populatePlayersSectionData();
+        welcomeSection.classList.remove('reveal');
+        playersSection.classList.add('reveal');
+        populatePlayerSectionLanguages(data.languagesChosen);
+        populatePlayers(mockPlayerObjects);
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
+        return;
+      });
+
+      confirmNameNoButton.addEventListener('click', () => {
+        playClickSound();
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
+      });
+      break;
+
+    case 'ReturnConfirmName':
+      sessionDisplayName = data.displayName;
+      modalSection.innerHTML = confirmNameHTML;
+      modalSection.classList.add('reveal');
+      const returnModalName = modalSection.querySelector('.modal_name');
+      const returnConfirmNameYesButton = modalSection.querySelector(
+        '.modal_section_button1'
+      );
+      const returnConfirmNameNoButton = modalSection.querySelector(
+        '.modal_section_button2'
+      );
+      returnModalName.textContent = sessionDisplayName;
+
+      returnConfirmNameYesButton.addEventListener('click', () => {
+        playClickSound();
         const storageData = storage.loadLocalStorage();
-        console.log(`Storage data = ${JSON.stringify(storageData)}`);
         storage.setLocalStorage(
           data.displayName,
           data.skillLevel,
           data.languages
         );
         const updatedStorageData = storage.loadLocalStorage();
-        console.log(
-          `Updated storage data = ${JSON.stringify(updatedStorageData)}`
-        );
-        console.log(updatedStorageData.displayName);
-        console.log(updatedStorageData.skillLevel);
-        console.log(...updatedStorageData.languages);
         populatePlayersSectionData();
         welcomeSection.classList.remove('reveal');
         playersSection.classList.add('reveal');
-        populatePlayerSectionLanguages(data.languagesChosen);
+        populatePlayerSectionLanguages(data.languagesChosenReturn);
+        populatePlayers(mockPlayerObjects);
         setTimeout(() => {
           removeModal();
-        }, 2000);
+        }, 1000);
         return;
       });
 
-      confirmNameNoButton.addEventListener('click', () => {
+      returnConfirmNameNoButton.addEventListener('click', () => {
         playClickSound();
-        console.log(`NOT known as ${sessionDisplayName}`);
         setTimeout(() => {
           removeModal();
-        }, 2000);
+        }, 1000);
       });
-
       break;
 
     case 'Return':
       modalSection.innerHTML = goBackFromPlayersSectionHTML;
       modalSection.classList.add('reveal');
-
       const returnYesButton = modalSection.querySelector(
         '.modal_section_button1'
       );
@@ -161,23 +274,51 @@ export function changeModalContent(tag = 'Challenge', data = '') {
 
       returnYesButton.addEventListener('click', () => {
         playClickSound();
-        console.log(`Returning to the welcome section`);
         playersSection.classList.remove('reveal');
         welcomeSection.classList.add('reveal');
         storage.clearLocalStorage();
         playersLanguageText.textContent = `Select`;
         setTimeout(() => {
           removeModal();
-        }, 2000);
+        }, 1000);
         return;
       });
 
       returnNoButton.addEventListener('click', () => {
         playClickSound();
-        console.log(`NOT returning to the welcome section`);
         setTimeout(() => {
           removeModal();
-        }, 2000);
+        }, 1000);
+        return;
+      });
+
+      break;
+
+    case 'NotYou':
+      modalSection.innerHTML = notYouHTML;
+      modalSection.classList.add('reveal');
+      const notYouYesButton = modalSection.querySelector(
+        '.modal_section_button1'
+      );
+      const notYouNoButton = modalSection.querySelector(
+        '.modal_section_button2'
+      );
+
+      notYouYesButton.addEventListener('click', () => {
+        playClickSound();
+        storage.clearLocalStorage();
+        setTimeout(() => {
+          removeModal();
+          window.location.reload();
+        }, 1000);
+        return;
+      });
+
+      notYouNoButton.addEventListener('click', () => {
+        playClickSound();
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
         return;
       });
 
@@ -186,30 +327,27 @@ export function changeModalContent(tag = 'Challenge', data = '') {
     case 'Challenge':
       modalSection.innerHTML = challengeModalHTML;
       modalSection.classList.add('reveal');
-
       const buttonChallengeCancel = modalSection.querySelector(
         '.challenge_button_cancel'
       );
       const challengeInformation =
         modalSection.querySelector('.challenge_text');
 
-      console.log(modalSection.innerHTML);
-      console.log(modalSection);
-
       buttonChallengeCancel.addEventListener('click', () => {
         playClickSound();
         challengeInformation.textContent = 'Cancelling challenge...';
         setTimeout(() => {
           removeModal();
-        }, 2000);
+        }, 1000);
       });
-
       break;
 
     case 'ChallengeReceived':
       modalSection.innerHTML = challengeReceivedModalHTML;
       modalSection.classList.add('reveal');
-
+      const challengeReceivedText = modalSection.querySelector(
+        '.challenge_received_text_big'
+      );
       const acceptButton = modalSection.querySelector(
         '.challenge_received_button_accept'
       );
@@ -217,56 +355,80 @@ export function changeModalContent(tag = 'Challenge', data = '') {
         '.challenge_received_button_decline'
       );
 
-      console.log(modalSection.innerHTML);
-      console.log(modalSection);
-
       acceptButton.addEventListener('click', () => {
         playClickSound();
-        console.log(`Challenge request accepted!`);
-        removeModal();
+        challengeReceivedText.textContent = 'CHALLENGE ACCEPTED!';
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
       });
 
       declineButton.addEventListener('click', () => {
         playClickSound();
-        console.log(`Challenge request rejected!`);
-        removeModal();
+        challengeReceivedText.textContent = 'CHALLENGE REJECTED!';
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
       });
+      break;
 
+    case 'NoChallenger':
+      modalSection.innerHTML = noChallengerHTML;
+      modalSection.classList.add('reveal');
+      const noChallengerYesButton = modalSection.querySelector(
+        '.modal_section_button1'
+      );
+
+      noChallengerYesButton.addEventListener('click', () => {
+        playClickSound();
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
+        return;
+      });
       break;
 
     case 'ForfeitRequest':
       modalSection.classList.remove('reveal');
       modalSection.innerHTML = forfeitModalHTML;
       modalSection.classList.add('reveal');
-
       const yesButton = modalSection.querySelector('.forfeit_button_yes');
       const noButton = modalSection.querySelector('.forfeit_button_no');
-
-      console.log(modalSection.innerHTML);
-      console.log(modalSection);
 
       yesButton.addEventListener('click', () => {
         playClickSound();
         console.log(`You have forfeited the game!`);
-        removeModal();
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
       });
 
       noButton.addEventListener('click', () => {
         playClickSound();
         console.log(`You have NOT forfeited the game!`);
-        removeModal();
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
       });
-
       break;
   }
 }
 
+// Shows the modal element
+// Called by changeModalContent()
 function showModal() {
   modalSection.style.display = 'block';
   modalSection.innerHTML = '';
+  adNotification.classList.add('blur_element');
 }
 
+// Hides the modal element
+// Called by changeModalContent()
 function removeModal() {
   modalSection.classList.remove('reveal');
   modalSection.style.display = 'none';
+  adNotification.classList.remove('blur_element');
 }
+
+// CODE END
+//////////////////////////////////////////////////////////////////////////////////////////
