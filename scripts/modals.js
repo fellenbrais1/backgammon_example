@@ -332,7 +332,10 @@ export function changeModalContent(tag = 'Challenge', data = '') {
       );
       const challengeInformation =
         modalSection.querySelector('.challenge_text');
-
+      const challengerNameField = document.querySelector(
+        '.challenge_text_names'
+      );
+      challengerNameField.textContent = `Challenging ${data}`;
       buttonChallengeCancel.addEventListener('click', () => {
         playClickSound();
         challengeInformation.textContent = 'Cancelling challenge...';
@@ -348,6 +351,10 @@ export function changeModalContent(tag = 'Challenge', data = '') {
       const challengeReceivedText = modalSection.querySelector(
         '.challenge_received_text_big'
       );
+      const challengerNameText = document.querySelector(
+        '.challenge_received_text'
+      );
+      challengerNameText.textContent = `${data} wants to play a game!`;
       const acceptButton = modalSection.querySelector(
         '.challenge_received_button_accept'
       );

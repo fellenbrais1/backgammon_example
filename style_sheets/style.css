@@ -45,7 +45,6 @@ html {
   text-align: center;
   font-weight: bold;
   font-size: 20px;
-  cursor: pointer;
 }
 
 /* DEBUG BUTTON ELEMENTS */
@@ -66,7 +65,6 @@ html {
   font-weight: bold;
   font-size: 24px;
   color: white;
-  cursor: pointer;
 }
 
 .test_button1 {
@@ -227,7 +225,6 @@ html {
   text-align: center;
   font-weight: bold;
   font-size: 24px;
-  cursor: pointer;
 }
 
 .challenge_button {
@@ -369,7 +366,6 @@ html {
   font-weight: bold;
   font-size: 18px;
   color: white;
-  cursor: pointer;
 }
 
 /* ACCORDION ELEMENTS */
@@ -468,6 +464,11 @@ html {
   background-color: lightblue;
 }
 
+.skill_choice {
+  display: grid;
+  grid-template-columns: 80px auto;
+}
+
 .skill_choice,
 .language_choice,
 .players_langauge_choice {
@@ -498,8 +499,6 @@ html {
 }
 
 .players_display {
-  /* display: grid;
-  grid-template-columns: 1fr 1fr; */
   grid-auto-rows: 24px;
   width: 235px;
   height: 240px;
@@ -521,8 +520,6 @@ html {
   font-size: 14px;
 }
 
-.toggle_available_graphic,
-.toggle_skill_graphic,
 .toggle_language_graphic {
   position: relative;
   height: 20px;
@@ -532,30 +529,6 @@ html {
   border-radius: 9999px;
   background-color: var(--youtube_red);
   margin-left: 12px;
-}
-
-.slider_button {
-  position: absolute;
-  top: -3px;
-  height: 20px;
-  width: 20px;
-  border: solid 1px silver;
-  border-radius: 50%;
-  background-color: black;
-  cursor: pointer;
-}
-
-.toggled_right {
-  background-color: rgb(91, 218, 91);
-}
-
-.toggled_right_button {
-  right: 0px;
-}
-
-.toggle_skill_level_div {
-  display: grid;
-  grid-template-columns: 150px 40px;
 }
 
 .toggle_skill_level_accordion {
@@ -574,10 +547,6 @@ html {
   margin-left: 4px;
   color: black;
   text-align: center;
-}
-
-.language_selector_button {
-  cursor: pointer;
 }
 
 .players_friends {
@@ -624,16 +593,8 @@ html {
   background-color: rgb(91, 218, 91);
 }
 
-.player_online_display.no_pointer_events {
-  font-weight: lighter;
-}
-
 .player_ingame {
   background-color: orange;
-}
-
-.player_offline {
-  background-color: var(--youtube_red);
 }
 
 .player_text {
@@ -687,7 +648,6 @@ html {
   grid-template-columns: 180px 180px;
   gap: 24px;
   margin-left: 78px;
-  cursor: pointer;
 }
 
 .modal_section_button1,
@@ -789,7 +749,6 @@ html {
   transform: translateX(-50%);
   font-size: 20px;
   font-weight: bold;
-  cursor: pointer;
 }
 
 /* CHALLENGE RECEIVED SECTION */
@@ -842,7 +801,6 @@ html {
   transform: translateX(-50%);
   font-size: 20px;
   font-weight: bold;
-  cursor: pointer;
 }
 
 .challenge_received_button_decline {
@@ -1034,7 +992,6 @@ html {
   outline: solid 2px white;
   border-radius: 5px;
   background-color: var(--topbar_light_blue);
-  cursor: pointer;
 }
 
 .game_button_backgammon img,
@@ -1111,7 +1068,6 @@ html {
   transform: translateX(-50%);
   font-size: 24px;
   font-weight: bold;
-  cursor: pointer;
 }
 
 .forfeit_button_no {
@@ -1140,7 +1096,6 @@ html {
   border-top-right-radius: 25px;
   border-bottom: none;
   background-color: red;
-  cursor: pointer;
 }
 
 .floating_buttons_toggler_arrow {
@@ -1156,7 +1111,6 @@ html {
   background-color: red;
   z-index: 3;
   transition: filter 0.2s;
-  cursor: pointer;
   text-align: center;
   font-weight: bold;
   padding-top: 8px;
@@ -1168,6 +1122,10 @@ html {
 
 .cls_logo {
   margin: 15px;
+}
+
+.button {
+  cursor: pointer;
 }
 
 /* AD SECTION ELEMENTS */
@@ -1277,6 +1235,13 @@ html {
 
 .skill_marker {
   letter-spacing: -6px;
+}
+
+.not_free,
+.not_free p,
+.not_free.skill_marker,
+.not_free.player_flag {
+  cursor: help;
 }
 
 /* CODE END */

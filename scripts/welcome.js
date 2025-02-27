@@ -10,7 +10,7 @@ console.log(`welcome.js running`);
 //////////////////////////////////////////////////////////////////////////////////////////
 // IMPORTS
 
-import { playClickSound, toggleClass } from './script.js';
+import { playClickSound } from './script.js';
 import * as storage from './localStorage.js';
 import * as modals from './modals.js';
 
@@ -18,7 +18,6 @@ import * as modals from './modals.js';
 // DOM ELEMENT SELECTION
 
 // Player name form elements
-const welcomeSection = document.querySelector('.welcome_section');
 export const welcomeNameForm = document.querySelector('.welcome_name_form');
 const welcomeNameInput = document.getElementById('welcome_name_input');
 
@@ -41,9 +40,6 @@ const languageSvg = document.getElementById('language_svg');
 
 // Language choice elements
 const languageChoices = document.querySelectorAll('.language_choice');
-const playersLanguageChoices = document.querySelectorAll(
-  '.players_language_choice'
-);
 
 // You section elements
 const playerInfoName = document.querySelector('.player_info_name');
@@ -59,7 +55,6 @@ const step4Div = document.querySelector('.step4');
 const continueButton = document.querySelector('.welcome_continue_button');
 
 // Step return elements
-const returnSection = document.querySelector('.return_section');
 const playerInfoNameReturn = document.querySelector('.player_info_name_return');
 const playerInfoSkillReturn = document.querySelector(
   '.player_info_skill_return'
@@ -72,13 +67,9 @@ const continueButtonReturn = document.querySelector('.return_continue_button');
 
 // Players section elements
 const playersSection = document.querySelector('.players_section');
-
 const playerInfoNameNext = document.querySelector('.player_info_name_next');
 const playerInfoSkillNext = document.querySelector('.player_info_skill_next');
 const playerInfoFlagsNext = document.getElementById('player_info_flags_next');
-// const challengeButton = document.querySelector('.challenge_button');
-
-// Players section elements
 const playersXButton = document.querySelector('.players_x_button');
 const playersDisplay = document.querySelector('.players_active');
 const playersChallengeButton = document.querySelector('.challenge_button');
@@ -94,7 +85,6 @@ export const playersLanguageText = document.getElementById(
 const playersLanguageSvg = document.getElementById('players_language_svg');
 
 // Test button elements
-const testButton2 = document.querySelector('.test_button2');
 const testButton3 = document.querySelector('.test_button3');
 const testButton4 = document.querySelector('.test_button4');
 const testButton5 = document.querySelector('.test_button5');
@@ -158,6 +148,13 @@ const mockPlayer6 = {
   lastOnline: 1740644195,
 };
 
+const mockPlayer7 = {
+  displayName: 'Juliano',
+  skillLevel: 'Advanced',
+  languages: ['it'],
+  lastOnline: 1740649195,
+};
+
 export let mockPlayerObjects = [
   mockPlayer1,
   mockPlayer2,
@@ -165,6 +162,7 @@ export let mockPlayerObjects = [
   mockPlayer4,
   mockPlayer5,
   mockPlayer6,
+  mockPlayer7,
 ];
 
 let playersInGame = [mockPlayer3];
@@ -174,8 +172,52 @@ let playersOnline = [
   mockPlayer3,
   mockPlayer5,
   mockPlayer6,
+  mockPlayer7,
 ];
-let DOMElement;
+
+// Challenger variables
+let challengerName = '';
+
+// Language HTML variables
+const englishHTML = `<p
+class="players_language_choice no_select"
+data-language="en"
+title="English"
+>
+English
+</p>`;
+
+const spanishHTML = `<p
+                      class="players_language_choice no_select"
+                      data-language="es"
+                      title="Spanish"
+                    >
+                      Espanol
+                    </p>`;
+
+const chineseHTML = `<p
+                      class="players_language_choice no_select"
+                      data-language="zh"
+                      title="Chinese"
+                    >
+                      中文
+                    </p>`;
+
+const japaneseHTML = `<p
+                      class="players_language_choice no_select"
+                      data-language="ja"
+                      title="Japanese"
+                    >
+                      日本語
+                    </p>`;
+
+const italianHTML = `<p
+                      class="players_language_choice no_select"
+                      data-language="it"
+                      title="Italian"
+                    >
+                      Italiano
+                    </p>`;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // EVENT LISTENERS
@@ -188,7 +230,7 @@ testButton3.addEventListener('click', () => {
 
 testButton4.addEventListener('click', () => {
   playClickSound();
-  modals.changeModalContent('ChallengeReceived');
+  modals.changeModalContent('ChallengeReceived', mockPlayer6.displayName);
 });
 
 testButton5.addEventListener('click', () => {
@@ -275,7 +317,7 @@ skillMaster.addEventListener('click', () => {
 });
 
 // Language section event listeners
-languageAccordion.addEventListener('click', function () {
+languageAccordion.addEventListener('click', () => {
   playClickSound();
   if (languagePanel.style.display === 'block') {
     languagePanel.style.display = 'none';
@@ -286,7 +328,7 @@ languageAccordion.addEventListener('click', function () {
   }
 });
 
-playersLanguageAccordion.addEventListener('click', function () {
+playersLanguageAccordion.addEventListener('click', () => {
   playClickSound();
   if (playersLanguagePanel.style.display === 'block') {
     playersLanguagePanel.style.display = 'none';
@@ -342,14 +384,6 @@ continueButtonReturn.addEventListener('click', () => {
     languagesChosen: languagesChosenReturn,
   };
   modals.changeModalContent('ConfirmName', data);
-  // const data = storage.loadLocalStorage();
-  // modals.changeModalContent('ReturnConfirmName', data);
-  // populatePlayersSectionData();
-  // populatePlayers(mockPlayerObjects);
-
-  // returnSection.classList.remove('reveal');
-  // playersSection.classList.add('reveal');
-  // populatePlayerSectionLanguages(languagesChosenReturn);
 });
 
 // Welcome back return section event listeners
@@ -366,14 +400,21 @@ playersXButton.addEventListener('click', () => {
 
 playersChallengeButton.addEventListener('click', () => {
   playClickSound();
-  modals.changeModalContent('NoChallenger');
+  if (challengerName === '') {
+    modals.changeModalContent('NoChallenger');
+  } else {
+    modals.changeModalContent('Challenge', challengerName);
+  }
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTIONS
 
 // General accordion functions
-// Closes the accordion specified and inverts its svg
+
+// Closes the accordion specified and rotates its svg icon
+// Called by event listeners on skillBegginer, skillAdvanced, skillMaster
+// Called by threeLanguagesChosen(), populatePlayerSectionLanguages()
 function closeAccordion(accordionPanel, accordionSvg) {
   setTimeout(() => {
     accordionPanel.style.display = 'none';
@@ -382,7 +423,10 @@ function closeAccordion(accordionPanel, accordionSvg) {
 }
 
 // Language section functions
+
 // Adds language flag images to the relevant section of the you section
+// Called by an event listener on languageChoices
+// Called by welcomeBackPopulateFields(), populatePlayersSectionData()
 function addLanguageFlags(flag = 0) {
   let flag1,
     flag2,
@@ -421,6 +465,12 @@ function addLanguageFlags(flag = 0) {
                 src="./images/flags/japanese_flag.png"
               />`;
     }
+    if (workingLanguages[i].includes('it')) {
+      flags[i] = `<img
+                class="player_flag_img"
+                src="./images/flags/italy_flag.png"
+              />`;
+    }
   }
   if (flag === 0) {
     playerInfoFlags.innerHTML = flags.join('');
@@ -438,6 +488,8 @@ function addLanguageFlags(flag = 0) {
   }
 }
 
+// Automatically closes the languages accordion when three languages have been selected
+// Called by an event listener on languageChoices
 function threeLanguagesChosen() {
   if (languagesChosen.length === 3) {
     console.log(languagesChosen);
@@ -449,6 +501,8 @@ function threeLanguagesChosen() {
   }
 }
 
+// Generates a language name based on a language choice element's data
+// Called by populatePlayerSectionLanguages()
 function retrieveLanguageName(languageData) {
   let languageName = '';
   switch (languageData) {
@@ -464,10 +518,15 @@ function retrieveLanguageName(languageData) {
     case 'ja':
       languageName = '日本語';
       break;
+    case 'it':
+      languageName = 'Italiano';
+      break;
   }
   return languageName;
 }
 
+// If the data proviued by the user is valid, it writes data to the local storage object by calling changeModalContent()
+// Called by an event listener on continueButton
 function createUserData() {
   if (
     sessionDisplayName !== '' &&
@@ -489,6 +548,8 @@ function createUserData() {
   }
 }
 
+// Checks to see if there is data already written into local storage and returns true or false
+// Called by showMain() in script.js
 export function checkForLocalStorageObject() {
   const storedObject = storage.loadLocalStorage();
   if (
@@ -505,6 +566,8 @@ export function checkForLocalStorageObject() {
   }
 }
 
+// Populates page field's with user data if local storage has already been written to
+// Called by checkForLocalStroageObject()
 function welcomeBackPopulateFields() {
   const storedObject = storage.loadLocalStorage();
   playerInfoNameReturn.textContent = storedObject.displayName;
@@ -513,6 +576,8 @@ function welcomeBackPopulateFields() {
   addLanguageFlags(1);
 }
 
+// Populates the players section's you elements with data from the local storage object
+// Called by changeModalContent() in modals.js
 export function populatePlayersSectionData() {
   const storedObject = storage.loadLocalStorage();
   playerInfoNameNext.textContent = storedObject.displayName;
@@ -521,40 +586,8 @@ export function populatePlayersSectionData() {
   addLanguageFlags(1);
 }
 
-populatePlayersSectionData();
-
-const englishHTML = `<p
-class="players_language_choice no_select"
-data-language="en"
-title="English"
->
-English
-</p>`;
-
-const spanishHTML = `<p
-                      class="players_language_choice no_select"
-                      data-language="es"
-                      title="Spanish"
-                    >
-                      Espanol
-                    </p>`;
-
-const chineseHTML = `<p
-                      class="players_language_choice no_select"
-                      data-language="zh"
-                      title="Chinese"
-                    >
-                      中文
-                    </p>`;
-
-const japaneseHTML = `<p
-                      class="players_language_choice no_select"
-                      data-language="ja"
-                      title="Japanese"
-                    >
-                      日本語
-                    </p>`;
-
+// Populates the available language options in the playersSection based on the languages chosen by the user
+// Called by changeModalContent() in modals.js
 export function populatePlayerSectionLanguages(languagesChosen) {
   let languagesHTML = '';
   if (languagesChosen.includes('en')) {
@@ -568,6 +601,9 @@ export function populatePlayerSectionLanguages(languagesChosen) {
   }
   if (languagesChosen.includes('ja')) {
     languagesHTML += japaneseHTML;
+  }
+  if (languagesChosen.includes('it')) {
+    languagesHTML += italianHTML;
   }
   playersLanguagePanel.innerHTML = languagesHTML;
   languageItems = playersLanguagePanel.querySelectorAll(
@@ -606,9 +642,11 @@ export function populatePlayerSectionLanguages(languagesChosen) {
   });
 }
 
+// Populates the players section's player_display element with available players
+// Called by filterPlayersByLanguage()
 export function populatePlayers(playerList, filter = 'none') {
   let HTML;
-  mockPlayerObjects.forEach((player) => {
+  playerList.forEach((player) => {
     let skillMarker = '🏆';
     switch (player.skillLevel) {
       case 'Beginner':
@@ -646,6 +684,11 @@ export function populatePlayers(playerList, filter = 'none') {
             `<img class='player_flag' src='./images/flags/japanese_flag.png'>`
           );
           break;
+        case 'it':
+          playerFlags.push(
+            `<img class='player_flag' src='./images/flags/italy_flag.png'>`
+          );
+          break;
       }
     });
     const joinedPlayerFlags = playerFlags.join('');
@@ -666,20 +709,30 @@ export function populatePlayers(playerList, filter = 'none') {
           : console.log(`Nothing to do here!`);
       }
     } else {
-      checkPlayerOnline(player, playersOnline)
-        ? (() => {
-            checkPlayerInGame(player, playersInGame)
-              ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`)
-              : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`);
-            playersDisplay.insertAdjacentHTML('afterbegin', HTML);
-          })()
-        : console.log(`Nothing to do here!`);
+      const storedObject = storage.loadLocalStorage();
+      const userLanguages = storedObject.languages;
+      console.log(userLanguages);
+      console.log(player.languages);
+      if (hasLanguageMatch(userLanguages, player.languages) === true) {
+        console.log(`Match detected`);
+        checkPlayerOnline(player, playersOnline)
+          ? (() => {
+              checkPlayerInGame(player, playersInGame)
+                ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`)
+                : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`);
+              playersDisplay.insertAdjacentHTML('afterbegin', HTML);
+            })()
+          : console.log(`Nothing to do here!`);
+      } else {
+        console.log(`Nothing to do here`);
+      }
     }
-    // (HTML = `<div class='player_online_display no_pointer_events ${specificClass}'><p class='is_player_active player_offline'></p><p class='player_text'>${player.displayName}</p><p class='player_text'>${skillMarker}</p><p class='player_text'>${player.languages}</p></div>`);
   });
   addPlayerEventListeners(playerList);
 }
 
+// Checks if a player is in the online list or not and returns true or false
+// Called by populatePlayers()
 function checkPlayerOnline(player, playersOnline) {
   if (playersOnline.includes(player)) {
     return true;
@@ -688,6 +741,8 @@ function checkPlayerOnline(player, playersOnline) {
   }
 }
 
+// Checks if a player is in a game or is free and returns true or false
+// Called by populatePlayers()
 function checkPlayerInGame(player, playersInGame) {
   if (playersInGame.includes(player)) {
     return true;
@@ -696,6 +751,8 @@ function checkPlayerInGame(player, playersInGame) {
   }
 }
 
+// Adds event listeners to the programmatically created player choice elements
+// Called by populatePlayers()
 function addPlayerEventListeners(playerList) {
   playerList.forEach((player) => {
     const element = '.player_is_' + player.displayName;
@@ -712,22 +769,37 @@ function addPlayerEventListeners(playerList) {
         'data-tooltip',
         `${status} Last Active: ${Math.floor(hours)} h, ${minutes} m ago`
       );
-      current.addEventListener('click', () => {
-        const newDOMElements = document.querySelectorAll(
-          '.player_online_display'
-        );
-        newDOMElements.forEach((current2) => {
-          current2.classList.remove('accordion_selected');
+      console.log(current.classList);
+      if (current.classList.contains('not_free')) {
+        console.log(`Nothing to do here!`);
+      } else {
+        current.addEventListener('click', () => {
+          playClickSound();
+          const newDOMElements = document.querySelectorAll(
+            '.player_online_display'
+          );
+          challengerName = player.displayName;
+          newDOMElements.forEach((current2) => {
+            current2.classList.remove('accordion_selected');
+          });
+          current.classList.toggle('accordion_selected');
         });
-        current.classList.toggle('accordion_selected');
-      });
+      }
     });
   });
 }
 
+// Allows filtering of available player elements by chosen language
+// Called by populatePlayerSectionLanguages()
 function filterPlayersByLanguage(languageFilter) {
   playersDisplay.innerHTML = '';
   populatePlayers(mockPlayerObjects, languageFilter);
+}
+
+// Determines whether the languages in a user's chosen languages match with the languages in another player's languages and populates the player_display field accordingly
+// Called by populatePlayers()
+function hasLanguageMatch(userLanguages, playerLanguages) {
+  return userLanguages.some((element) => playerLanguages.includes(element));
 }
 
 // CODE END
