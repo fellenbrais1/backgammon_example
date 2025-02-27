@@ -585,20 +585,42 @@ html {
 }
 
 .player_online_display {
+  position: relative;
   display: grid;
-  grid-template-columns: 24px 60px 70px 50px;
+  grid-template-columns: 18px 84px 48px auto;
   height: 24px;
-  margin-bottom: 4px;
   font-weight: 450;
-  font-size: 14px;
-  border-bottom: 1px solid grey;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.511);
+}
+
+.player_online_display:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 9;
+  bottom: -95%;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.player_online_display p {
+  transform: translateY(4px);
 }
 
 .is_player_active {
-  height: 18px;
-  width: 18px;
+  height: 14px;
+  width: 14px;
   border: 1px solid white;
   border-radius: 50%;
+  margin-top: 2px;
+  margin-left: 2px;
   background-color: rgb(91, 218, 91);
 }
 
@@ -617,6 +639,12 @@ html {
 .player_text {
   color: black;
   cursor: pointer;
+}
+
+.player_flag {
+  height: 14px;
+  width: 18px;
+  margin-right: 1px;
 }
 
 /* MODAL SECTION */
@@ -1245,6 +1273,10 @@ html {
 
 .blur_element {
   filter: blur(2px);
+}
+
+.skill_marker {
+  letter-spacing: -6px;
 }
 
 /* CODE END */

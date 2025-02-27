@@ -125,7 +125,7 @@ const mockPlayer1 = {
 
 const mockPlayer2 = {
   displayName: 'Jubilee',
-  skillLevel: 'Beginner',
+  skillLevel: 'Master',
   languages: ['ja', 'es'],
   lastOnline: 1740481329,
 };
@@ -151,16 +151,30 @@ const mockPlayer5 = {
   lastOnline: 1740482329,
 };
 
+const mockPlayer6 = {
+  displayName: 'Tariger12345',
+  skillLevel: 'Beginner',
+  languages: ['en', 'zh', 'ja'],
+  lastOnline: 1740644195,
+};
+
 export let mockPlayerObjects = [
   mockPlayer1,
   mockPlayer2,
   mockPlayer3,
   mockPlayer4,
   mockPlayer5,
+  mockPlayer6,
 ];
 
 let playersInGame = [mockPlayer3];
-let playersOnline = [mockPlayer1, mockPlayer2, mockPlayer3, mockPlayer5];
+let playersOnline = [
+  mockPlayer1,
+  mockPlayer2,
+  mockPlayer3,
+  mockPlayer5,
+  mockPlayer6,
+];
 let DOMElement;
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -570,9 +584,10 @@ export function populatePlayerSectionLanguages(languagesChosen) {
         languageItems.forEach((current2) => {
           current2.classList.remove('accordion_selected');
         });
-        languageFilter = 'en';
+        languageFilter = 'none';
         playersLanguageText.textContent = `Select`;
         closeAccordion(playersLanguagePanel, playersLanguageSvg);
+        filterPlayersByLanguage(languageFilter);
         return;
       } else {
         languageItems.forEach((current2) => {
@@ -583,13 +598,15 @@ export function populatePlayerSectionLanguages(languagesChosen) {
 
         playersLanguageText.textContent = languageName;
         closeAccordion(playersLanguagePanel, playersLanguageSvg);
+        filterPlayersByLanguage(languageFilter);
+        console.log(languageFilter);
         return;
       }
     });
   });
 }
 
-export function populatePlayers(playerList) {
+export function populatePlayers(playerList, filter = 'none') {
   let HTML;
   mockPlayerObjects.forEach((player) => {
     let skillMarker = '🏆';
@@ -604,15 +621,61 @@ export function populatePlayers(playerList) {
         skillMarker = '🏆🏆🏆';
         break;
     }
+
+    let playerFlags = [];
+    player.languages.forEach((current) => {
+      const languageData = current;
+      switch (languageData) {
+        case 'en':
+          playerFlags.push(
+            `<img class='player_flag' src='./images/flags/english_flag.png'>`
+          );
+          break;
+        case 'es':
+          playerFlags.push(
+            `<img class='player_flag' src='./images/flags/spanish_flag.png'>`
+          );
+          break;
+        case 'zh':
+          playerFlags.push(
+            `<img class='player_flag' src='./images/flags/chinese_flag.png'>`
+          );
+          break;
+        case 'ja':
+          playerFlags.push(
+            `<img class='player_flag' src='./images/flags/japanese_flag.png'>`
+          );
+          break;
+      }
+    });
+    const joinedPlayerFlags = playerFlags.join('');
     const specificClass = 'player_is_' + player.displayName;
-    checkPlayerOnline(player, playersOnline)
-      ? (() => {
-          checkPlayerInGame(player, playersInGame)
-            ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${player.displayName}</p><p class='player_text'>${skillMarker}</p><p class='player_text'>${player.languages}</p></div>`)
-            : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${player.displayName}</p><p class='player_text'>${skillMarker}</p><p class='player_text'>${player.languages}</p></div>`);
-        })()
-      : (HTML = `<div class='player_online_display no_pointer_events ${specificClass}'><p class='is_player_active player_offline'></p><p class='player_text'>${player.displayName}</p><p class='player_text'>${skillMarker}</p><p class='player_text'>${player.languages}</p></div>`);
-    playersDisplay.insertAdjacentHTML('afterbegin', HTML);
+
+    if (filter !== 'none') {
+      console.log(player.languages);
+      if (!player.languages.includes(filter)) {
+        console.log(`Skipping player`);
+      } else {
+        checkPlayerOnline(player, playersOnline)
+          ? (() => {
+              checkPlayerInGame(player, playersInGame)
+                ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`)
+                : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`);
+              playersDisplay.insertAdjacentHTML('afterbegin', HTML);
+            })()
+          : console.log(`Nothing to do here!`);
+      }
+    } else {
+      checkPlayerOnline(player, playersOnline)
+        ? (() => {
+            checkPlayerInGame(player, playersInGame)
+              ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`)
+              : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`);
+            playersDisplay.insertAdjacentHTML('afterbegin', HTML);
+          })()
+        : console.log(`Nothing to do here!`);
+    }
+    // (HTML = `<div class='player_online_display no_pointer_events ${specificClass}'><p class='is_player_active player_offline'></p><p class='player_text'>${player.displayName}</p><p class='player_text'>${skillMarker}</p><p class='player_text'>${player.languages}</p></div>`);
   });
   addPlayerEventListeners(playerList);
 }
@@ -636,16 +699,35 @@ function checkPlayerInGame(player, playersInGame) {
 function addPlayerEventListeners(playerList) {
   playerList.forEach((player) => {
     const element = '.player_is_' + player.displayName;
-    DOMElement = document.querySelectorAll(element);
+    const DOMElement = document.querySelectorAll(element);
+    const timeNow = Math.floor(Date.now() / 1000);
     DOMElement.forEach((current) => {
+      const timeSinceLastLoggedIn = Math.floor(timeNow - player.lastOnline);
+      const hours = Math.floor(timeSinceLastLoggedIn % (3600 * 24)) / 3600;
+      const minutes = Math.floor((timeSinceLastLoggedIn % 3600) / 60);
+      const status = current.classList.contains('not_free')
+        ? 'IN GAME'
+        : 'FREE';
+      current.setAttribute(
+        'data-tooltip',
+        `${status} Last Active: ${Math.floor(hours)} h, ${minutes} m ago`
+      );
       current.addEventListener('click', () => {
-        DOMElement.forEach((current2) => {
+        const newDOMElements = document.querySelectorAll(
+          '.player_online_display'
+        );
+        newDOMElements.forEach((current2) => {
           current2.classList.remove('accordion_selected');
         });
         current.classList.toggle('accordion_selected');
       });
     });
   });
+}
+
+function filterPlayersByLanguage(languageFilter) {
+  playersDisplay.innerHTML = '';
+  populatePlayers(mockPlayerObjects, languageFilter);
 }
 
 // CODE END
