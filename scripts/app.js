@@ -13,6 +13,97 @@ console.log('Using Firebase in app.js:', window.firebaseApp);
 const db = window.database;
 console.log(db);
 
+// add dice
+document.addEventListener('DOMContentLoaded', function () {
+  // Create new image elements
+  let dice1 = document.createElement('img');
+  dice1.id = 'dice1';
+  let dice2 = document.createElement('img');
+  dice2.id = 'dice2';
+
+  // Set the source of the images
+  dice1.src = 'images/dice-six.png';
+  dice2.src = 'images/dice-six.png';
+
+  // Set the size of the images (40px wide and 40px tall)
+  dice1.width = 40;
+  dice1.height = 40;
+  dice2.width = 40;
+  dice2.height = 40;
+
+  // Set the style to position the images
+  dice1.style.position = 'absolute';
+  dice1.style.top = '210px';
+  dice1.style.left = '10px';
+  dice2.style.position = 'absolute';
+  dice2.style.top = '260px';
+  dice2.style.left = '10px';
+
+  // Append the images to the 'board' div
+  document.getElementById('board').appendChild(dice1);
+  document.getElementById('board').appendChild(dice2);
+
+  dice1.addEventListener('click', rollDice);
+  dice2.addEventListener('click', rollDice);
+});
+
+// Helper function to create a delay
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// animate rolling dice
+async function rollDice() {
+  console.log('Dice clicked! Rolling the dice...');
+
+  // clear previous throw
+  board.diceThrows.fill(0);
+
+  const dice1 = document.getElementById('dice1');
+  const dice2 = document.getElementById('dice2');
+
+  // Array of dice image paths
+  var diceFaces = [
+    'images/dice-one.png',
+    'images/dice-two.png',
+    'images/dice-three.png',
+    'images/dice-four.png',
+    'images/dice-five.png',
+    'images/dice-six.png',
+  ];
+
+  // Simulate rolling by changing the dice face multiple times
+  for (let i = 0; i < 5; i++) {
+    // Generate a random number between 0 and 5 (inclusive)
+    let randomIndex1 = Math.floor(Math.random() * diceFaces.length);
+    let randomIndex2 = Math.floor(Math.random() * diceFaces.length);
+
+    // Change the dice image to a random face
+    dice1.src = diceFaces[randomIndex1];
+    dice2.src = diceFaces[randomIndex2];
+
+    // Wait for 100ms before changing the face again
+    await sleep(100);
+  }
+
+  // Wait for half a second before the final roll
+  await sleep(100);
+
+  // Final roll
+  let finalIndex1 = Math.floor(Math.random() * diceFaces.length);
+  let finalIndex2 = Math.floor(Math.random() * diceFaces.length);
+  dice1.src = diceFaces[finalIndex1];
+  dice2.src = diceFaces[finalIndex2];
+
+  board.diceThrows[0] = finalIndex1 + 1;
+  board.diceThrows[1] = finalIndex2 + 1;
+  if (board.diceThrows[0] == board.diceThrows[1]) {
+    board.diceThrows[2] = board.diceThrows[3] = board.diceThrows[0];
+  }
+
+  console.log('Dice rolled: ', board.diceThrows);
+}
+
 document.querySelector('.test_button2').addEventListener('click', function () {
   if (game.currentTurn == 'w') {
     game.currentTurn = 'r';
@@ -24,14 +115,6 @@ document.querySelector('.test_button2').addEventListener('click', function () {
 
   console.log('CurrentTurn is now ' + game.currentTurn);
 });
-
-function rollOnce() {
-  board.throwDice(1);
-}
-
-function rollTwice() {
-  board.throwDice(2);
-}
 
 class CoordinateMapper {
   constructor() {
@@ -82,24 +165,6 @@ const board = {
   diceThrows: [0, 0, 0, 0],
 
   onTheMove: '', // piece id that is currently on the move
-
-  // populate dice throws
-  throwDice(numberOfDice) {
-    // clear previous throw
-    this.diceThrows.fill(0);
-
-    if (numberOfDice == 1) {
-      this.diceThrows[0] = Math.floor(Math.random() * 6) + 1;
-    } else if (numberOfDice == 2) {
-      this.diceThrows[0] = Math.floor(Math.random() * 6) + 1;
-      this.diceThrows[1] = Math.floor(Math.random() * 6) + 1;
-
-      if (this.diceThrows[0] == this.diceThrows[1]) {
-        this.diceThrows[2] = this.diceThrows[0];
-        this.diceThrows[3] = this.diceThrows[0];
-      }
-    }
-  },
 
   // Method to update a specific point by index
   updatePoint(index, newContent) {
