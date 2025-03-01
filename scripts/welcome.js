@@ -444,33 +444,56 @@ function addLanguageFlags(flag = 0) {
     if (workingLanguages[i].includes('en')) {
       flags[i] = `<img
                 class="player_flag_img"
+                data-language="en"
                 src="./images/flags/english_flag.png"
               />`;
     }
     if (workingLanguages[i].includes('es')) {
       flags[i] = `<img
                 class="player_flag_img"
+                data-language="es"
                 src="./images/flags/spanish_flag.png"
               />`;
     }
     if (workingLanguages[i].includes('zh')) {
       flags[i] = `<img
                 class="player_flag_img"
+                data-language="zh"
                 src="./images/flags/chinese_flag.png"
               />`;
     }
     if (workingLanguages[i].includes('ja')) {
       flags[i] = `<img
                 class="player_flag_img"
+                data-language="ja"
                 src="./images/flags/japanese_flag.png"
               />`;
     }
     if (workingLanguages[i].includes('it')) {
       flags[i] = `<img
                 class="player_flag_img"
+                data-language="it"
                 src="./images/flags/italy_flag.png"
               />`;
     }
+  }
+  if (flags.length > 1) {
+    flags.sort((a, b) => {
+      const matchA = a.match(/data-language="([^"]+)"/);
+      const matchB = b.match(/data-language="([^"]+)"/);
+
+      if (matchA && matchB) {
+        const langA = matchA[1];
+        const langB = matchB[1];
+        return langA.localeCompare(langB);
+      } else if (matchA) {
+        return -1;
+      } else if (matchB) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
   }
   if (flag === 0) {
     playerInfoFlags.innerHTML = flags.join('');
@@ -478,6 +501,7 @@ function addLanguageFlags(flag = 0) {
       languageText.textContent = `Select Language`;
       return;
     } else {
+      console.log(`Flags added!`);
       step4Div.classList.add('reveal');
       languageText.innerHTML = flags.join('');
       return;
@@ -666,31 +690,38 @@ export function populatePlayers(playerList, filter = 'none') {
       switch (languageData) {
         case 'en':
           playerFlags.push(
-            `<img class='player_flag' src='./images/flags/english_flag.png'>`
+            `<img class='player_flag' data-language="en" src='./images/flags/english_flag.png'>`
           );
           break;
         case 'es':
           playerFlags.push(
-            `<img class='player_flag' src='./images/flags/spanish_flag.png'>`
+            `<img class='player_flag' data-language="es" src='./images/flags/spanish_flag.png'>`
           );
           break;
         case 'zh':
           playerFlags.push(
-            `<img class='player_flag' src='./images/flags/chinese_flag.png'>`
+            `<img class='player_flag' data-language="zh" src='./images/flags/chinese_flag.png'>`
           );
           break;
         case 'ja':
           playerFlags.push(
-            `<img class='player_flag' src='./images/flags/japanese_flag.png'>`
+            `<img class='player_flag' data-language="ja" src='./images/flags/japanese_flag.png'>`
           );
           break;
         case 'it':
           playerFlags.push(
-            `<img class='player_flag' src='./images/flags/italy_flag.png'>`
+            `<img class='player_flag' data-language="it" src='./images/flags/italy_flag.png'>`
           );
           break;
       }
     });
+
+    playerFlags.sort((a, b) => {
+      const langA = a.match(/data-language="([^"]+)"/)[1];
+      const langB = b.match(/data-language="([^"]+)"/)[1];
+      return langA.localeCompare(langB);
+    });
+
     const joinedPlayerFlags = playerFlags.join('');
     const specificClass = 'player_is_' + player.displayName;
 
