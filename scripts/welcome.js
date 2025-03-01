@@ -108,49 +108,49 @@ let sessionLanguages = [];
 // Mock variables to test player section population
 const mockPlayer1 = {
   displayName: 'Bob',
-  skillLevel: 'Beginner',
+  skillLevel: '🏆',
   languages: ['en', 'zh'],
   lastOnline: 1740486329,
 };
 
 const mockPlayer2 = {
   displayName: 'Jubilee',
-  skillLevel: 'Master',
+  skillLevel: '🏆🏆🏆',
   languages: ['ja', 'es'],
   lastOnline: 1740481329,
 };
 
 const mockPlayer3 = {
   displayName: 'Arcturus',
-  skillLevel: 'Beginner',
+  skillLevel: '🏆',
   languages: ['en', 'ja'],
   lastOnline: 1740483329,
 };
 
 const mockPlayer4 = {
   displayName: 'Jesper',
-  skillLevel: 'Master',
+  skillLevel: '🏆🏆🏆',
   languages: ['en'],
   lastOnline: 1740484329,
 };
 
 const mockPlayer5 = {
   displayName: 'Ellim',
-  skillLevel: 'Advanced',
+  skillLevel: '🏆🏆',
   languages: ['en', 'zh', 'es'],
   lastOnline: 1740482329,
 };
 
 const mockPlayer6 = {
   displayName: 'Tariger12345',
-  skillLevel: 'Beginner',
+  skillLevel: '🏆',
   languages: ['en', 'zh', 'ja'],
   lastOnline: 1740644195,
 };
 
 const mockPlayer7 = {
   displayName: 'Juliano',
-  skillLevel: 'Advanced',
+  skillLevel: '🏆🏆',
   languages: ['it'],
   lastOnline: 1740649195,
 };
@@ -286,8 +286,8 @@ skillBeginner.addEventListener('click', () => {
   skillAdvanced.classList.remove('accordion_selected');
   skillMaster.classList.remove('accordion_selected');
   skillLevelText.textContent = 'Beginner 🏆';
-  playerInfoSkill.textContent = 'Beginner 🏆';
-  sessionSkillLevel = 'Beginner';
+  playerInfoSkill.textContent = '🏆';
+  sessionSkillLevel = '🏆';
   step3Div.classList.add('reveal');
   closeAccordion(skillLevelPanel, skillLevelSvg);
 });
@@ -298,8 +298,8 @@ skillAdvanced.addEventListener('click', () => {
   skillBeginner.classList.remove('accordion_selected');
   skillMaster.classList.remove('accordion_selected');
   skillLevelText.textContent = 'Advanced 🏆🏆';
-  playerInfoSkill.textContent = 'Advanced 🏆🏆';
-  sessionSkillLevel = 'Advanced';
+  playerInfoSkill.textContent = '🏆🏆';
+  sessionSkillLevel = '🏆🏆';
   step3Div.classList.add('reveal');
   closeAccordion(skillLevelPanel, skillLevelSvg);
 });
@@ -310,8 +310,8 @@ skillMaster.addEventListener('click', () => {
   skillBeginner.classList.remove('accordion_selected');
   skillAdvanced.classList.remove('accordion_selected');
   skillLevelText.textContent = 'Master 🏆🏆🏆';
-  playerInfoSkill.textContent = 'Master 🏆🏆🏆';
-  sessionSkillLevel = 'Master';
+  playerInfoSkill.textContent = '🏆🏆🏆';
+  sessionSkillLevel = '🏆🏆🏆';
   step3Div.classList.add('reveal');
   closeAccordion(skillLevelPanel, skillLevelSvg);
 });
@@ -671,18 +671,7 @@ export function populatePlayerSectionLanguages(languagesChosen) {
 export function populatePlayers(playerList, filter = 'none') {
   let HTML;
   playerList.forEach((player) => {
-    let skillMarker = '🏆';
-    switch (player.skillLevel) {
-      case 'Beginner':
-        skillMarker = '🏆';
-        break;
-      case 'Advanced':
-        skillMarker = '🏆🏆';
-        break;
-      case 'Master':
-        skillMarker = '🏆🏆🏆';
-        break;
-    }
+    let skillMarker = player.skillLevel;
 
     let playerFlags = [];
     player.languages.forEach((current) => {
