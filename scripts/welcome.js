@@ -253,6 +253,8 @@ welcomeNameForm.addEventListener('keydown', (event) => {
           playerInfoName.textContent = welcomeName;
           sessionDisplayName = welcomeName;
           step2Div.classList.add('reveal');
+          welcomeNameForm.classList.remove('focus_element');
+          skillLevelAccordion.classList.add('focus_element');
           return;
         }
       } else {
@@ -290,6 +292,8 @@ skillBeginner.addEventListener('click', () => {
   sessionSkillLevel = '🏆';
   step3Div.classList.add('reveal');
   closeAccordion(skillLevelPanel, skillLevelSvg);
+  skillLevelAccordion.classList.remove('focus_element');
+  languageAccordion.classList.add('focus_element');
 });
 
 skillAdvanced.addEventListener('click', () => {
@@ -302,6 +306,8 @@ skillAdvanced.addEventListener('click', () => {
   sessionSkillLevel = '🏆🏆';
   step3Div.classList.add('reveal');
   closeAccordion(skillLevelPanel, skillLevelSvg);
+  skillLevelAccordion.classList.remove('focus_element');
+  languageAccordion.classList.add('focus_element');
 });
 
 skillMaster.addEventListener('click', () => {
@@ -314,6 +320,8 @@ skillMaster.addEventListener('click', () => {
   sessionSkillLevel = '🏆🏆🏆';
   step3Div.classList.add('reveal');
   closeAccordion(skillLevelPanel, skillLevelSvg);
+  skillLevelAccordion.classList.remove('focus_element');
+  languageAccordion.classList.add('focus_element');
 });
 
 // Language section event listeners
@@ -363,6 +371,8 @@ languageChoices.forEach((current) => {
       languagesChosen.push(languageValue);
       threeLanguagesChosen();
       addLanguageFlags();
+      languageAccordion.classList.remove('focus_element');
+      continueButton.classList.add('focus_element');
       return;
     }
   });
@@ -372,6 +382,7 @@ languageChoices.forEach((current) => {
 continueButton.addEventListener('click', () => {
   playClickSound();
   createUserData();
+  continueButton.classList.remove('focus_element');
 });
 
 continueButtonReturn.addEventListener('click', () => {
