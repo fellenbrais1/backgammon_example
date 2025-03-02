@@ -220,8 +220,11 @@ const board = {
   },
 
   updatePointOccupation(reqPointNumber) {
+    // reverse point numbers for points 1 - 24 when player is red
     const pointNumber =
-      game.currentTurn == 'r' ? 25 - reqPointNumber : reqPointNumber;
+      game.currentTurn == 'r' && reqPointNumber <= 24
+        ? 25 - reqPointNumber
+        : reqPointNumber;
 
     const pieceNumberId = 'pieceNumber' + pointNumber;
     const pointsNumber = document.getElementById(pieceNumberId);
@@ -233,6 +236,7 @@ const board = {
     let limit = pointNumber < 25 ? 5 : 1; // 5 points without occupied number, 1 on bars (points 25 and 26)
 
     if (occupied <= limit) {
+      console.log('in updatePointOccupation: reqPointNumber=' + reqPointNumber);
       pointsNumber.textContent = '';
     } else {
       pointsNumber.textContent = '' + occupied;
@@ -480,12 +484,20 @@ function drawBoardNoAnimation() {
     for (let pos = 1; pos <= occupiedList.length; pos++) {
       const id = occupiedList[pos - 1];
       const piece = document.getElementById(id);
+      console.log(
+        'About to call getPieceCoords with pt=' + pt + ', pos=' + pos
+      );
       let [x, y] = getPieceCoords(pt, pos);
+      console.log(
+        'After calling getPieceCoords with pt=' + pt + ', pos=' + pos
+      );
       // await animateMovePiece(piece, x, y, 5);
       // Set the new position based on progress
       piece.style.left = x - PIECE_RADIUS + 'px';
       piece.style.top = y - PIECE_RADIUS + 'px';
     }
+
+    board.updatePointOccupation(pt);
   }
 }
 
@@ -625,7 +637,7 @@ function getPieceCoords(reqPoint, reqPosition) {
   let point = reqPoint;
 
   // convert the coords when playing as red
-  if (game.currentTurn == 'r') {
+  if (game.currentTurn == 'r' && reqPoint <= 24) {
     point = 25 - reqPoint;
   }
 
