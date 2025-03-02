@@ -228,8 +228,8 @@ html {
 }
 
 .challenge_button {
-  margin-top: 18px;
   font-size: 18px;
+  margin-left: 8px;
 }
 
 .challenge_button p {
@@ -305,26 +305,6 @@ html {
 .continue_svg,
 .return_continue_svg {
   transform: translateX(0px) translateY(-6px);
-}
-
-#player_info,
-#player_info_next {
-  display: grid;
-  grid-template-columns: 110px 110px;
-  text-align: center;
-  font-weight: bold;
-  margin-bottom: 4px;
-  font-size: 14px;
-}
-
-#player_info_flags,
-#player_info_flags_return,
-#player_info_flags_next {
-  display: grid;
-  grid-template-columns: 50px 50px 50px;
-  width: 150px;
-  margin-left: 45px;
-  margin-bottom: 4px;
 }
 
 .player_flag_img {
@@ -482,7 +462,7 @@ html {
 /* PLAYERS SECTION */
 .players_section {
   display: grid;
-  grid-template-rows: 20px 20px 70px 60px 240px 60px;
+  grid-template-rows: 20px 20px 48px 70px 260px 60px;
   position: absolute;
   top: 0;
   left: 0;
@@ -553,7 +533,8 @@ html {
   height: 100%;
 }
 
-.player_online_display {
+.player_online_display,
+.you_display {
   position: relative;
   display: grid;
   grid-template-columns: 18px 84px 48px auto;
@@ -561,6 +542,25 @@ html {
   font-weight: 450;
   font-size: 12px;
   border-bottom: 1px solid rgba(128, 128, 128, 0.511);
+}
+
+.you_display {
+  height: 36px;
+  font-size: 13px;
+  color: white;
+  padding-top: 4px;
+}
+
+.you_skill,
+.return_you_skill,
+.next_you_skill {
+  margin-left: 4px;
+}
+
+.you_flags,
+.return_you_flags,
+.next_you_flags {
+  margin-left: 4px;
 }
 
 .player_online_display:hover::after {
@@ -579,7 +579,8 @@ html {
   pointer-events: none;
 }
 
-.player_online_display p {
+.player_online_display p,
+.you_display p {
   transform: translateY(4px);
 }
 
@@ -602,10 +603,23 @@ html {
   cursor: pointer;
 }
 
+.you_name,
+.return_you_name,
+.next_you_name {
+  color: white;
+  font-weight: bold;
+  margin-left: 4px;
+}
+
 .player_flag {
   height: 14px;
   width: 18px;
   margin-right: 1px;
+}
+
+.player_flag_bigger {
+  height: 20px;
+  width: 24px;
 }
 
 /* MODAL SECTION */

@@ -42,34 +42,30 @@ const languageSvg = document.getElementById('language_svg');
 const languageChoices = document.querySelectorAll('.language_choice');
 
 // You section elements
-const playerInfoName = document.querySelector('.player_info_name');
-const playerInfoSkill = document.querySelector('.player_info_skill');
-const playerInfoFlags = document.getElementById('player_info_flags');
+const youName = document.querySelector('.you_name');
+const youSkill = document.querySelector('.you_skill');
+const youFlags = document.querySelector('.you_flags');
 
 // Step elements
 const step2Div = document.querySelector('.step2');
 const step3Div = document.querySelector('.step3');
 const step4Div = document.querySelector('.step4');
 
-// Challenge button
+// Continue button
 const continueButton = document.querySelector('.welcome_continue_button');
 
-// Step return elements
-const playerInfoNameReturn = document.querySelector('.player_info_name_return');
-const playerInfoSkillReturn = document.querySelector(
-  '.player_info_skill_return'
-);
-const playerInfoFlagsReturn = document.getElementById(
-  'player_info_flags_return'
-);
+// Return section elements
+const returnYouName = document.querySelector('.return_you_name');
+const returnYouSkill = document.querySelector('.return_you_skill');
+const returnYouFlags = document.querySelector('.return_you_flags');
 const notYouButton = document.querySelector('.not_you_button');
 const continueButtonReturn = document.querySelector('.return_continue_button');
 
 // Players section elements
 const playersSection = document.querySelector('.players_section');
-const playerInfoNameNext = document.querySelector('.player_info_name_next');
-const playerInfoSkillNext = document.querySelector('.player_info_skill_next');
-const playerInfoFlagsNext = document.getElementById('player_info_flags_next');
+const nextYouName = document.querySelector('.next_you_name');
+const nextYouSkill = document.querySelector('.next_you_skill');
+const nextYouFlags = document.querySelector('.next_you_flags');
 const playersXButton = document.querySelector('.players_x_button');
 const playersDisplay = document.querySelector('.players_active');
 const playersChallengeButton = document.querySelector('.challenge_button');
@@ -250,7 +246,7 @@ welcomeNameForm.addEventListener('keydown', (event) => {
           modals.changeModalContent('NameProblem');
           return;
         } else {
-          playerInfoName.textContent = welcomeName;
+          youName.textContent = welcomeName;
           sessionDisplayName = welcomeName;
           step2Div.classList.add('reveal');
           welcomeNameForm.classList.remove('focus_element');
@@ -288,7 +284,7 @@ skillBeginner.addEventListener('click', () => {
   skillAdvanced.classList.remove('accordion_selected');
   skillMaster.classList.remove('accordion_selected');
   skillLevelText.textContent = 'Beginner 🏆';
-  playerInfoSkill.textContent = '🏆';
+  youSkill.textContent = '🏆';
   sessionSkillLevel = '🏆';
   step3Div.classList.add('reveal');
   closeAccordion(skillLevelPanel, skillLevelSvg);
@@ -302,7 +298,7 @@ skillAdvanced.addEventListener('click', () => {
   skillBeginner.classList.remove('accordion_selected');
   skillMaster.classList.remove('accordion_selected');
   skillLevelText.textContent = 'Advanced 🏆🏆';
-  playerInfoSkill.textContent = '🏆🏆';
+  youSkill.textContent = '🏆🏆';
   sessionSkillLevel = '🏆🏆';
   step3Div.classList.add('reveal');
   closeAccordion(skillLevelPanel, skillLevelSvg);
@@ -316,7 +312,7 @@ skillMaster.addEventListener('click', () => {
   skillBeginner.classList.remove('accordion_selected');
   skillAdvanced.classList.remove('accordion_selected');
   skillLevelText.textContent = 'Master 🏆🏆🏆';
-  playerInfoSkill.textContent = '🏆🏆🏆';
+  youSkill.textContent = '🏆🏆🏆';
   sessionSkillLevel = '🏆🏆🏆';
   step3Div.classList.add('reveal');
   closeAccordion(skillLevelPanel, skillLevelSvg);
@@ -443,6 +439,8 @@ function addLanguageFlags(flag = 0) {
     flag2,
     flag3 = '<p></p>';
   let flags = [flag1, flag2, flag3];
+  let flagYou1, flagYou2, flagYou3;
+  let flagsYou = [flagYou1, flagYou2, flagYou3];
   let workingLanguages;
 
   sessionLanguages = languagesChosen;
@@ -458,6 +456,11 @@ function addLanguageFlags(flag = 0) {
                 data-language="en"
                 src="./images/flags/english_flag.png"
               />`;
+      flagsYou[i] = `<img
+              class="player_flag_bigger"
+              data-language="en"
+              src="./images/flags/english_flag.png"
+            />`;
     }
     if (workingLanguages[i].includes('es')) {
       flags[i] = `<img
@@ -465,6 +468,11 @@ function addLanguageFlags(flag = 0) {
                 data-language="es"
                 src="./images/flags/spanish_flag.png"
               />`;
+      flagsYou[i] = `<img
+              class="player_flag_bigger"
+              data-language="es"
+              src="./images/flags/spanish_flag.png"
+            />`;
     }
     if (workingLanguages[i].includes('zh')) {
       flags[i] = `<img
@@ -472,6 +480,11 @@ function addLanguageFlags(flag = 0) {
                 data-language="zh"
                 src="./images/flags/chinese_flag.png"
               />`;
+      flagsYou[i] = `<img
+              class="player_flag_bigger"
+              data-language="zh"
+              src="./images/flags/chinese_flag.png"
+            />`;
     }
     if (workingLanguages[i].includes('ja')) {
       flags[i] = `<img
@@ -479,6 +492,11 @@ function addLanguageFlags(flag = 0) {
                 data-language="ja"
                 src="./images/flags/japanese_flag.png"
               />`;
+      flagsYou[i] = `<img
+              class="player_flag_bigger"
+              data-language="ja"
+              src="./images/flags/japanese_flag.png"
+            />`;
     }
     if (workingLanguages[i].includes('it')) {
       flags[i] = `<img
@@ -486,6 +504,11 @@ function addLanguageFlags(flag = 0) {
                 data-language="it"
                 src="./images/flags/italy_flag.png"
               />`;
+      flagsYou[i] = `<img
+              class="player_flag_bigger"
+              data-language="it"
+              src="./images/flags/italy_flag.png"
+            />`;
     }
   }
   if (flags.length > 1) {
@@ -506,8 +529,26 @@ function addLanguageFlags(flag = 0) {
       }
     });
   }
+  if (flagsYou.length > 1) {
+    flagsYou.sort((a, b) => {
+      const matchA = a.match(/data-language="([^"]+)"/);
+      const matchB = b.match(/data-language="([^"]+)"/);
+
+      if (matchA && matchB) {
+        const langA = matchA[1];
+        const langB = matchB[1];
+        return langA.localeCompare(langB);
+      } else if (matchA) {
+        return -1;
+      } else if (matchB) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  }
   if (flag === 0) {
-    playerInfoFlags.innerHTML = flags.join('');
+    youFlags.innerHTML = flagsYou.join('');
     if (languagesChosen.length === 0) {
       languageText.textContent = `Select Language`;
       return;
@@ -518,8 +559,8 @@ function addLanguageFlags(flag = 0) {
       return;
     }
   } else {
-    playerInfoFlagsReturn.innerHTML = flags.join('');
-    playerInfoFlagsNext.innerHTML = flags.join('');
+    returnYouFlags.innerHTML = flagsYou.join('');
+    nextYouFlags.innerHTML = flagsYou.join('');
   }
 }
 
@@ -605,8 +646,8 @@ export function checkForLocalStorageObject() {
 // Called by checkForLocalStroageObject()
 function welcomeBackPopulateFields() {
   const storedObject = storage.loadLocalStorage();
-  playerInfoNameReturn.textContent = storedObject.displayName;
-  playerInfoSkillReturn.textContent = storedObject.skillLevel;
+  returnYouName.textContent = storedObject.displayName;
+  returnYouSkill.textContent = storedObject.skillLevel;
   languagesChosenReturn = storedObject.languages;
   addLanguageFlags(1);
 }
@@ -615,8 +656,8 @@ function welcomeBackPopulateFields() {
 // Called by changeModalContent() in modals.js
 export function populatePlayersSectionData() {
   const storedObject = storage.loadLocalStorage();
-  playerInfoNameNext.textContent = storedObject.displayName;
-  playerInfoSkillNext.textContent = storedObject.skillLevel;
+  nextYouName.textContent = storedObject.displayName;
+  nextYouSkill.textContent = storedObject.skillLevel;
   languagesChosenReturn = storedObject.languages;
   addLanguageFlags(1);
 }
@@ -680,6 +721,7 @@ export function populatePlayerSectionLanguages(languagesChosen) {
 // Populates the players section's player_display element with available players
 // Called by filterPlayersByLanguage()
 export function populatePlayers(playerList, filter = 'none') {
+  playersDisplay.innerHTML = '';
   let HTML;
   playerList.forEach((player) => {
     let skillMarker = player.skillLevel;
@@ -823,6 +865,7 @@ function addPlayerEventListeners(playerList) {
 // Allows filtering of available player elements by chosen language
 // Called by populatePlayerSectionLanguages()
 function filterPlayersByLanguage(languageFilter) {
+  challengerName = '';
   playersDisplay.innerHTML = '';
   populatePlayers(mockPlayerObjects, languageFilter);
 }
