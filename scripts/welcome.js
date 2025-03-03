@@ -172,6 +172,7 @@ let playersOnline = [
 ];
 
 // Challenger variables
+let activeOpponent = '';
 let challengerName = '';
 
 // Language HTML variables
@@ -411,6 +412,9 @@ playersChallengeButton.addEventListener('click', () => {
     modals.changeModalContent('NoChallenger');
   } else {
     modals.changeModalContent('Challenge', challengerName);
+    const storedObject = storage.loadLocalStorage();
+    storedObject.lastOnline = Math.floor(Date.now() / 1000);
+    playerPairingUserChallenge(storedObject);
   }
 });
 
@@ -851,6 +855,7 @@ function addPlayerEventListeners(playerList) {
           const newDOMElements = document.querySelectorAll(
             '.player_online_display'
           );
+          activeOpponent = player;
           challengerName = player.displayName;
           newDOMElements.forEach((current2) => {
             current2.classList.remove('accordion_selected');
@@ -874,6 +879,20 @@ function filterPlayersByLanguage(languageFilter) {
 // Called by populatePlayers()
 function hasLanguageMatch(userLanguages, playerLanguages) {
   return userLanguages.some((element) => playerLanguages.includes(element));
+}
+
+function playerPairingUserChallenge(storedObject) {
+  const playerWhite = storedObject;
+  const playerRed = activeOpponent;
+  console.log(`Player White: ${JSON.stringify(playerWhite)}`);
+  console.log(`Player Red: ${JSON.stringify(playerRed)}`);
+}
+
+export function playerPairingOpponentChallenge(storedObject, activeOpponent) {
+  const playerRed = storedObject;
+  const playerWhite = activeOpponent;
+  console.log(`Player White: ${JSON.stringify(playerWhite)}`);
+  console.log(`Player Red: ${JSON.stringify(playerRed)}`);
 }
 
 // CODE END

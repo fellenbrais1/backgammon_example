@@ -15,6 +15,7 @@ import {
   playersLanguageText,
   populatePlayers,
   mockPlayerObjects,
+  playerPairingOpponentChallenge,
 } from './welcome.js';
 import * as storage from './localStorage.js';
 
@@ -336,6 +337,7 @@ export function changeModalContent(tag = 'Challenge', data = '') {
         '.challenge_text_names'
       );
       challengerNameField.textContent = `Challenging ${data}`;
+
       buttonChallengeCancel.addEventListener('click', () => {
         playClickSound();
         challengeInformation.textContent = 'Cancelling challenge...';
@@ -368,6 +370,11 @@ export function changeModalContent(tag = 'Challenge', data = '') {
         setTimeout(() => {
           removeModal();
         }, 1000);
+        // FOR TESTING
+        const activeOpponent = mockPlayerObjects[5];
+        const storedObject = storage.loadLocalStorage();
+        storedObject.lastOnline = Math.floor(Date.now() / 1000);
+        playerPairingOpponentChallenge(storedObject, activeOpponent);
       });
 
       declineButton.addEventListener('click', () => {
