@@ -13,6 +13,7 @@ console.log(`welcome.js running`);
 import { playClickSound } from './script.js';
 import * as storage from './localStorage.js';
 import * as modals from './modals.js';
+import { demoRegisterForChat } from './chat.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -415,6 +416,7 @@ playersChallengeButton.addEventListener('click', () => {
     const storedObject = storage.loadLocalStorage();
     storedObject.lastOnline = Math.floor(Date.now() / 1000);
     playerPairingUserChallenge(storedObject);
+    demoRegisterForChat();
   }
 });
 

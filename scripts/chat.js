@@ -5,6 +5,7 @@
 
 // IMPORTS
 import { firebaseApp, analytics, database } from '../scripts/firebaseConfig.js';
+import * as storage from '../scripts/localStorage.js';
 
 ('use strict');
 
@@ -66,21 +67,22 @@ let remotePeerId = '';
 let conn;
 
 // Register on Firebase
-function registerForChat(player) {
-  if (!player.displayName) {
-    console.error('Error: user display name cannot be empty');
-    return;
-  }
-  console.log('Registering ' + player.displayName);
+function registerForChat(playerObject) {
+  // if (!player.displayName) {
+  //   console.error('Error: user display name cannot be empty');
+  //   return;
+  // }
+  console.log('Registering ' + playerObject.displayName);
 
   const playerData = {
-    displayName: player.displayName,
-    peerID: player.peerId,
-    skillLevel: player.skillLevel,
-    languages: player.languages,
+    displayName: playerObject.displayName,
+    peerID: playerObject.peerId,
+    skillLevel: playerObject.skillLevel,
+    languages: playerObject.languages,
     lastOnline: new Date().toISOString(),
   };
 
+  console.log(`Demo register for chat: ${JSON.stringify(playerData)}`);
   const playersRef = database.ref('players'); // Reference to the 'players' node
 
   // Push the player record to Firebase, which generates a unique key
@@ -95,6 +97,8 @@ function registerForChat(player) {
     .catch((error) => {
       console.error('Error saving player: ', error);
     });
+
+  demoFetchPlayers();
 }
 
 async function fetchPlayers() {
@@ -188,18 +192,21 @@ function handleRPC(data) {
 
 // Step 1: When displayName is set, registerForChat(your_display_name)
 export function demoRegisterForChat() {
-  const name = document.getElementById('welcome_name_input').value.trim();
+  let storedObject = storage.loadLocalStorage();
+
+  const name = storedObject.displayName;
   console.log('Attempting to save user record for ' + name + ' into Firebase');
 
   // create a user object
-  let player = {
+  let playerObject = {
     displayName: name,
-    languages: ['English', 'Spanish'],
+    languages: storedObject.languages,
     peerId: peer.id,
-    skillLevel: 'beginner',
+    skillLevel: storedObject.skillLevel,
   };
 
-  registerForChat(player);
+  console.log(`Demo register for chat: ${JSON.stringify(playerObject)}`);
+  registerForChat(playerObject);
 }
 
 // Step 2: Get the records of other players
