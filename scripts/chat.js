@@ -8,7 +8,7 @@ import { firebaseApp, analytics, database } from '../scripts/firebaseConfig.js';
 
 ('use strict');
 
-console.log(`chat.js running`);
+console.log('chat.js running');
 
 console.log('Using Firebase in chat.js:', firebaseApp);
 const db = database;
@@ -67,25 +67,34 @@ let conn;
 
 // Register on Firebase
 function registerForChat(player) {
-  if (!player.username) {
-    console.error('Error: Username cannot be empty');
+  if (!player.displayName) {
+    console.error('Error: user display name cannot be empty');
     return;
   }
-  console.log('Registering ' + player.username);
+  console.log('Registering ' + player.displayName);
 
   const playerData = {
-    peerId: player.peerId,
+    displayName: player.displayName,
+    peerID: player.peerId,
     skillLevel: player.skillLevel,
     languages: player.languages,
-    lastLoggedIn: new Date().toISOString(),
+    lastOnline: new Date().toISOString(),
   };
 
-  const playersRef = database.ref('players/' + player.username); // Reference to the 'players' node
+  const playersRef = database.ref('players'); // Reference to the 'players' node
 
-  playersRef
+  // Push the player record to Firebase, which generates a unique key
+  const newPlayerRef = playersRef.push();
+
+  // Set the player data under the generated key
+  newPlayerRef
     .set(playerData)
-    .then(() => console.log('Player registered successfully'))
-    .catch((err) => console.error('Error registering player:', err));
+    .then(() => {
+      console.log('Player saved successfully!');
+    })
+    .catch((error) => {
+      console.error('Error saving player: ', error);
+    });
 }
 
 async function fetchPlayers() {
@@ -178,13 +187,14 @@ function handleRPC(data) {
 // DEMO functions
 
 // Step 1: When displayName is set, registerForChat(your_display_name)
-function demoRegisterForChat() {
-  const name = document.getElementById('userName').value.trim();
+export function demoRegisterForChat() {
+  const name = document.getElementById('welcome_name_input').value.trim();
+  console.log('Attempting to save user record for ' + name + ' into Firebase');
 
   // create a user object
-  player = {
-    username: name,
-    languages: ['Enghlish', 'Spanish'],
+  let player = {
+    displayName: name,
+    languages: ['English', 'Spanish'],
     peerId: peer.id,
     skillLevel: 'beginner',
   };

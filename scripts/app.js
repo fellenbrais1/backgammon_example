@@ -1,3 +1,5 @@
+import { demoRegisterForChat } from './chat.js';
+
 const PIECE_RADIUS = 18;
 const PIECE_DIAMETER = PIECE_RADIUS + PIECE_RADIUS;
 const VERTICAL_TOLERANCE = 4;
@@ -105,15 +107,17 @@ async function rollDice() {
 }
 
 document.querySelector('.test_button2').addEventListener('click', function () {
-  if (game.currentTurn == 'w') {
-    game.currentTurn = 'r';
-  } else {
-    game.currentTurn = 'w';
-  }
+  demoRegisterForChat();
 
-  drawBoardNoAnimation();
+  // if (game.currentTurn == 'w') {
+  //   game.currentTurn = 'r';
+  // } else {
+  //   game.currentTurn = 'w';
+  // }
 
-  console.log('CurrentTurn is now ' + game.currentTurn);
+  // drawBoardNoAnimation();
+
+  // console.log('CurrentTurn is now ' + game.currentTurn);
 });
 
 class CoordinateMapper {
