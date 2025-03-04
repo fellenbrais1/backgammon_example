@@ -390,9 +390,9 @@ continueButtonReturn.addEventListener('click', () => {
     displayName: storedObject.displayName,
     skillLevel: storedObject.skillLevel,
     languages: storedObject.languages,
-    languagesChosen: languagesChosenReturn,
+    languagesChosen: storedObject.languages,
   };
-  modals.changeModalContent('ConfirmName', data);
+  modals.changeModalContent('ReturnConfirmName', data);
 });
 
 // Welcome back return section event listeners
@@ -559,7 +559,6 @@ function addLanguageFlags(flag = 0) {
       languageText.textContent = `Select Language`;
       return;
     } else {
-      console.log(`Flags added!`);
       step4Div.classList.add('reveal');
       languageText.innerHTML = flags.join('');
       return;
@@ -574,11 +573,9 @@ function addLanguageFlags(flag = 0) {
 // Called by an event listener on languageChoices
 function threeLanguagesChosen() {
   if (languagesChosen.length === 3) {
-    console.log(languagesChosen);
     closeAccordion(languagePanel, languageSvg);
     return;
   } else {
-    console.log(languagesChosen);
     return;
   }
 }
@@ -717,7 +714,6 @@ export function populatePlayerSectionLanguages(languagesChosen) {
         playersLanguageText.textContent = languageName;
         closeAccordion(playersLanguagePanel, playersLanguageSvg);
         filterPlayersByLanguage(languageFilter);
-        console.log(languageFilter);
         return;
       }
     });
@@ -727,21 +723,14 @@ export function populatePlayerSectionLanguages(languagesChosen) {
 // Populates the players section's player_display element with available players
 // Called by filterPlayersByLanguage()
 export function populatePlayers(playerList, filter = 'none') {
+  const storedObject = storage.loadLocalStorage();
   playersDisplay.innerHTML = '';
   let HTML;
   Object.entries(playerList).forEach(([key, value]) => {
-    // console.log(key, value);
     let skillMarker = value.skillLevel;
-
     let playerFlags = [];
 
-    // console.log(skillMarker);
-    // console.log(value.languages);
-    // console.log(value.displayName);
-    // console.log(value.languages);
-
     value.languages.forEach((current) => {
-      // console.log(current);
       const languageData = current;
       switch (languageData) {
         case 'en':
@@ -777,45 +766,46 @@ export function populatePlayers(playerList, filter = 'none') {
       return langA.localeCompare(langB);
     });
 
-    // console.log(playerFlags);
-
     const joinedPlayerFlags = playerFlags.join('');
-    const specificClass = 'player_is_' + value.displayName;
-
-    // console.log(specificClass);
+    const newName = value.displayName.replace(' ', '_');
+    const specificClass = 'player_is_' + newName;
 
     if (filter !== 'none') {
-      console.log(value.languages);
       if (!value.languages.includes(filter)) {
-        console.log(`Skipping player`);
+        console.log(
+          `Skipping player ${value.displayName} - Does not speak a common language`
+        );
+      } else if (value.displayName === storedObject.displayName) {
+        console.log(`Skipping player ${value.displayName} - Same name`);
       } else {
-        checkPlayerOnline(value)
-          ? (() => {
-              checkPlayerInGame(value)
-                ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${value.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`)
-                : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${value.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`);
-              playersDisplay.insertAdjacentHTML('afterbegin', HTML);
-            })()
-          : console.log(`Nothing to do here!`);
-      }
-    } else {
-      const storedObject = storage.loadLocalStorage();
-      const userLanguages = storedObject.languages;
-      console.log(userLanguages);
-      console.log(value.languages);
-      if (hasLanguageMatch(userLanguages, value.languages) === true) {
-        // console.log(`Match detected`);
         checkPlayerOnline(value.lastOnline)
           ? (() => {
               checkPlayerInGame(value.inGame)
                 ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${value.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`)
                 : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${value.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`);
               playersDisplay.insertAdjacentHTML('afterbegin', HTML);
-              // console.log(HTML);
             })()
-          : console.log(`Nothing to do here!`);
+          : console.log(`Nothing to do for ${value.displayName} - Offline`);
+      }
+    } else {
+      const userLanguages = storedObject.languages;
+      if (hasLanguageMatch(userLanguages, value.languages) === true) {
+        if (value.displayName === storedObject.displayName) {
+          console.log(`Skipping player ${value.displayName} - Same name`);
+        } else {
+          checkPlayerOnline(value.lastOnline)
+            ? (() => {
+                checkPlayerInGame(value.inGame)
+                  ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${value.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`)
+                  : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${value.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`);
+                playersDisplay.insertAdjacentHTML('afterbegin', HTML);
+              })()
+            : console.log(`Nothing to do for ${value.displayName} - Offline`);
+        }
       } else {
-        console.log(`Nothing to do here`);
+        console.log(
+          `Nothing to do for ${value.displayName} - Does not speak a common language`
+        );
       }
     }
   });
@@ -828,12 +818,10 @@ export function populatePlayers(playerList, filter = 'none') {
 function checkPlayerOnline(lastOnline) {
   const now = Math.floor(Date.now() / 1000);
   const result = now - lastOnline;
-  // console.log(result);
-  if (result < 1200000) {
-    // console.log(`checkPlayerOnline returning true`);
+  // TODO = ADJUST AS NEEDED
+  if (result < 12000000000000) {
     return true;
   } else {
-    // console.log(`checkPlayerOnline returning false`);
     return false;
   }
 }
@@ -842,10 +830,8 @@ function checkPlayerOnline(lastOnline) {
 // Called by populatePlayers()
 function checkPlayerInGame(inGame) {
   if (inGame === true) {
-    // console.log(`checkPlayerInGame returning true`);
     return true;
   } else {
-    // console.log(`checkPlayerInGame returning false`);
     return false;
   }
 }
@@ -854,8 +840,8 @@ function checkPlayerInGame(inGame) {
 // Called by populatePlayers()
 function addPlayerEventListeners(playerList) {
   Object.entries(playerList).forEach(([key, value]) => {
-    // console.log(key, value);
-    const element = '.player_is_' + value.displayName;
+    const newName = value.displayName.replace(' ', '_');
+    const element = '.player_is_' + newName;
     const DOMElement = document.querySelectorAll(element);
     const timeNow = Math.floor(Date.now() / 1000);
     DOMElement.forEach((current) => {
@@ -869,16 +855,14 @@ function addPlayerEventListeners(playerList) {
         'data-tooltip',
         `${status} Last Active: ${Math.floor(hours)} h, ${minutes} m ago`
       );
-      // console.log(current.classList);
       if (current.classList.contains('not_free')) {
-        console.log(`Nothing to do here!`);
+        console.log(`Nothing to do for ${current.displayName} - In game`);
       } else {
         current.addEventListener('click', () => {
           playClickSound();
           const newDOMElements = document.querySelectorAll(
             '.player_online_display'
           );
-          // const storedObject = storage.loadLocalStorage();
           activeOpponent = value;
           challengerName = value.displayName;
           newDOMElements.forEach((current2) => {
@@ -896,7 +880,7 @@ function addPlayerEventListeners(playerList) {
 function filterPlayersByLanguage(languageFilter) {
   challengerName = '';
   playersDisplay.innerHTML = '';
-  fetchPlayers();
+  fetchPlayers(languageFilter);
   // populatePlayers(mockPlayerObject, languageFilter);
 }
 

@@ -18,7 +18,7 @@ import {
   playerPairingOpponentChallenge,
 } from './welcome.js';
 import * as storage from './localStorage.js';
-import { demoRegisterForChat } from './chat.js';
+import { demoRegisterForChat, fetchPlayers } from './chat.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -197,19 +197,16 @@ export function changeModalContent(tag = 'Challenge', data = '') {
 
       confirmNameYesButton.addEventListener('click', () => {
         playClickSound();
-        // const storageData = storage.loadLocalStorage();
         storage.setLocalStorage(
           data.displayName,
           data.skillLevel,
           data.languages
         );
-        // const updatedStorageData = storage.loadLocalStorage();
         populatePlayersSectionData();
         welcomeSection.classList.remove('reveal');
         playersSection.classList.add('reveal');
         populatePlayerSectionLanguages(data.languagesChosen);
         demoRegisterForChat();
-        // populatePlayers(mockPlayerObjects);
         setTimeout(() => {
           removeModal();
         }, 1000);
@@ -239,19 +236,11 @@ export function changeModalContent(tag = 'Challenge', data = '') {
 
       returnConfirmNameYesButton.addEventListener('click', () => {
         playClickSound();
-        const storageData = storage.loadLocalStorage();
-        storage.setLocalStorage(
-          data.displayName,
-          data.skillLevel,
-          data.languages
-        );
-        const updatedStorageData = storage.loadLocalStorage();
         populatePlayersSectionData();
         welcomeSection.classList.remove('reveal');
         playersSection.classList.add('reveal');
-        populatePlayerSectionLanguages(data.languagesChosenReturn);
-        demoRegisterForChat();
-        // populatePlayers(mockPlayerObjects);
+        populatePlayerSectionLanguages(data.languages);
+        fetchPlayers();
         setTimeout(() => {
           removeModal();
         }, 1000);

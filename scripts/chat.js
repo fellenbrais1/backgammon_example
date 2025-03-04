@@ -73,6 +73,9 @@ function registerForChat(playerObject) {
   //   console.error('Error: user display name cannot be empty');
   //   return;
   // }
+
+  let players;
+
   console.log('Registering ' + playerObject.displayName);
 
   const playerData = {
@@ -86,6 +89,25 @@ function registerForChat(playerObject) {
 
   console.log(`Demo register for chat: ${JSON.stringify(playerData)}`);
   const playersRef = database.ref('players'); // Reference to the 'players' node
+
+  // playersRef.on('value', (snapshot) => {
+  //   setTimeout(() => {
+  //     players = snapshot.val(); // Get all players as an object
+  //     console.log('Players:', players);
+  //   }, 1000);
+  // });
+
+  // Object.entries(playersRef).forEach(([key, value]) => {
+  //   console.log(playerData);
+  //   console.log(value);
+  //   if (value === playerData) {
+  //     console.log(`Not adding player as record already exists`);
+  //     demoFetchPlayers();
+  //     return;
+  //   }
+  // });
+
+  // console.log(playersRef);
 
   // Push the player record to Firebase, which generates a unique key
   const newPlayerRef = playersRef.push();
@@ -101,9 +123,10 @@ function registerForChat(playerObject) {
     });
 
   demoFetchPlayers();
+  return;
 }
 
-export async function fetchPlayers() {
+export async function fetchPlayers(languageFilter = 'none') {
   const playersRef = database.ref('players');
   let players;
 
@@ -113,8 +136,12 @@ export async function fetchPlayers() {
   });
 
   setTimeout(() => {
-    populatePlayers(players);
-  }, 500);
+    if (languageFilter === 'none') {
+      populatePlayers(players);
+    } else {
+      populatePlayers(players, languageFilter);
+    }
+  }, 1000);
 }
 
 async function fetchPlayer(remoteName) {

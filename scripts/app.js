@@ -1,4 +1,5 @@
 import { demoRegisterForChat } from './chat.js';
+import { firebaseApp, analytics, database } from '../scripts/firebaseConfig.js';
 
 const PIECE_RADIUS = 18;
 const PIECE_DIAMETER = PIECE_RADIUS + PIECE_RADIUS;
@@ -11,8 +12,8 @@ const boardLeftOffset = boardElement.getBoundingClientRect().left;
 const boardTopOffset = boardElement.getBoundingClientRect().top;
 //console.log('boardLeftOffset = ', boardLeftOffset, ', boardTopOffset = ', boardTopOffset);
 
-console.log('Using Firebase in app.js:', window.firebaseApp);
-const db = window.database;
+console.log('Using Firebase in app.js:', firebaseApp);
+const db = database;
 console.log(db);
 
 // add dice
