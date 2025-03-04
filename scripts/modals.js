@@ -18,6 +18,7 @@ import {
   playerPairingOpponentChallenge,
 } from './welcome.js';
 import * as storage from './localStorage.js';
+import { demoRegisterForChat } from './chat.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -207,7 +208,8 @@ export function changeModalContent(tag = 'Challenge', data = '') {
         welcomeSection.classList.remove('reveal');
         playersSection.classList.add('reveal');
         populatePlayerSectionLanguages(data.languagesChosen);
-        populatePlayers(mockPlayerObjects);
+        demoRegisterForChat();
+        // populatePlayers(mockPlayerObjects);
         setTimeout(() => {
           removeModal();
         }, 1000);
@@ -248,7 +250,8 @@ export function changeModalContent(tag = 'Challenge', data = '') {
         welcomeSection.classList.remove('reveal');
         playersSection.classList.add('reveal');
         populatePlayerSectionLanguages(data.languagesChosenReturn);
-        populatePlayers(mockPlayerObjects);
+        demoRegisterForChat();
+        // populatePlayers(mockPlayerObjects);
         setTimeout(() => {
           removeModal();
         }, 1000);

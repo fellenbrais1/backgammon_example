@@ -6,6 +6,7 @@
 // IMPORTS
 import { firebaseApp, analytics, database } from '../scripts/firebaseConfig.js';
 import * as storage from '../scripts/localStorage.js';
+import { populatePlayers } from './welcome.js';
 
 ('use strict');
 
@@ -80,6 +81,7 @@ function registerForChat(playerObject) {
     skillLevel: playerObject.skillLevel,
     languages: playerObject.languages,
     lastOnline: new Date().toISOString(),
+    inGame: false,
   };
 
   console.log(`Demo register for chat: ${JSON.stringify(playerData)}`);
@@ -103,11 +105,16 @@ function registerForChat(playerObject) {
 
 async function fetchPlayers() {
   const playersRef = database.ref('players');
+  let players;
 
   playersRef.on('value', (snapshot) => {
-    const players = snapshot.val(); // Get all players as an object
+    players = snapshot.val(); // Get all players as an object
     console.log('Players:', players);
   });
+
+  setTimeout(() => {
+    populatePlayers(players);
+  }, 5000);
 }
 
 async function fetchPlayer(remoteName) {

@@ -729,11 +729,12 @@ export function populatePlayerSectionLanguages(languagesChosen) {
 export function populatePlayers(playerList, filter = 'none') {
   playersDisplay.innerHTML = '';
   let HTML;
-  playerList.forEach((player) => {
-    let skillMarker = player.skillLevel;
+  Object.entries(playerList).forEach(([key, value]) => {
+    console.log(key, value);
+    let skillMarker = value.skillLevel;
 
     let playerFlags = [];
-    player.languages.forEach((current) => {
+    value.languages.forEach((current) => {
       const languageData = current;
       switch (languageData) {
         case 'en':
@@ -763,7 +764,6 @@ export function populatePlayers(playerList, filter = 'none') {
           break;
       }
     });
-
     playerFlags.sort((a, b) => {
       const langA = a.match(/data-language="([^"]+)"/)[1];
       const langB = b.match(/data-language="([^"]+)"/)[1];
@@ -771,16 +771,16 @@ export function populatePlayers(playerList, filter = 'none') {
     });
 
     const joinedPlayerFlags = playerFlags.join('');
-    const specificClass = 'player_is_' + player.displayName;
+    const specificClass = 'player_is_' + value.displayName;
 
     if (filter !== 'none') {
-      console.log(player.languages);
-      if (!player.languages.includes(filter)) {
+      console.log(value.languages);
+      if (!value.languages.includes(filter)) {
         console.log(`Skipping player`);
       } else {
-        checkPlayerOnline(player, playersOnline)
+        checkPlayerOnline(value)
           ? (() => {
-              checkPlayerInGame(player, playersInGame)
+              checkPlayerInGame(value)
                 ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`)
                 : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`);
               playersDisplay.insertAdjacentHTML('afterbegin', HTML);
@@ -791,12 +791,12 @@ export function populatePlayers(playerList, filter = 'none') {
       const storedObject = storage.loadLocalStorage();
       const userLanguages = storedObject.languages;
       console.log(userLanguages);
-      console.log(player.languages);
-      if (hasLanguageMatch(userLanguages, player.languages) === true) {
+      console.log(value.languages);
+      if (hasLanguageMatch(userLanguages, value.languages) === true) {
         console.log(`Match detected`);
-        checkPlayerOnline(player, playersOnline)
+        checkPlayerOnline(value)
           ? (() => {
-              checkPlayerInGame(player, playersInGame)
+              checkPlayerInGame(value)
                 ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`)
                 : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`);
               playersDisplay.insertAdjacentHTML('afterbegin', HTML);
@@ -807,13 +807,15 @@ export function populatePlayers(playerList, filter = 'none') {
       }
     }
   });
+
   addPlayerEventListeners(playerList);
 }
 
 // Checks if a player is in the online list or not and returns true or false
 // Called by populatePlayers()
-function checkPlayerOnline(player, playersOnline) {
-  if (playersOnline.includes(player)) {
+function checkPlayerOnline(player) {
+  const now = Date.now;
+  if (now - player.lastOnline < 1000) {
     return true;
   } else {
     return false;
@@ -822,8 +824,8 @@ function checkPlayerOnline(player, playersOnline) {
 
 // Checks if a player is in a game or is free and returns true or false
 // Called by populatePlayers()
-function checkPlayerInGame(player, playersInGame) {
-  if (playersInGame.includes(player)) {
+function checkPlayerInGame(player) {
+  if (player.inGame === true) {
     return true;
   } else {
     return false;
@@ -833,12 +835,13 @@ function checkPlayerInGame(player, playersInGame) {
 // Adds event listeners to the programmatically created player choice elements
 // Called by populatePlayers()
 function addPlayerEventListeners(playerList) {
-  playerList.forEach((player) => {
-    const element = '.player_is_' + player.displayName;
+  Object.entries(playerList).forEach(([key, value]) => {
+    console.log(key, value);
+    const element = '.player_is_' + value.displayName;
     const DOMElement = document.querySelectorAll(element);
     const timeNow = Math.floor(Date.now() / 1000);
     DOMElement.forEach((current) => {
-      const timeSinceLastLoggedIn = Math.floor(timeNow - player.lastOnline);
+      const timeSinceLastLoggedIn = Math.floor(timeNow - value.lastOnline);
       const hours = Math.floor(timeSinceLastLoggedIn % (3600 * 24)) / 3600;
       const minutes = Math.floor((timeSinceLastLoggedIn % 3600) / 60);
       const status = current.classList.contains('not_free')
