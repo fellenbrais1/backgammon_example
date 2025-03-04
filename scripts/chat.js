@@ -80,7 +80,7 @@ function registerForChat(playerObject) {
     peerID: playerObject.peerId,
     skillLevel: playerObject.skillLevel,
     languages: playerObject.languages,
-    lastOnline: new Date().toISOString(),
+    lastOnline: Math.floor(Date.now() / 1000),
     inGame: false,
   };
 
@@ -103,7 +103,7 @@ function registerForChat(playerObject) {
   demoFetchPlayers();
 }
 
-async function fetchPlayers() {
+export async function fetchPlayers() {
   const playersRef = database.ref('players');
   let players;
 
@@ -114,7 +114,7 @@ async function fetchPlayers() {
 
   setTimeout(() => {
     populatePlayers(players);
-  }, 5000);
+  }, 500);
 }
 
 async function fetchPlayer(remoteName) {

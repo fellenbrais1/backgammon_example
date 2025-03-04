@@ -13,7 +13,7 @@ console.log(`welcome.js running`);
 import { playClickSound } from './script.js';
 import * as storage from './localStorage.js';
 import * as modals from './modals.js';
-import { demoRegisterForChat } from './chat.js';
+import { demoRegisterForChat, fetchPlayers } from './chat.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -730,11 +730,18 @@ export function populatePlayers(playerList, filter = 'none') {
   playersDisplay.innerHTML = '';
   let HTML;
   Object.entries(playerList).forEach(([key, value]) => {
-    console.log(key, value);
+    // console.log(key, value);
     let skillMarker = value.skillLevel;
 
     let playerFlags = [];
+
+    // console.log(skillMarker);
+    // console.log(value.languages);
+    // console.log(value.displayName);
+    // console.log(value.languages);
+
     value.languages.forEach((current) => {
+      // console.log(current);
       const languageData = current;
       switch (languageData) {
         case 'en':
@@ -770,8 +777,12 @@ export function populatePlayers(playerList, filter = 'none') {
       return langA.localeCompare(langB);
     });
 
+    // console.log(playerFlags);
+
     const joinedPlayerFlags = playerFlags.join('');
     const specificClass = 'player_is_' + value.displayName;
+
+    // console.log(specificClass);
 
     if (filter !== 'none') {
       console.log(value.languages);
@@ -781,8 +792,8 @@ export function populatePlayers(playerList, filter = 'none') {
         checkPlayerOnline(value)
           ? (() => {
               checkPlayerInGame(value)
-                ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`)
-                : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`);
+                ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${value.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`)
+                : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${value.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`);
               playersDisplay.insertAdjacentHTML('afterbegin', HTML);
             })()
           : console.log(`Nothing to do here!`);
@@ -793,13 +804,14 @@ export function populatePlayers(playerList, filter = 'none') {
       console.log(userLanguages);
       console.log(value.languages);
       if (hasLanguageMatch(userLanguages, value.languages) === true) {
-        console.log(`Match detected`);
-        checkPlayerOnline(value)
+        // console.log(`Match detected`);
+        checkPlayerOnline(value.lastOnline)
           ? (() => {
-              checkPlayerInGame(value)
-                ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`)
-                : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${player.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`);
+              checkPlayerInGame(value.inGame)
+                ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${value.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`)
+                : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${value.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`);
               playersDisplay.insertAdjacentHTML('afterbegin', HTML);
+              // console.log(HTML);
             })()
           : console.log(`Nothing to do here!`);
       } else {
@@ -813,21 +825,27 @@ export function populatePlayers(playerList, filter = 'none') {
 
 // Checks if a player is in the online list or not and returns true or false
 // Called by populatePlayers()
-function checkPlayerOnline(player) {
-  const now = Date.now;
-  if (now - player.lastOnline < 1000) {
+function checkPlayerOnline(lastOnline) {
+  const now = Math.floor(Date.now() / 1000);
+  const result = now - lastOnline;
+  // console.log(result);
+  if (result < 1200000) {
+    // console.log(`checkPlayerOnline returning true`);
     return true;
   } else {
+    // console.log(`checkPlayerOnline returning false`);
     return false;
   }
 }
 
 // Checks if a player is in a game or is free and returns true or false
 // Called by populatePlayers()
-function checkPlayerInGame(player) {
-  if (player.inGame === true) {
+function checkPlayerInGame(inGame) {
+  if (inGame === true) {
+    // console.log(`checkPlayerInGame returning true`);
     return true;
   } else {
+    // console.log(`checkPlayerInGame returning false`);
     return false;
   }
 }
@@ -836,7 +854,7 @@ function checkPlayerInGame(player) {
 // Called by populatePlayers()
 function addPlayerEventListeners(playerList) {
   Object.entries(playerList).forEach(([key, value]) => {
-    console.log(key, value);
+    // console.log(key, value);
     const element = '.player_is_' + value.displayName;
     const DOMElement = document.querySelectorAll(element);
     const timeNow = Math.floor(Date.now() / 1000);
@@ -851,7 +869,7 @@ function addPlayerEventListeners(playerList) {
         'data-tooltip',
         `${status} Last Active: ${Math.floor(hours)} h, ${minutes} m ago`
       );
-      console.log(current.classList);
+      // console.log(current.classList);
       if (current.classList.contains('not_free')) {
         console.log(`Nothing to do here!`);
       } else {
@@ -860,8 +878,9 @@ function addPlayerEventListeners(playerList) {
           const newDOMElements = document.querySelectorAll(
             '.player_online_display'
           );
-          activeOpponent = player;
-          challengerName = player.displayName;
+          // const storedObject = storage.loadLocalStorage();
+          activeOpponent = value;
+          challengerName = value.displayName;
           newDOMElements.forEach((current2) => {
             current2.classList.remove('accordion_selected');
           });
@@ -877,7 +896,8 @@ function addPlayerEventListeners(playerList) {
 function filterPlayersByLanguage(languageFilter) {
   challengerName = '';
   playersDisplay.innerHTML = '';
-  populatePlayers(mockPlayerObjects, languageFilter);
+  fetchPlayers();
+  // populatePlayers(mockPlayerObject, languageFilter);
 }
 
 // Determines whether the languages in a user's chosen languages match with the languages in another player's languages and populates the player_display field accordingly
