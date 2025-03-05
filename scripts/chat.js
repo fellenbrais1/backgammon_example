@@ -10,8 +10,6 @@ import { populatePlayers } from './welcome.js';
 
 ('use strict');
 
-console.log('chat.js running');
-
 console.log('Using Firebase in chat.js:', firebaseApp);
 const db = database;
 console.log(analytics);
@@ -67,101 +65,182 @@ document.addEventListener('DOMContentLoaded', () => {
 let remotePeerId = '';
 let conn;
 
-// Register on Firebase
-function registerForChat(playerObject) {
-  // if (!player.displayName) {
-  //   console.error('Error: user display name cannot be empty');
-  //   return;
-  // }
+// // Register on Firebase
+// function registerForChat(player) {
+//   if (!player.displayName) {
+//     console.error('Error: user display name cannot be empty');
+//     return;
+//   }
+//   console.log('Registering ' + player.displayName);
 
-  let players;
+//   const playerData = {
+//     displayName: player.displayName,
+//     peerID: player.peerId,
+//     skillLevel: player.skillLevel,
+//     languages: player.languages,
+//     lastOnline: new Date().toISOString(),
+//   };
 
-  console.log('Registering ' + playerObject.displayName);
+//   const playersRef = database.ref('players'); // Reference to the 'players' node
 
-  const playerData = {
-    displayName: playerObject.displayName,
-    peerID: playerObject.peerId,
-    skillLevel: playerObject.skillLevel,
-    languages: playerObject.languages,
-    lastOnline: Math.floor(Date.now() / 1000),
-    inGame: false,
-  };
+//   // Push the player record to Firebase, which generates a unique key
+//   const newPlayerRef = playersRef.push();
 
-  console.log(`Demo register for chat: ${JSON.stringify(playerData)}`);
-  const playersRef = database.ref('players'); // Reference to the 'players' node
+//   // Set the player data under the generated key
+//   newPlayerRef
+//     .set(playerData)
+//     .then(() => {
+//       console.log('Player saved successfully!');
+//     })
+//     .catch((error) => {
+//       console.error('Error saving player: ', error);
+//     });
+// }
 
-  // playersRef.on('value', (snapshot) => {
-  //   setTimeout(() => {
-  //     players = snapshot.val(); // Get all players as an object
-  //     console.log('Players:', players);
-  //   }, 1000);
-  // });
+async function registerForChat(key, player) {
+  if (!player.displayName) {
+    console.error('Error: user display name cannot be empty');
+    return null;
+  }
 
-  // Object.entries(playersRef).forEach(([key, value]) => {
-  //   console.log(playerData);
-  //   console.log(value);
-  //   if (value === playerData) {
-  //     console.log(`Not adding player as record already exists`);
-  //     demoFetchPlayers();
-  //     return;
-  //   }
-  // });
+  const playersRef = database.ref('players');
 
-  // console.log(playersRef);
+  try {
+    // Query Firebase to check if displayName already exists
+    const querySnapshot = await playersRef
+      .orderByChild('displayName')
+      .equalTo(player.displayName)
+      .once('value');
+    const nameExists = querySnapshot.exists();
 
-  // Push the player record to Firebase, which generates a unique key
-  const newPlayerRef = playersRef.push();
+    if (key === null) {
+      if (nameExists) {
+        console.error('Error: display name already exists');
+        return null;
+      }
 
-  // Set the player data under the generated key
-  newPlayerRef
-    .set(playerData)
-    .then(() => {
-      console.log('Player saved successfully!');
-    })
-    .catch((error) => {
-      console.error('Error saving player: ', error);
-    });
+      // Create a new player record
+      const newPlayerRef = playersRef.push();
+      await newPlayerRef.set({
+        displayName: player.displayName,
+        peerID: player.peerId,
+        skillLevel: player.skillLevel,
+        languages: player.languages,
+        lastOnline: Date.now(),
+      });
+      // console.log('Player registered successfully!');
+      return newPlayerRef.key;
+    } else {
+      // Check if the record exists
+      const existingPlayerRef = playersRef.child(key);
+      const existingSnapshot = await existingPlayerRef.once('value');
+      if (!existingSnapshot.exists()) {
+        console.error('Error: Player record does not exist');
+        return null;
+      }
 
-  demoFetchPlayers();
-  return;
+      const existingPlayer = existingSnapshot.val();
+
+      // If updating, ensure the new displayName does not conflict
+      if (player.displayName !== existingPlayer.displayName && nameExists) {
+        console.error('Error: New display name already exists');
+        return null;
+      }
+
+      // Update the existing player record
+      await existingPlayerRef.update({
+        displayName: player.displayName,
+        peerID: player.peerId,
+        skillLevel: player.skillLevel,
+        languages: player.languages,
+        lastOnline: Date.now(),
+      });
+      console.log('Player updated successfully!');
+      return key;
+    }
+  } catch (error) {
+    console.error('Error handling player record: ', error);
+    return null;
+  }
 }
 
-export async function fetchPlayers(languageFilter = 'none') {
+async function fetchPlayers() {
   const playersRef = database.ref('players');
   let players;
 
-  playersRef.on('value', (snapshot) => {
-    players = snapshot.val(); // Get all players as an object
-    console.log('Players:', players);
-  });
+  try {
+    const snapshot = await playersRef.once('value');
+    const playersObject = snapshot.val();
 
-  setTimeout(() => {
-    if (languageFilter === 'none') {
-      populatePlayers(players);
-    } else {
-      populatePlayers(players, languageFilter);
+    if (!playersObject) {
+      console.log('No players found.');
+      return [];
     }
-  }, 1000);
+
+    // Convert object to array and include keys
+    const playersArray = Object.keys(playersObject).map((key) => ({
+      id: key, // Firebase-generated key
+      ...playersObject[key], // Player data
+    }));
+
+    console.log('Players with keys:', playersArray);
+    return playersArray; // Now correctly in scope
+  } catch (error) {
+    console.error('Error retrieving players:', error);
+    return [];
+  }
 }
 
-async function fetchPlayer(remoteName) {
-  const playerRef = database.ref('players/' + remoteName);
+async function fetchPlayerByKey(playerKey) {
+  const playerRef = database.ref(`players/${playerKey}`);
 
   try {
     const snapshot = await playerRef.once('value');
+    const playerData = snapshot.val();
 
-    if (snapshot.exists()) {
-      const remoteUserObject = snapshot.val();
-      remotePeerId = remoteUserObject.uniqueCode;
-      console.log(remoteName + ' PeerJS code:', remotePeerId);
-      return remoteUserObject;
-    } else {
-      console.log('No player found with that username.');
+    if (!playerData) {
+      console.log(`No player found with key: ${playerKey}`);
       return null;
     }
-  } catch (err) {
-    console.error('Error fetching player data:', err);
+
+    // Include the key in the returned object
+    const player = { id: playerKey, ...playerData };
+
+    // console.log('Fetched player:', player);
+    return player;
+  } catch (error) {
+    console.error('Error retrieving player:', error);
     return null;
+  }
+}
+
+async function fetchRecentPlayers() {
+  const playersRef = database.ref('players');
+  const oneHourAgo = Date.now() - 60 * 60 * 1000; // 1 hour ago in milliseconds
+
+  try {
+    const snapshot = await playersRef
+      .orderByChild('lastOnline')
+      .startAt(oneHourAgo)
+      .once('value');
+    const playersObject = snapshot.val();
+
+    if (!playersObject) {
+      console.log('No players online in the last hour.');
+      return [];
+    }
+
+    // Convert object to an array with keys
+    const playersArray = Object.keys(playersObject).map((key) => ({
+      id: key,
+      ...playersObject[key],
+    }));
+
+    // console.log('Players online in the last hour:', playersArray);
+    return playersArray;
+  } catch (error) {
+    console.error('Error retrieving recent players:', error);
+    return [];
   }
 }
 
@@ -225,22 +304,85 @@ function handleRPC(data) {
 // DEMO functions
 
 // Step 1: When displayName is set, registerForChat(your_display_name)
-export function demoRegisterForChat() {
-  let storedObject = storage.loadLocalStorage();
+export async function demoRegisterForChat() {
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
-  const name = storedObject.displayName;
-  console.log('Attempting to save user record for ' + name + ' into Firebase');
+  let player;
+  let key;
+  let mike_key;
 
-  // create a user object
-  let playerObject = {
-    displayName: name,
-    languages: storedObject.languages,
+  // Trial 1 - Register Mike (should succeed)
+  player = {
+    displayName: 'Mike',
+    languages: ['English', 'Spanish'],
     peerId: peer.id,
-    skillLevel: storedObject.skillLevel,
+    skillLevel: 'beginner',
   };
 
-  console.log(`Demo register for chat: ${JSON.stringify(playerObject)}`);
-  registerForChat(playerObject);
+  key = await registerForChat(null, player);
+
+  if (key) {
+    mike_key = key;
+    console.log('Mike - New player created with key:', key);
+  } else {
+    console.error('Mike - Error creating record');
+  }
+
+  await delay(3000); // Wait 3 seconds
+
+  // Trial 2 - Register Tom (should succeed)
+  player.displayName = 'Tom';
+
+  key = await registerForChat(null, player);
+
+  if (key) {
+    console.log('Tom - New player created with key:', key);
+  } else {
+    console.error('Tom - Error creating record');
+  }
+
+  await delay(3000); // Wait 3 seconds
+
+  // Trial 3 - Register Mike again (should fail)
+  player.displayName = 'Mike';
+
+  key = await registerForChat(null, player);
+
+  if (key) {
+    console.log('Mike (2) - New player created with key:', key);
+  } else {
+    console.error('Mike (2) - Error creating record');
+  }
+
+  await delay(3000); // Wait 3 seconds
+
+  // Trial 4 - Updating Mike to speak Swahili (should succeed)
+  if (mike_key) {
+    player.languages = ['Swahili'];
+
+    const key = await registerForChat(mike_key, player);
+    if (key) {
+      console.log('Mike updated to speak Swahili, key:', key);
+    } else {
+      console.error('Mike update - Error updating record');
+    }
+  }
+
+  await delay(3000); // Wait 3 seconds
+
+  fetchPlayers();
+
+  await delay(3000); // Wait 3 seconds
+
+  let mike_player = await fetchPlayerByKey(mike_key);
+  console.log('Mike record is: ', mike_player);
+
+  await delay(3000); // Wait 3 seconds
+
+  let recent_players = await fetchRecentPlayers();
+  console.log('Recent players are: ', recent_players);
 }
 
 // Step 2: Get the records of other players
