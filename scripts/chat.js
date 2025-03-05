@@ -164,7 +164,7 @@ async function registerForChat(key, player) {
   }
 }
 
-async function fetchPlayers() {
+export async function fetchPlayers() {
   const playersRef = database.ref('players');
   let players;
 
