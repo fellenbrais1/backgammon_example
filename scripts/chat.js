@@ -16,6 +16,7 @@ console.log(analytics);
 console.log(db);
 
 let peer;
+export let peerIDStorage;
 
 // BUG
 // Linter does not like the 'Peer' constructor in this function but it DOES work
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   peer.on('open', (id) => {
     console.log('My unique peer ID is: ' + id);
+    peerIDStorage = id;
   });
 
   // On the remote peer's side
@@ -89,7 +91,7 @@ let conn;
 //   // Set the player data under the generated key
 //   newPlayerRef
 //     .set(playerData)
-//     .then(() => {
+//     .then(() => {qq
 //       console.log('Player saved successfully!');
 //     })
 //     .catch((error) => {
@@ -97,10 +99,15 @@ let conn;
 //     });
 // }
 
-async function registerForChat(key, player) {
-  if (!player.displayName) {
-    console.error('Error: user display name cannot be empty');
-    return null;
+// NOTES
+export async function registerForChat(key, player) {
+  // if (!player.displayName) {
+  //   console.error('Error: user display name cannot be empty');
+  //   return null;
+  // }
+
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   const playersRef = database.ref('players');
@@ -123,7 +130,7 @@ async function registerForChat(key, player) {
       const newPlayerRef = playersRef.push();
       await newPlayerRef.set({
         displayName: player.displayName,
-        peerID: player.peerId,
+        peerID: player.peerID,
         skillLevel: player.skillLevel,
         languages: player.languages,
         lastOnline: Date.now(),
@@ -301,6 +308,7 @@ function handleRPC(data) {
   }
 }
 
+// NOTES
 // DEMO functions
 
 // Step 1: When displayName is set, registerForChat(your_display_name)
@@ -322,6 +330,10 @@ export async function demoRegisterForChat() {
   };
 
   key = await registerForChat(null, player);
+
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
   if (key) {
     mike_key = key;

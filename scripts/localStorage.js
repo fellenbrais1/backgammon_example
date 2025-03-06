@@ -14,6 +14,9 @@ const defaultLocalStorageObject = {
   displayName: '',
   skillLevel: 'beginner',
   languages: [],
+  userKey: '',
+  inGame: false,
+  peerID: '',
 };
 
 // FUNCTIONS
@@ -33,7 +36,10 @@ export function createLocalStorage() {
 export function setLocalStorage(
   displayName = '',
   skillLevel = 'beginner',
-  languages = ['English']
+  languages = ['English'],
+  userKey = '',
+  peerID = '',
+  inGame = false
 ) {
   let storedObject = localStorage.getItem('localStorageObject');
   if (!storedObject) {
@@ -43,6 +49,9 @@ export function setLocalStorage(
   localStorageObject.displayName = displayName;
   localStorageObject.skillLevel = skillLevel;
   localStorageObject.languages = languages;
+  localStorageObject.userKey = userKey;
+  localStorageObject.inGame = inGame;
+  localStorageObject.peerID = peerID;
   localStorage.setItem(
     'localStorageObject',
     JSON.stringify(localStorageObject)
@@ -60,6 +69,9 @@ export function loadLocalStorage() {
       displayName: localStorageObject.displayName,
       skillLevel: localStorageObject.skillLevel,
       languages: localStorageObject.languages,
+      userKey: localStorageObject.userKey,
+      inGame: localStorageObject.inGame,
+      peerID: localStorageObject.peerID,
     };
   } else {
     const newObject = createLocalStorage();
@@ -67,6 +79,9 @@ export function loadLocalStorage() {
       displayName: newObject.displayName,
       skillLevel: newObject.skillLevel,
       languages: newObject.languages,
+      userKey: newObject.userKey,
+      inGame: newObject.inGame,
+      peerID: newObject.peerID,
     };
   }
 }

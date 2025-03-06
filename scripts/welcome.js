@@ -13,7 +13,7 @@ console.log(`welcome.js running`);
 import { playClickSound } from './script.js';
 import * as storage from './localStorage.js';
 import * as modals from './modals.js';
-import { demoRegisterForChat, fetchPlayers } from './chat.js';
+import { registerForChat, fetchPlayers, peerIDStorage } from './chat.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -391,6 +391,7 @@ continueButtonReturn.addEventListener('click', () => {
     skillLevel: storedObject.skillLevel,
     languages: storedObject.languages,
     languagesChosen: storedObject.languages,
+    userKey: storedObject.userKey,
   };
   modals.changeModalContent('ReturnConfirmName', data);
 });
@@ -416,7 +417,7 @@ playersChallengeButton.addEventListener('click', () => {
     const storedObject = storage.loadLocalStorage();
     storedObject.lastOnline = Math.floor(Date.now() / 1000);
     playerPairingUserChallenge(storedObject);
-    demoRegisterForChat();
+    registerForChat();
   }
 });
 
@@ -604,7 +605,7 @@ function retrieveLanguageName(languageData) {
   return languageName;
 }
 
-// If the data proviued by the user is valid, it writes data to the local storage object by calling changeModalContent()
+// If the data provided by the user is valid, it writes data to the local storage object by calling changeModalContent()
 // Called by an event listener on continueButton
 function createUserData() {
   if (
@@ -614,12 +615,17 @@ function createUserData() {
     sessionSkillLevel !== '' &&
     sessionLanguages.length > 0
   ) {
+    console.log(peerIDStorage);
+    const peerData = peerIDStorage;
+    console.log(peerData);
     const data = {
       displayName: sessionDisplayName,
       skillLevel: sessionSkillLevel,
       languages: sessionLanguages,
       languagesChosen: languagesChosen,
+      peerID: peerData,
     };
+    console.log(JSON.stringify(data));
     modals.changeModalContent('ConfirmName', data);
   } else {
     modals.changeModalContent('IncompleteData');

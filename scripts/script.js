@@ -144,10 +144,6 @@ function showMain() {
     }
   }, 500);
   setTimeout(() => {
-    if (doesUserAlreadyExist) {
-      // TODO
-      console.log(`Focus on challenge button`);
-    }
     welcomeNameForm.classList.add('focus_element');
   }, 500);
 }

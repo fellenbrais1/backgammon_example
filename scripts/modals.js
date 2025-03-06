@@ -18,7 +18,7 @@ import {
   playerPairingOpponentChallenge,
 } from './welcome.js';
 import * as storage from './localStorage.js';
-import { demoRegisterForChat, fetchPlayers } from './chat.js';
+import { registerForChat, fetchPlayers, peerIDStorage } from './chat.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -130,7 +130,11 @@ const forfeitModalHTML = `<section class="forfeit_section">
 
 // Changes the HTML content of the modal element depending on the tag in the call to the function
 // Called by various buttons on the webpage when a modal needs to be displayed
-export function changeModalContent(tag = 'Challenge', data = '') {
+export async function changeModalContent(tag = 'Challenge', data = '') {
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   showModal();
 
   switch (tag) {
@@ -195,22 +199,46 @@ export function changeModalContent(tag = 'Challenge', data = '') {
       );
       modalName.textContent = sessionDisplayName;
 
-      confirmNameYesButton.addEventListener('click', () => {
+      confirmNameYesButton.addEventListener('click', async () => {
         playClickSound();
         storage.setLocalStorage(
           data.displayName,
           data.skillLevel,
-          data.languages
+          data.languages,
+          data.peerID
         );
+
+        let storageObject = storage.loadLocalStorage();
+        console.log(storageObject);
         populatePlayersSectionData();
-        welcomeSection.classList.remove('reveal');
-        playersSection.classList.add('reveal');
         populatePlayerSectionLanguages(data.languagesChosen);
-        demoRegisterForChat();
-        setTimeout(() => {
-          removeModal();
-        }, 1000);
-        return;
+        console.log(storageObject.peerID);
+
+        try {
+          const userKey = await registerForChat(null, data);
+          console.log(userKey);
+
+          storageObject.userKey = userKey;
+          console.log(JSON.stringify(storageObject));
+
+          storage.setLocalStorage(
+            storageObject.displayName,
+            storageObject.skillLevel,
+            storageObject.languages,
+            storageObject.userKey,
+            storageObject.peerID
+          );
+
+          setTimeout(() => {
+            welcomeSection.classList.remove('reveal');
+            playersSection.classList.add('reveal');
+            removeModal();
+          }, 1000);
+          return;
+        } catch (error) {
+          console.error(`Error registering for chat:`, error);
+          return;
+        }
       });
 
       confirmNameNoButton.addEventListener('click', () => {
@@ -234,17 +262,37 @@ export function changeModalContent(tag = 'Challenge', data = '') {
       );
       returnModalName.textContent = sessionDisplayName;
 
-      returnConfirmNameYesButton.addEventListener('click', () => {
+      returnConfirmNameYesButton.addEventListener('click', async () => {
         playClickSound();
         populatePlayersSectionData();
-        welcomeSection.classList.remove('reveal');
-        playersSection.classList.add('reveal');
         populatePlayerSectionLanguages(data.languages);
-        fetchPlayers();
-        setTimeout(() => {
-          removeModal();
-        }, 1000);
-        return;
+        console.log(JSON.stringify(data));
+
+        try {
+          await registerForChat(data.userKey, data);
+          // console.log(userKey);
+
+          // storageObject.userKey = userKey;
+          // console.log(JSON.stringify(storageObject));
+
+          // storage.setLocalStorage(
+          //   storageObject.displayName,
+          //   storageObject.skillLevel,
+          //   storageObject.languages,
+          //   storageObject.userKey
+          // );
+
+          fetchPlayers();
+          setTimeout(() => {
+            welcomeSection.classList.remove('reveal');
+            playersSection.classList.add('reveal');
+            removeModal();
+          }, 1000);
+          return;
+        } catch (error) {
+          console.error(`Error registering for chat:`, error);
+          return;
+        }
       });
 
       returnConfirmNameNoButton.addEventListener('click', () => {
