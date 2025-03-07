@@ -13,7 +13,7 @@ console.log(`welcome.js running`);
 import { playClickSound } from './script.js';
 import * as storage from './localStorage.js';
 import * as modals from './modals.js';
-import { registerForChat, fetchPlayers, peerIDStorage } from './chat.js';
+import { registerForChat, fetchPlayers, peer } from './chat.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -615,15 +615,13 @@ function createUserData() {
     sessionSkillLevel !== '' &&
     sessionLanguages.length > 0
   ) {
-    console.log(peerIDStorage);
-    const peerData = peerIDStorage;
-    console.log(peerData);
+    console.log(`CREATE USER DATA PEER.ID = ${peer.id}`);
     const data = {
       displayName: sessionDisplayName,
       skillLevel: sessionSkillLevel,
       languages: sessionLanguages,
       languagesChosen: languagesChosen,
-      peerID: peerData,
+      peerID: peer.id,
     };
     console.log(JSON.stringify(data));
     modals.changeModalContent('ConfirmName', data);

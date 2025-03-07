@@ -18,7 +18,7 @@ import {
   playerPairingOpponentChallenge,
 } from './welcome.js';
 import * as storage from './localStorage.js';
-import { registerForChat, fetchPlayers, peerIDStorage } from './chat.js';
+import { registerForChat, fetchPlayers, peer } from './chat.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -135,6 +135,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  console.log(`DATA IS: ${JSON.stringify(data)}`);
   showModal();
 
   switch (tag) {
@@ -200,13 +201,15 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       modalName.textContent = sessionDisplayName;
 
       confirmNameYesButton.addEventListener('click', async () => {
+        console.log(`LANGAUGES = ${data.languages}`);
+        console.log(`PEERID = ${data.peerID}`);
         playClickSound();
-        storage.setLocalStorage(
-          data.displayName,
-          data.skillLevel,
-          data.languages,
-          data.peerID
-        );
+        storage.setLocalStorage({
+          displayName: data.displayName,
+          skillLevel: data.skillLevel,
+          langauges: data.languages,
+          peerID: data.peerID,
+        });
 
         let storageObject = storage.loadLocalStorage();
         console.log(storageObject);
@@ -225,8 +228,8 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
             storageObject.displayName,
             storageObject.skillLevel,
             storageObject.languages,
-            storageObject.userKey,
-            storageObject.peerID
+            storageObject.peerID,
+            storageObject.userKey
           );
 
           setTimeout(() => {

@@ -33,14 +33,15 @@ export function createLocalStorage() {
 
 // Sets the user's data on their copy of the localStorageObject
 // Exported to , called by
-export function setLocalStorage(
+export function setLocalStorage({
   displayName = '',
   skillLevel = 'beginner',
   languages = ['English'],
-  userKey = '',
   peerID = '',
-  inGame = false
-) {
+  userKey = '',
+  inGame = false,
+} = {}) {
+  console.log(`PEER ID IS: ${peerID}`);
   let storedObject = localStorage.getItem('localStorageObject');
   if (!storedObject) {
     storedObject = createLocalStorage();

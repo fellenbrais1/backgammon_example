@@ -15,8 +15,8 @@ const db = database;
 console.log(analytics);
 console.log(db);
 
-let peer;
-export let peerIDStorage;
+export let peer;
+// export let peerIDStorage;
 
 // BUG
 // Linter does not like the 'Peer' constructor in this function but it DOES work
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   peer.on('open', (id) => {
     console.log('My unique peer ID is: ' + id);
-    peerIDStorage = id;
+    // peerIDStorage = id;
   });
 
   // On the remote peer's side
