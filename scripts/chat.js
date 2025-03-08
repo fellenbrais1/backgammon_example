@@ -157,7 +157,7 @@ export async function registerForChat(key, player) {
       // Update the existing player record
       await existingPlayerRef.update({
         displayName: player.displayName,
-        peerID: player.peerId,
+        peerID: player.peerID,
         skillLevel: player.skillLevel,
         languages: player.languages,
         lastOnline: Date.now(),
@@ -171,7 +171,7 @@ export async function registerForChat(key, player) {
   }
 }
 
-export async function fetchPlayers() {
+export async function fetchPlayers(languageFilter = 'none') {
   const playersRef = database.ref('players');
   let players;
 
@@ -191,6 +191,15 @@ export async function fetchPlayers() {
     }));
 
     console.log('Players with keys:', playersArray);
+
+    setTimeout(() => {
+      if (languageFilter === 'none') {
+        populatePlayers(playersArray);
+      } else {
+        populatePlayers(playersArray, languageFilter);
+      }
+    }, 1000);
+
     return playersArray; // Now correctly in scope
   } catch (error) {
     console.error('Error retrieving players:', error);

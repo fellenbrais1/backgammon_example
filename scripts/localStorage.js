@@ -57,6 +57,7 @@ export function setLocalStorage({
     'localStorageObject',
     JSON.stringify(localStorageObject)
   );
+  console.log(JSON.stringify(localStorageObject));
   return;
 }
 
@@ -93,7 +94,7 @@ export function testForLocalStorageData() {
 }
 
 export function clearLocalStorage() {
-  setLocalStorage();
+  setLocalStorage(defaultLocalStorageObject);
   testForLocalStorageData();
 }
 

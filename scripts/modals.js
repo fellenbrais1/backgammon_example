@@ -207,14 +207,14 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         storage.setLocalStorage({
           displayName: data.displayName,
           skillLevel: data.skillLevel,
-          langauges: data.languages,
+          languages: data.languages,
           peerID: data.peerID,
         });
 
         let storageObject = storage.loadLocalStorage();
         console.log(storageObject);
-        populatePlayersSectionData();
-        populatePlayerSectionLanguages(data.languagesChosen);
+        // populatePlayersSectionData();
+        // populatePlayerSectionLanguages(data.languages);
         console.log(storageObject.peerID);
 
         try {
@@ -224,14 +224,18 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
           storageObject.userKey = userKey;
           console.log(JSON.stringify(storageObject));
 
-          storage.setLocalStorage(
-            storageObject.displayName,
-            storageObject.skillLevel,
-            storageObject.languages,
-            storageObject.peerID,
-            storageObject.userKey
-          );
+          storage.setLocalStorage({
+            displayName: storageObject.displayName,
+            skillLevel: storageObject.skillLevel,
+            languages: storageObject.languages,
+            peerID: storageObject.peerID,
+            userKey: storageObject.userKey,
+          });
 
+          populatePlayersSectionData();
+          populatePlayerSectionLanguages(data.languages);
+
+          fetchPlayers();
           setTimeout(() => {
             welcomeSection.classList.remove('reveal');
             playersSection.classList.add('reveal');

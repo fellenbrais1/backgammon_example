@@ -392,6 +392,7 @@ continueButtonReturn.addEventListener('click', () => {
     languages: storedObject.languages,
     languagesChosen: storedObject.languages,
     userKey: storedObject.userKey,
+    peerID: storedObject.peerID,
   };
   modals.changeModalContent('ReturnConfirmName', data);
 });
@@ -417,7 +418,7 @@ playersChallengeButton.addEventListener('click', () => {
     const storedObject = storage.loadLocalStorage();
     storedObject.lastOnline = Math.floor(Date.now() / 1000);
     playerPairingUserChallenge(storedObject);
-    registerForChat();
+    // registerForChat();
   }
 });
 
@@ -656,6 +657,8 @@ function welcomeBackPopulateFields() {
   returnYouName.textContent = storedObject.displayName;
   returnYouSkill.textContent = storedObject.skillLevel;
   languagesChosenReturn = storedObject.languages;
+  console.log(storedObject.languages);
+  console.log(languagesChosenReturn);
   addLanguageFlags(1);
 }
 
@@ -663,9 +666,12 @@ function welcomeBackPopulateFields() {
 // Called by changeModalContent() in modals.js
 export function populatePlayersSectionData() {
   const storedObject = storage.loadLocalStorage();
+  console.log(JSON.stringify(storedObject));
   nextYouName.textContent = storedObject.displayName;
   nextYouSkill.textContent = storedObject.skillLevel;
   languagesChosenReturn = storedObject.languages;
+  console.log(storedObject.languages);
+  console.log(languagesChosenReturn);
   addLanguageFlags(1);
 }
 
@@ -730,7 +736,7 @@ export function populatePlayers(playerList, filter = 'none') {
   const storedObject = storage.loadLocalStorage();
   playersDisplay.innerHTML = '';
   let HTML;
-  Object.entries(playerList).forEach(([key, value]) => {
+  playerList.forEach((value) => {
     let skillMarker = value.skillLevel;
     let playerFlags = [];
 
