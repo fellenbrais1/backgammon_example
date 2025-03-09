@@ -13,12 +13,15 @@ import {
   populatePlayersSectionData,
   populatePlayerSectionLanguages,
   playersLanguageText,
-  populatePlayers,
-  mockPlayerObjects,
+  playerPairingUserChallenge,
   playerPairingOpponentChallenge,
 } from './welcome.js';
 import * as storage from './localStorage.js';
-import { registerForChat, fetchPlayers, peer } from './chat.js';
+import {
+  registerForChat,
+  fetchRecentPlayers,
+  connectToPlayer,
+} from './chat.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -29,6 +32,7 @@ const playersSection = document.querySelector('.players_section');
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
 let sessionDisplayName = '';
+let cancelFlag = false;
 
 // HTML variables
 const nameLengthProblemHTML = `<section class='modal_message_section'><p class="modal_section_message big_margin_top no_select">Please enter a display name between 3 and 12 characters long</p>
@@ -235,7 +239,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
           populatePlayersSectionData();
           populatePlayerSectionLanguages(data.languages);
 
-          fetchPlayers();
+          fetchRecentPlayers();
           setTimeout(() => {
             welcomeSection.classList.remove('reveal');
             playersSection.classList.add('reveal');
@@ -277,19 +281,8 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
 
         try {
           await registerForChat(data.userKey, data);
-          // console.log(userKey);
 
-          // storageObject.userKey = userKey;
-          // console.log(JSON.stringify(storageObject));
-
-          // storage.setLocalStorage(
-          //   storageObject.displayName,
-          //   storageObject.skillLevel,
-          //   storageObject.languages,
-          //   storageObject.userKey
-          // );
-
-          fetchPlayers();
+          fetchRecentPlayers();
           setTimeout(() => {
             welcomeSection.classList.remove('reveal');
             playersSection.classList.add('reveal');
@@ -373,6 +366,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       break;
 
     case 'Challenge':
+      cancelFlag = false;
       modalSection.innerHTML = challengeModalHTML;
       modalSection.classList.add('reveal');
       const buttonChallengeCancel = modalSection.querySelector(
@@ -387,12 +381,42 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
 
       buttonChallengeCancel.addEventListener('click', () => {
         playClickSound();
+        cancelFlag = true;
         challengeInformation.textContent = 'Cancelling challenge...';
         setTimeout(() => {
           removeModal();
         }, 1000);
       });
-      break;
+
+      const gamePlayers = await playerPairingUserChallenge();
+      console.log(JSON.stringify(gamePlayers));
+      const conn = await connectToPlayer(gamePlayers.opponent);
+      console.log(JSON.stringify(gamePlayers.opponent));
+      console.log(conn);
+      if (conn !== null) {
+        cancelFlag = true;
+        const modalChallengeSection =
+          document.querySelector('.challenge_section');
+        modalChallengeSection.style.backgroundColor = 'lightgreen';
+        challengeInformation.textContent = `Challenge has been accepted!`;
+        break;
+      }
+
+      // Code to automatically cancel the challenge modal after 20 seconds
+      if (cancelFlag === false) {
+        setTimeout(() => {
+          console.log(
+            `20 seconds have passed without challenge response, cancelling.`
+          );
+          playClickSound();
+          challengeInformation.textContent = 'Cancelling challenge...';
+          setTimeout(() => {
+            // modalSection.classList.remove('reveal');
+            removeModal();
+          }, 1000);
+        }, 20000);
+        break;
+      }
 
     case 'ChallengeReceived':
       modalSection.innerHTML = challengeReceivedModalHTML;
@@ -418,10 +442,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
           removeModal();
         }, 1000);
         // FOR TESTING
-        const activeOpponent = mockPlayerObjects[5];
-        const storedObject = storage.loadLocalStorage();
-        storedObject.lastOnline = Math.floor(Date.now() / 1000);
-        playerPairingOpponentChallenge(storedObject, activeOpponent);
+        playerPairingOpponentChallenge();
       });
 
       declineButton.addEventListener('click', () => {

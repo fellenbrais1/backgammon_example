@@ -173,7 +173,6 @@ export async function registerForChat(key, player) {
 
 export async function fetchPlayers(languageFilter = 'none') {
   const playersRef = database.ref('players');
-  let players;
 
   try {
     const snapshot = await playersRef.once('value');
@@ -230,7 +229,7 @@ async function fetchPlayerByKey(playerKey) {
   }
 }
 
-async function fetchRecentPlayers() {
+export async function fetchRecentPlayers(languageFilter = 'none') {
   const playersRef = database.ref('players');
   const oneHourAgo = Date.now() - 60 * 60 * 1000; // 1 hour ago in milliseconds
 
@@ -252,6 +251,14 @@ async function fetchRecentPlayers() {
       ...playersObject[key],
     }));
 
+    setTimeout(() => {
+      if (languageFilter === 'none') {
+        populatePlayers(playersArray);
+      } else {
+        populatePlayers(playersArray, languageFilter);
+      }
+    }, 1000);
+
     // console.log('Players online in the last hour:', playersArray);
     return playersArray;
   } catch (error) {
@@ -260,10 +267,16 @@ async function fetchRecentPlayers() {
   }
 }
 
-async function connectToPlayer(remoteName) {
-  console.log('Attempting to connect to ' + remoteName);
+export async function connectToPlayer(opponent) {
+  console.log(JSON.stringify(opponent));
+  console.log(
+    'Attempting to connect to ' +
+      opponent.displayName +
+      ' at ' +
+      opponent.userKey
+  );
 
-  const playerRef = database.ref('players/' + remoteName);
+  const playerRef = database.ref(`players/${opponent.userKey}`);
 
   try {
     const snapshot = await playerRef.once('value');
@@ -466,6 +479,44 @@ async function demoFetchPlayer() {
   const remoteName = document.getElementById('remoteName').value.trim();
   const remotePlayer = await fetchPlayer(remoteName);
   console.log('remotePlayer:', remotePlayer);
+}
+
+export async function getOpponentUserKey(opponent) {
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  const playersRef = database.ref('players');
+
+  try {
+    // Query Firebase to check if displayName already exists
+    const querySnapshot = await playersRef
+      .orderByChild('displayName')
+      .equalTo(opponent.displayName)
+      .once('value');
+
+    if (querySnapshot.exists()) {
+      querySnapshot.forEach((childSnapshot) => {
+        // Access the key using childSnapshot.key
+        opponent.userKey = childSnapshot.key;
+      });
+    } else {
+      console.log(`Opponent not found.`);
+      opponent.userKey = null;
+      return null;
+    }
+
+    // const opponentRecord = querySnapshot.exists();
+    // opponent.userKey = opponentRecord.key;
+
+    await delay(2000);
+
+    console.log(opponent);
+    return opponent;
+  } catch (error) {
+    console.log(`Problem getting opponent record - ${error}`);
+    return null;
+  }
 }
 
 // CODE END

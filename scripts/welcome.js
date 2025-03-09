@@ -13,7 +13,7 @@ console.log(`welcome.js running`);
 import { playClickSound } from './script.js';
 import * as storage from './localStorage.js';
 import * as modals from './modals.js';
-import { registerForChat, fetchPlayers, peer } from './chat.js';
+import { fetchRecentPlayers, getOpponentUserKey, peer } from './chat.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -173,8 +173,8 @@ let playersOnline = [
 ];
 
 // Challenger variables
-let activeOpponent = '';
-let challengerName = '';
+export let activeOpponent = '';
+export let challengerName = '';
 
 // Language HTML variables
 const englishHTML = `<p
@@ -428,7 +428,8 @@ playersChallengeButton.addEventListener('click', () => {
     modals.changeModalContent('Challenge', challengerName);
     const storedObject = storage.loadLocalStorage();
     storedObject.lastOnline = Math.floor(Date.now() / 1000);
-    playerPairingUserChallenge(storedObject);
+    // const gamePlayers = playerPairingUserChallenge(storedObject);
+    // connectToPlayer(gamePlayers.opponent.displayName);
     // registerForChat();
   }
 });
@@ -861,6 +862,7 @@ function checkPlayerInGame(inGame) {
 // Called by populatePlayers()
 function addPlayerEventListeners(playerList) {
   Object.entries(playerList).forEach(([key, value]) => {
+    console.log(JSON.stringify(value));
     const newName = value.displayName.replace(' ', '_');
     const element = '.player_is_' + newName;
     const DOMElement = document.querySelectorAll(element);
@@ -901,7 +903,7 @@ function addPlayerEventListeners(playerList) {
 function filterPlayersByLanguage(languageFilter) {
   challengerName = '';
   playersDisplay.innerHTML = '';
-  fetchPlayers(languageFilter);
+  fetchRecentPlayers(languageFilter);
   // populatePlayers(mockPlayerObject, languageFilter);
 }
 
@@ -911,18 +913,38 @@ function hasLanguageMatch(userLanguages, playerLanguages) {
   return userLanguages.some((element) => playerLanguages.includes(element));
 }
 
-function playerPairingUserChallenge(storedObject) {
+export async function playerPairingUserChallenge() {
+  const storedObject = storage.loadLocalStorage();
+  storedObject.lastOnline = Math.floor(Date.now() / 1000);
   const playerWhite = storedObject;
-  const playerRed = activeOpponent;
+  // let playerRed = activeOpponent;
+
+  const playerRed = await getOpponentUserKey(activeOpponent);
+  console.log(playerRed);
+
   console.log(`Player White: ${JSON.stringify(playerWhite)}`);
   console.log(`Player Red: ${JSON.stringify(playerRed)}`);
+  return {
+    you: playerWhite,
+    opponent: playerRed,
+  };
 }
 
-export function playerPairingOpponentChallenge(storedObject, activeOpponent) {
+export async function playerPairingOpponentChallenge() {
+  const storedObject = storage.loadLocalStorage();
+  storedObject.lastOnline = Math.floor(Date.now() / 1000);
   const playerRed = storedObject;
-  const playerWhite = activeOpponent;
+  // let playerWhite = activeOpponent;
+
+  const playerWhite = await getOpponentUserKey(activeOpponent);
+  console.log(playerWhite);
+
   console.log(`Player White: ${JSON.stringify(playerWhite)}`);
   console.log(`Player Red: ${JSON.stringify(playerRed)}`);
+  return {
+    you: playerRed,
+    opponent: playerWhite,
+  };
 }
 
 // CODE END
