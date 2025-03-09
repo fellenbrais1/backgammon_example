@@ -123,7 +123,6 @@ testButton2.addEventListener('click', () => {
 // Main display functions
 // Shows the pages main elements on load or a site reset event
 function showMain() {
-  // startGame();
   const doesUserAlreadyExist = checkForLocalStorageObject();
   console.log(doesUserAlreadyExist);
   setTimeout(() => {

@@ -386,13 +386,24 @@ continueButton.addEventListener('click', () => {
 continueButtonReturn.addEventListener('click', () => {
   playClickSound();
   const storedObject = storage.loadLocalStorage();
-  const data = {
+  console.log(storedObject);
+  storage.setLocalStorage({
     displayName: storedObject.displayName,
     skillLevel: storedObject.skillLevel,
     languages: storedObject.languages,
     languagesChosen: storedObject.languages,
     userKey: storedObject.userKey,
-    peerID: storedObject.peerID,
+    peerID: peer.id,
+  });
+  const storedObject2 = storage.loadLocalStorage();
+  console.log(storedObject2);
+  const data = {
+    displayName: storedObject2.displayName,
+    skillLevel: storedObject2.skillLevel,
+    languages: storedObject2.languages,
+    languagesChosen: storedObject2.languages,
+    userKey: storedObject2.userKey,
+    peerID: storedObject2.peerID,
   };
   modals.changeModalContent('ReturnConfirmName', data);
 });
