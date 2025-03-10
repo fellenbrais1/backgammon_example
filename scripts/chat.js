@@ -3,10 +3,13 @@
 // NOTES
 // Inter-player communication logic
 
+'use strict';
+
 // IMPORTS
 import { firebaseApp, analytics, database } from '../scripts/firebaseConfig.js';
 import * as storage from '../scripts/localStorage.js';
 import { populatePlayers } from './welcome.js';
+import * as messages from './messages.js';
 
 ('use strict');
 
@@ -16,7 +19,8 @@ console.log(analytics);
 console.log(db);
 
 export let peer;
-// export let peerIDStorage;
+let remotePeerId = '';
+export let conn;
 
 // BUG
 // Linter does not like the 'Peer' constructor in this function but it DOES work
@@ -44,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     conn.on('data', (data) => {
       console.log('Received data:', data);
+      handleRPC(data);
     });
 
     conn.on('error', (err) => {
@@ -63,9 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // removePeerIdFromDatabase(peer.id);
   });
 });
-
-let remotePeerId = '';
-let conn;
 
 // // Register on Firebase
 // function registerForChat(player) {
@@ -286,7 +288,7 @@ export async function connectToPlayer(opponent) {
     }
 
     const remotePeerId = snapshot.val().peerID;
-    const conn = peer.connect(remotePeerId);
+    conn = peer.connect(remotePeerId);
 
     conn.on('error', (err) => {
       console.error('Connection error:', err);
@@ -309,7 +311,7 @@ export async function connectToPlayer(opponent) {
   }
 }
 
-function sendRPC(method, params) {
+export function sendRPC(method, params) {
   const rpcMessage = {
     method: method,
     params: params,
@@ -326,6 +328,14 @@ function handleRPC(data) {
   // Handle the RPC method
   if (rpcMessage.method === 'move') {
     console.log('Player moved to:', rpcMessage.params.position);
+  }
+  if (rpcMessage.method === 'challenge') {
+    console.log(`Challenge sent to ${rpcMessage.params}`);
+  }
+  if (rpcMessage.method === 'chat') {
+    console.log(`Chat message received: ${rpcMessage.params}`);
+    const opponentName = messages.getOpponentName();
+    messages.pretendOpponentMessage(opponentName, rpcMessage.params);
   }
 }
 

@@ -21,6 +21,8 @@ import {
   registerForChat,
   fetchRecentPlayers,
   connectToPlayer,
+  sendRPC,
+  conn,
 } from './chat.js';
 import * as messages from './messages.js';
 
@@ -399,19 +401,11 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       console.log(JSON.stringify(gamePlayers.opponent));
       console.log(conn);
       if (conn !== null) {
+        console.log(conn);
         cancelFlag = true;
-        const modalChallengeSection =
-          document.querySelector('.challenge_section');
-        modalChallengeSection.style.backgroundColor = 'lightgreen';
-        challengeInformation.textContent = `Challenge has been accepted!`;
-        setTimeout(() => {
-          playersSection.classList.remove('reveal');
-          welcomeSection.classList.remove('reveal');
-          returnSection.classList.remove('reveal');
-          chatSection.classList.add('reveal');
-          removeModal();
-          messages.startGameMessages(gamePlayers.opponent.displayName);
-        }, 1000);
+        sendRPC('challenge', gamePlayers.you);
+        // TODO - CHANGE HERE
+        // Code should 'hold' until a challenge confirmation message has been sent by the opponent, then a sendRPC message will be received, which calls this function with the case 'ChallengeAccepted'
         break;
       }
 
@@ -430,6 +424,29 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         }, 20000);
         break;
       }
+
+    case 'ChallengeAccepted':
+      const modalChallengeSection =
+        document.querySelector('.challenge_section');
+      modalChallengeSection.style.backgroundColor = 'lightgreen';
+      challengeInformation.textContent = `Challenge has been accepted!`;
+      setTimeout(() => {
+        playersSection.classList.remove('reveal');
+        welcomeSection.classList.remove('reveal');
+        returnSection.classList.remove('reveal');
+        chatSection.classList.add('reveal');
+        removeModal();
+        messages.startGameMessages(gamePlayers.opponent.displayName);
+      }, 1000);
+
+    case 'ChallengeRejected':
+      const modalChallengeSection2 =
+        document.querySelector('.challenge_section');
+      modalChallengeSection2.style.backgroundColor = 'red';
+      challengeInformation.textContent = `Challenge has been rejected!`;
+      setTimeout(() => {
+        removeModal();
+      }, 1000);
 
     case 'ChallengeReceived':
       modalSection.innerHTML = challengeReceivedModalHTML;

@@ -1,6 +1,7 @@
 import { gamePlayers } from './modals.js';
 import * as storage from './localStorage.js';
 import { activeOpponent } from './welcome.js';
+import * as chat from './chat.js';
 
 // Chat sounds
 const chatPop = document.getElementById('chat_sound');
@@ -44,6 +45,7 @@ function addChatMessage() {
   const message = chatInput.value;
   chatInput.value = '';
   const messageHTML = createChatMessage(message);
+  chat.sendRPC('chat', { message });
   postChatMessage(messageHTML);
   displayLatestMessage();
 }
@@ -90,17 +92,20 @@ function getUserDisplayName() {
   return displayName;
 }
 
-function getOpponentName() {
+export function getOpponentName() {
   const opponentName = gamePlayers.opponent.displayName;
   return opponentName;
 }
 
 // Generates and posts a chatbox message from a pretend opponent
 // Called by an eventHandler on the 'Ask Jack - TEST' button
-function pretendOpponentMessage(opponentName) {
+export function pretendOpponentMessage(
+  opponentName,
+  chatContent = `'That would be an ecumenical matter...'`
+) {
   const messageHTML = createOpponentMessage(
     `${opponentName}`,
-    'That would be an ecumenical matter...'
+    `${chatContent}`
   );
   postChatMessage(messageHTML);
   displayLatestMessage();
