@@ -428,9 +428,6 @@ playersChallengeButton.addEventListener('click', () => {
     modals.changeModalContent('Challenge', challengerName);
     const storedObject = storage.loadLocalStorage();
     storedObject.lastOnline = Math.floor(Date.now() / 1000);
-    // const gamePlayers = playerPairingUserChallenge(storedObject);
-    // connectToPlayer(gamePlayers.opponent.displayName);
-    // registerForChat();
   }
 });
 

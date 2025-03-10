@@ -34,6 +34,8 @@ const playersSection = document.querySelector('.players_section');
 let sessionDisplayName = '';
 let cancelFlag = false;
 
+export let gamePlayers;
+
 // HTML variables
 const nameLengthProblemHTML = `<section class='modal_message_section'><p class="modal_section_message big_margin_top no_select">Please enter a display name between 3 and 12 characters long</p>
 <p class="modal_section_button1 button center_modal_button no_select" title='Ok'>Ok</p>
@@ -388,7 +390,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         }, 1000);
       });
 
-      const gamePlayers = await playerPairingUserChallenge();
+      gamePlayers = await playerPairingUserChallenge();
       console.log(JSON.stringify(gamePlayers));
       const conn = await connectToPlayer(gamePlayers.opponent);
       console.log(JSON.stringify(gamePlayers.opponent));
