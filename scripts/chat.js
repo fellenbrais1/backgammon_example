@@ -207,22 +207,21 @@ export async function fetchPlayers(languageFilter = 'none') {
 }
 
 async function fetchPlayerByKey(playerKey) {
-  const playerRef = database.ref(`players/${playerKey}`);
-
   try {
-    const snapshot = await playerRef.once('value');
-    const playerData = snapshot.val();
+    const playerRef = database.ref('players').child(playerKey);
 
-    if (!playerData) {
-      console.log(`No player found with key: ${playerKey}`);
+    // Modern approach with get()
+    const snapshot = await playerRef.get();
+
+    // Older approach with once()
+    // const snapshot = await playerRef.once('value');
+
+    if (snapshot.exists()) {
+      return snapshot.val(); // Returns the player data object
+    } else {
+      console.log('No player found with that key');
       return null;
     }
-
-    // Include the key in the returned object
-    const player = { id: playerKey, ...playerData };
-
-    // console.log('Fetched player:', player);
-    return player;
   } catch (error) {
     console.error('Error retrieving player:', error);
     return null;
@@ -279,14 +278,14 @@ export async function connectToPlayer(opponent) {
   const playerRef = database.ref(`players/${opponent.userKey}`);
 
   try {
-    const snapshot = await playerRef.once('value');
+    const snapshot = await playerRef.get();
 
     if (!snapshot.exists()) {
       console.log('No player found with that username.');
       return null;
     }
 
-    const remotePeerId = snapshot.val().uniqueCode;
+    const remotePeerId = snapshot.val().peerID;
     const conn = peer.connect(remotePeerId);
 
     conn.on('error', (err) => {
@@ -395,6 +394,7 @@ export async function demoRegisterForChat() {
   // Trial 4 - Updating Mike to speak Swahili (should succeed)
   if (mike_key) {
     player.languages = ['Swahili'];
+    player.displayName = 'Tom';
 
     const key = await registerForChat(mike_key, player);
     if (key) {

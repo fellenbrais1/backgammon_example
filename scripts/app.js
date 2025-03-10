@@ -23,31 +23,52 @@ document.addEventListener('DOMContentLoaded', function () {
   dice1.id = 'dice1';
   let dice2 = document.createElement('img');
   dice2.id = 'dice2';
+  let dice_red1 = document.createElement('img');
+  dice_red1.id = 'dice_red1';
+  let dice_red2 = document.createElement('img');
+  dice_red2.id = 'dice_red2';
 
   // Set the source of the images
   dice1.src = 'images/dice-six.png';
   dice2.src = 'images/dice-six.png';
+  dice_red1.src = 'images/dice-red-six.png';
+  dice_red2.src = 'images/dice-red-six.png';
 
   // Set the size of the images (40px wide and 40px tall)
   dice1.width = 40;
   dice1.height = 40;
   dice2.width = 40;
   dice2.height = 40;
+  dice_red1.width = 40;
+  dice_red1.height = 40;
+  dice_red2.width = 40;
+  dice_red2.height = 40;
 
   // Set the style to position the images
   dice1.style.position = 'absolute';
-  dice1.style.top = '210px';
+  dice1.style.top = '110px';
   dice1.style.left = '10px';
   dice2.style.position = 'absolute';
-  dice2.style.top = '260px';
+  dice2.style.top = '160px';
   dice2.style.left = '10px';
+
+  dice_red1.style.position = 'absolute';
+  dice_red1.style.top = '310px';
+  dice_red1.style.left = '10px';
+  dice_red2.style.position = 'absolute';
+  dice_red2.style.top = '360px';
+  dice_red2.style.left = '10px';
 
   // Append the images to the 'board' div
   document.getElementById('board').appendChild(dice1);
   document.getElementById('board').appendChild(dice2);
+  document.getElementById('board').appendChild(dice_red1);
+  document.getElementById('board').appendChild(dice_red2);
 
   dice1.addEventListener('click', rollDice);
   dice2.addEventListener('click', rollDice);
+  dice_red1.addEventListener('click', rollRedDice);
+  dice_red2.addEventListener('click', rollRedDice);
 });
 
 // Helper function to create a delay
@@ -57,6 +78,8 @@ function sleep(ms) {
 
 // animate rolling dice
 async function rollDice() {
+  if (game.currentTurn != 'w') return; // can be operated by white player only
+
   console.log('Dice clicked! Rolling the dice...');
 
   // clear previous throw
@@ -105,6 +128,60 @@ async function rollDice() {
   }
 
   console.log('Dice rolled: ', board.diceThrows);
+}
+
+// animate rolling red dice
+async function rollRedDice() {
+  if (game.currentTurn != 'r') return; // can be operated by red player only
+
+  console.log('Red Dice clicked! Rolling the red dice...');
+
+  // clear previous throw
+  board.diceThrows.fill(0);
+
+  const dice_red1 = document.getElementById('dice_red1');
+  const dice_red2 = document.getElementById('dice_red2');
+
+  // Array of dice image paths
+  var diceFaces = [
+    'images/dice-red-one.png',
+    'images/dice-red-two.png',
+    'images/dice-red-three.png',
+    'images/dice-red-four.png',
+    'images/dice-red-five.png',
+    'images/dice-red-six.png',
+  ];
+
+  // Simulate rolling by changing the dice face multiple times
+  for (let i = 0; i < 5; i++) {
+    // Generate a random number between 0 and 5 (inclusive)
+    let randomIndex1 = Math.floor(Math.random() * diceFaces.length);
+    let randomIndex2 = Math.floor(Math.random() * diceFaces.length);
+
+    // Change the dice image to a random face
+    dice_red1.src = diceFaces[randomIndex1];
+    dice_red2.src = diceFaces[randomIndex2];
+
+    // Wait for 100ms before changing the face again
+    await sleep(100);
+  }
+
+  // Wait for half a second before the final roll
+  await sleep(100);
+
+  // Final roll
+  let finalIndex1 = Math.floor(Math.random() * diceFaces.length);
+  let finalIndex2 = Math.floor(Math.random() * diceFaces.length);
+  dice_red1.src = diceFaces[finalIndex1];
+  dice_red2.src = diceFaces[finalIndex2];
+
+  board.diceThrows[0] = finalIndex1 + 1;
+  board.diceThrows[1] = finalIndex2 + 1;
+  if (board.diceThrows[0] == board.diceThrows[1]) {
+    board.diceThrows[2] = board.diceThrows[3] = board.diceThrows[0];
+  }
+
+  console.log('Red Dice rolled: ', board.diceThrows);
 }
 
 document.querySelector('.test_button2').addEventListener('click', function () {
@@ -188,7 +265,6 @@ const board = {
   // Method to reset the board
   resetBoard() {
     this.contents = this.contents.map(() => ({
-      // color: '',
       occupied: [],
     }));
 
