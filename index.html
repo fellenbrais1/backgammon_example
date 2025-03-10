@@ -324,7 +324,7 @@
             <div class="players_x_button button x_button">X</div>
           </section>
           <!-- CHAT SECTION -->
-          <section class="chat_section">
+          <section class="chat_section no_pointer_events">
             <div class="chat_display"></div>
             <form class="chat_form">
               <input
@@ -335,6 +335,13 @@
                 autocomplete="off"
               />
             </form>
+            <div class="chat_buttons_display">
+              <p class="chat_test_button">TEST1</p>
+              <p class="chat_test_button">TEST2</p>
+              <p class="chat_test_button">TEST3</p>
+              <p class="chat_test_button">TEST4</p>
+              <p class="chat_test_button">TEST5</p>
+            </div>
           </section>
           <!-- SETTINGS SECTION -->
           <section class="settings_section no_pointer_events">
@@ -623,7 +630,7 @@
       <p class="test_button2 button no_select" title="Dad Test Button">
         TEST 2
       </p>
-      <p class="test_button3 button no_select" title="Challenge Test">Ch</p>
+      <p class="test_button3 button no_select" title="Message Test">MT</p>
       <p class="test_button4 button no_select" title="Challenge Received Test">
         Ch Re
       </p>
@@ -638,6 +645,7 @@
     <audio id="piece_putdown" src="./sounds/piece_putdown.wav"></audio>
     <audio id="pieces_deal" src="./sounds/pieces_deal.wav"></audio>
     <audio id="dice_roll_sound" src="./sounds/rolling_dice.mp3"></audio>
+    <audio id="chat_sound" src="./sounds/chat_notification.wav"></audio>
     <!-- SPEECH SOUNDS-->
     <audio id="number1" src="./sounds/number1.wav"></audio>
     <audio id="number2" src="./sounds/number2.wav"></audio>
@@ -661,6 +669,7 @@
     <script src="./scripts/localStorage.js" type="module" defer></script>
     <script src="./scripts/modals.js" type="module" defer></script>
     <script src="./scripts/welcome.js" type="module" defer></script>
+    <script src="./scripts/messages.js" type="module" defer></script>
     <!-- ONLINE SCRIPTS -->
     <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>

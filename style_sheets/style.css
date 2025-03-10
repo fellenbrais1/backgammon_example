@@ -823,30 +823,46 @@ html {
 
 /* CHAT SECTION ELEMENTS */
 .chat_section {
-  display: grid;
-  grid-template-rows: 90% 10%;
   position: absolute;
+  top: 0px;
   height: 504px;
   width: 250px;
+  display: grid;
+  grid-template-rows: 80% 35px auto;
+  row-gap: 18px;
   border: 2px solid white;
   border-radius: 25px;
   background-color: var(--active_button_gold);
   opacity: 0;
-  transform: translateX(-800px);
-  transition: opacity 1s ease-in-out, transform 2s ease-in-out;
+  transition: opacity 1s ease-in-out, transform;
   overflow: hidden;
 }
 
 .chat_display {
-  height: 95%;
+  height: 100%;
   width: 95%;
-  margin-top: 3%;
+  margin-top: 5%;
   margin-left: 2.5%;
   background-color: aliceblue;
   border: solid 1px black;
   border-radius: 5px;
   overflow-x: hidden;
   overflow-y: scroll;
+}
+
+.chat_buttons_display {
+  height: 95%;
+  width: 90%;
+  display: grid;
+  grid-template-columns: 18% 18% 18% 18% 18%;
+  gap: 10px;
+}
+
+.chat_test_button {
+  background-color: red;
+  height: 24px;
+  width: 40px;
+  color: white;
 }
 
 .chat_entry_a,

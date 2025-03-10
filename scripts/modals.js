@@ -22,12 +22,15 @@ import {
   fetchRecentPlayers,
   connectToPlayer,
 } from './chat.js';
+import * as messages from './messages.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
 const modalSection = document.querySelector('.modal_section');
 const welcomeSection = document.querySelector('.welcome_section');
+const returnSection = document.querySelector('.return_section');
 const playersSection = document.querySelector('.players_section');
+const chatSection = document.querySelector('.chat_section');
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
@@ -401,6 +404,14 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
           document.querySelector('.challenge_section');
         modalChallengeSection.style.backgroundColor = 'lightgreen';
         challengeInformation.textContent = `Challenge has been accepted!`;
+        setTimeout(() => {
+          playersSection.classList.remove('reveal');
+          welcomeSection.classList.remove('reveal');
+          returnSection.classList.remove('reveal');
+          chatSection.classList.add('reveal');
+          removeModal();
+          messages.startGameMessages(gamePlayers.opponent.displayName);
+        }, 1000);
         break;
       }
 

@@ -82,7 +82,7 @@ export const playersLanguageText = document.getElementById(
 const playersLanguageSvg = document.getElementById('players_language_svg');
 
 // Test button elements
-const testButton3 = document.querySelector('.test_button3');
+// const testButton3 = document.querySelector('.test_button3');
 const testButton4 = document.querySelector('.test_button4');
 const testButton5 = document.querySelector('.test_button5');
 
@@ -221,10 +221,10 @@ const italianHTML = `<p
 // EVENT LISTENERS
 
 // Test button event listeners
-testButton3.addEventListener('click', () => {
-  playClickSound();
-  modals.changeModalContent('Challenge');
-});
+// testButton3.addEventListener('click', () => {
+//   playClickSound();
+//   modals.changeModalContent('Challenge');
+// });
 
 testButton4.addEventListener('click', () => {
   playClickSound();
