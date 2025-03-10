@@ -37,7 +37,7 @@ const returnSection = document.querySelector('.return_section');
 // Chatbox section elements
 const chatboxSection = document.querySelector('.chatbox_section');
 const chatBoxDisplay = document.querySelector('.chatbox_display');
-const chatboxInput = document.getElementById('chatbox_input');
+const chatboxInput = document.getElementById('chat_input');
 
 // Ad section elements
 export const adNotification = document.querySelector('.ad_notification');
