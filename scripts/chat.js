@@ -286,7 +286,6 @@ export function sendRPC(method, params) {
   };
   console.log(JSON.stringify(rpcMessage));
   setTimeout(() => {
-    console.log(`Fuckery`);
     conn.send(JSON.stringify(rpcMessage));
   }, 5000);
 }
@@ -306,8 +305,8 @@ function handleRPC(data) {
   }
   if (rpcMessage.method === 'chat') {
     console.log(`Chat message received: ${rpcMessage.params}`);
-    const opponentName = messages.getOpponentName();
-    messages.pretendOpponentMessage(opponentName, rpcMessage.params);
+    // const opponentName = messages.getOpponentName();
+    // messages.pretendOpponentMessage(opponentName, rpcMessage.params);
   }
 }
 
