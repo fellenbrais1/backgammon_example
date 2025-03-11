@@ -22,7 +22,6 @@ import {
   fetchRecentPlayers,
   connectToPlayer,
   sendRPC,
-  conn,
 } from './chat.js';
 import * as messages from './messages.js';
 
@@ -403,7 +402,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       if (conn !== null) {
         console.log(conn);
         cancelFlag = true;
-        sendRPC('challenge', gamePlayers.you);
+        // sendRPC('challenge', gamePlayers.you);
         // TODO - CHANGE HERE
         // Code should 'hold' until a challenge confirmation message has been sent by the opponent, then a sendRPC message will be received, which calls this function with the case 'ChallengeAccepted'
         break;

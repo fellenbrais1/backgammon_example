@@ -11,16 +11,14 @@ import * as storage from '../scripts/localStorage.js';
 import { populatePlayers } from './welcome.js';
 import * as messages from './messages.js';
 
-('use strict');
-
 console.log('Using Firebase in chat.js:', firebaseApp);
 const db = database;
 console.log(analytics);
 console.log(db);
 
 export let peer;
-let remotePeerId = '';
-export let conn;
+// let remotePeerId = '';
+let conn;
 
 // BUG
 // Linter does not like the 'Peer' constructor in this function but it DOES work
@@ -34,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   peer.on('open', (id) => {
     console.log('My unique peer ID is: ' + id);
-    // peerIDStorage = id;
   });
 
   // On the remote peer's side
@@ -69,49 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// // Register on Firebase
-// function registerForChat(player) {
-//   if (!player.displayName) {
-//     console.error('Error: user display name cannot be empty');
-//     return;
-//   }
-//   console.log('Registering ' + player.displayName);
-
-//   const playerData = {
-//     displayName: player.displayName,
-//     peerID: player.peerId,
-//     skillLevel: player.skillLevel,
-//     languages: player.languages,
-//     lastOnline: new Date().toISOString(),
-//   };
-
-//   const playersRef = database.ref('players'); // Reference to the 'players' node
-
-//   // Push the player record to Firebase, which generates a unique key
-//   const newPlayerRef = playersRef.push();
-
-//   // Set the player data under the generated key
-//   newPlayerRef
-//     .set(playerData)
-//     .then(() => {qq
-//       console.log('Player saved successfully!');
-//     })
-//     .catch((error) => {
-//       console.error('Error saving player: ', error);
-//     });
-// }
-
 // NOTES
 export async function registerForChat(key, player) {
-  // if (!player.displayName) {
-  //   console.error('Error: user display name cannot be empty');
-  //   return null;
-  // }
-
-  function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   const playersRef = database.ref('players');
 
   try {
@@ -137,7 +93,7 @@ export async function registerForChat(key, player) {
         languages: player.languages,
         lastOnline: Date.now(),
       });
-      // console.log('Player registered successfully!');
+      console.log('Player registered successfully!');
       return newPlayerRef.key;
     } else {
       // Check if the record exists
@@ -241,6 +197,7 @@ export async function fetchRecentPlayers(languageFilter = 'none') {
       .once('value');
     const playersObject = snapshot.val();
 
+    // TODO - This isn't useful in its current form as it will never display, it needs to display if the length of playersObject is less than 2, as there will always be at least 1 record in there when called.
     if (!playersObject) {
       console.log('No players online in the last hour.');
       return [];
@@ -269,6 +226,10 @@ export async function fetchRecentPlayers(languageFilter = 'none') {
 }
 
 export async function connectToPlayer(opponent) {
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   console.log(JSON.stringify(opponent));
   console.log(
     'Attempting to connect to ' +
@@ -278,6 +239,8 @@ export async function connectToPlayer(opponent) {
   );
 
   const playerRef = database.ref(`players/${opponent.userKey}`);
+  console.log(opponent.userKey, typeof opponent.userKey);
+  console.log(playerRef, typeof playerRef);
 
   try {
     const snapshot = await playerRef.get();
@@ -288,7 +251,11 @@ export async function connectToPlayer(opponent) {
     }
 
     const remotePeerId = snapshot.val().peerID;
-    conn = peer.connect(remotePeerId);
+    console.log(remotePeerId);
+    const conn = peer.connect(remotePeerId);
+    console.log(conn);
+
+    delay(1000);
 
     conn.on('error', (err) => {
       console.error('Connection error:', err);
