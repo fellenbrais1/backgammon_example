@@ -7,7 +7,6 @@
 
 // IMPORTS
 import { firebaseApp, analytics, database } from '../scripts/firebaseConfig.js';
-import * as storage from '../scripts/localStorage.js';
 import { populatePlayers } from './welcome.js';
 import * as messages from './messages.js';
 
@@ -18,7 +17,6 @@ console.log(db);
 
 export let peer;
 // let remotePeerId = '';
-let conn;
 
 // BUG
 // Linter does not like the 'Peer' constructor in this function but it DOES work
@@ -45,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     conn.on('data', (data) => {
       console.log('Received data:', data);
-      handleRPC(data);
+      // handleRPC(data);
     });
 
     conn.on('error', (err) => {
@@ -65,6 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // removePeerIdFromDatabase(peer.id);
   });
 });
+
+let conn;
 
 // NOTES
 export async function registerForChat(key, player) {
@@ -252,10 +252,11 @@ export async function connectToPlayer(opponent) {
 
     const remotePeerId = snapshot.val().peerID;
     console.log(remotePeerId);
-    const conn = peer.connect(remotePeerId);
-    console.log(conn);
+    conn = await peer.connect(remotePeerId);
 
     delay(1000);
+
+    console.log(conn);
 
     conn.on('error', (err) => {
       console.error('Connection error:', err);
@@ -283,7 +284,11 @@ export function sendRPC(method, params) {
     method: method,
     params: params,
   };
-  conn.send(JSON.stringify(rpcMessage));
+  console.log(JSON.stringify(rpcMessage));
+  setTimeout(() => {
+    console.log(`Fuckery`);
+    conn.send(JSON.stringify(rpcMessage));
+  }, 5000);
 }
 
 function handleRPC(data) {
@@ -297,7 +302,7 @@ function handleRPC(data) {
     console.log('Player moved to:', rpcMessage.params.position);
   }
   if (rpcMessage.method === 'challenge') {
-    console.log(`Challenge sent to ${rpcMessage.params}`);
+    console.log(`Challenge sent to ${rpcMessage.params.displayName}`);
   }
   if (rpcMessage.method === 'chat') {
     console.log(`Chat message received: ${rpcMessage.params}`);
@@ -496,4 +501,12 @@ export async function getOpponentUserKey(opponent) {
   }
 }
 
+export async function assignConn(opponent) {
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+  conn = await connectToPlayer(opponent);
+  delay(2000);
+  return conn;
+}
 // CODE END

@@ -20,8 +20,8 @@ import * as storage from './localStorage.js';
 import {
   registerForChat,
   fetchRecentPlayers,
-  connectToPlayer,
   sendRPC,
+  assignConn,
 } from './chat.js';
 import * as messages from './messages.js';
 
@@ -396,13 +396,16 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
 
       gamePlayers = await playerPairingUserChallenge();
       console.log(JSON.stringify(gamePlayers));
-      const conn = await connectToPlayer(gamePlayers.opponent);
+      // console.log(conn);
+      const conn = await assignConn(gamePlayers.opponent);
       console.log(JSON.stringify(gamePlayers.opponent));
       console.log(conn);
       if (conn !== null) {
         console.log(conn);
         cancelFlag = true;
-        // sendRPC('challenge', gamePlayers.you);
+        delay(5000);
+        console.log(gamePlayers.you);
+        sendRPC('challenge', gamePlayers.you);
         // TODO - CHANGE HERE
         // Code should 'hold' until a challenge confirmation message has been sent by the opponent, then a sendRPC message will be received, which calls this function with the case 'ChallengeAccepted'
         break;

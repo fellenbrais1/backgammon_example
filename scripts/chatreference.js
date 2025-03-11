@@ -179,7 +179,7 @@ async function connectToPlayer(remoteName) {
     }
 
     const remotePeerId = snapshot.val().uniqueCode;
-    const conn = peer.connect(remotePeerId);
+    conn = peer.connect(remotePeerId);
 
     conn.on('error', (err) => {
       console.error('Connection error:', err);
