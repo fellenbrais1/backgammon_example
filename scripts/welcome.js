@@ -620,7 +620,7 @@ function retrieveLanguageName(languageData) {
 function createUserData() {
   if (
     sessionDisplayName !== '' &&
-    sessionDisplayName.length > 3 &&
+    sessionDisplayName.length >= 3 &&
     sessionDisplayName.length < 13 &&
     sessionSkillLevel !== '' &&
     sessionLanguages.length > 0

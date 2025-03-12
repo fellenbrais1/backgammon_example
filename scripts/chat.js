@@ -282,7 +282,7 @@ export async function connectToPlayer(opponent) {
 export function sendRPC(method, params) {
   const rpcMessage = {
     method: method,
-    params: params,
+    params: JSON.stringify(params),
   };
   console.log(JSON.stringify(rpcMessage));
   setTimeout(() => {
@@ -295,16 +295,17 @@ function handleRPC(data) {
   const rpcMessage = JSON.parse(data);
   console.log('RPC Method:', rpcMessage.method);
   console.log('RPC Params:', rpcMessage.params);
+  const parsedParams = JSON.parse(rpcMessage.params);
 
   // Handle the RPC method
   if (rpcMessage.method === 'move') {
-    console.log('Player moved to:', rpcMessage.params.position);
+    console.log('Player moved to:', parsedParams.position);
   }
   if (rpcMessage.method === 'challenge') {
-    console.log(`Challenge sent to ${rpcMessage.params.displayName}`);
+    console.log(`Challenge sent to ${parsedParams.displayName}`);
   }
   if (rpcMessage.method === 'chat') {
-    console.log(`Chat message received: ${rpcMessage.params}`);
+    console.log(`Chat message received: ${parsedParams}`);
     // const opponentName = messages.getOpponentName();
     // messages.pretendOpponentMessage(opponentName, rpcMessage.params);
   }
