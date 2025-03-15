@@ -7,8 +7,9 @@
 
 // IMPORTS
 import { firebaseApp, analytics, database } from '../scripts/firebaseConfig.js';
-import { populatePlayers } from './welcome.js';
+import { challengerName, populatePlayers } from './welcome.js';
 import * as messages from './messages.js';
+import { changeModalContent } from './modals.js';
 
 console.log('Using Firebase in chat.js:', firebaseApp);
 const db = database;
@@ -16,6 +17,7 @@ console.log(analytics);
 console.log(db);
 
 export let peer;
+let activeOpponent;
 // let remotePeerId = '';
 
 // BUG
@@ -290,7 +292,7 @@ export function sendRPC(method, params) {
   }, 5000);
 }
 
-function handleRPC(data) {
+async function handleRPC(data) {
   console.log('handleRPC function called');
   const rpcMessage = JSON.parse(data);
   console.log(rpcMessage);
@@ -302,9 +304,14 @@ function handleRPC(data) {
     // console.log('Player moved to:', parsedParams.position);
   }
   if (rpcMessage.method === 'challenge') {
-    const opponent = fetchPlayerByKey(rpcMessage.params);
+    activeOpponent = await fetchPlayerByKey(rpcMessage.params);
     console.log(opponent);
-    console.log(`Challenge received from ${opponent.displayName}`);
+    console.log(`Challenge received from ${activeOpponent.displayName}`);
+    changeModalContent('ChallengeReceived', activeOpponent.displayName);
+  }
+  if (rpcMessage.method === 'challengeRejected') {
+    console.log(activeOpponent);
+    console.log(`Challenge rejected by ${challengerName}`);
   }
   if (rpcMessage.method === 'chat') {
     // console.log(`Chat message received: ${parsedParams}`);

@@ -15,6 +15,7 @@ import {
   playersLanguageText,
   playerPairingUserChallenge,
   playerPairingOpponentChallenge,
+  challengerName,
 } from './welcome.js';
 import * as storage from './localStorage.js';
 import {
@@ -430,6 +431,44 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         break;
       }
 
+    case 'ChallengeReceived':
+      modalSection.innerHTML = challengeReceivedModalHTML;
+      modalSection.classList.add('reveal');
+      const challengeReceivedText = modalSection.querySelector(
+        '.challenge_received_text_big'
+      );
+      const challengerNameText = document.querySelector(
+        '.challenge_received_text'
+      );
+      challengerNameText.textContent = `${data} wants to play a game!`;
+      const acceptButton = modalSection.querySelector(
+        '.challenge_received_button_accept'
+      );
+      const declineButton = modalSection.querySelector(
+        '.challenge_received_button_decline'
+      );
+
+      acceptButton.addEventListener('click', () => {
+        playClickSound();
+        challengeReceivedText.textContent = `${challengerName} has accepted your challenge!`;
+        sendRPC('challengeAccepted', challengerName);
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
+        // FOR TESTING
+        playerPairingOpponentChallenge();
+      });
+
+      declineButton.addEventListener('click', () => {
+        playClickSound();
+        challengeReceivedText.textContent = `${challengerName} has rejected your challenge!`;
+        sendRPC('challengeRejected', challengerName);
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
+      });
+      break;
+
     case 'ChallengeAccepted':
       const modalChallengeSection =
         document.querySelector('.challenge_section');
@@ -452,42 +491,6 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       setTimeout(() => {
         removeModal();
       }, 1000);
-
-    case 'ChallengeReceived':
-      modalSection.innerHTML = challengeReceivedModalHTML;
-      modalSection.classList.add('reveal');
-      const challengeReceivedText = modalSection.querySelector(
-        '.challenge_received_text_big'
-      );
-      const challengerNameText = document.querySelector(
-        '.challenge_received_text'
-      );
-      challengerNameText.textContent = `${data} wants to play a game!`;
-      const acceptButton = modalSection.querySelector(
-        '.challenge_received_button_accept'
-      );
-      const declineButton = modalSection.querySelector(
-        '.challenge_received_button_decline'
-      );
-
-      acceptButton.addEventListener('click', () => {
-        playClickSound();
-        challengeReceivedText.textContent = 'CHALLENGE ACCEPTED!';
-        setTimeout(() => {
-          removeModal();
-        }, 1000);
-        // FOR TESTING
-        playerPairingOpponentChallenge();
-      });
-
-      declineButton.addEventListener('click', () => {
-        playClickSound();
-        challengeReceivedText.textContent = 'CHALLENGE REJECTED!';
-        setTimeout(() => {
-          removeModal();
-        }, 1000);
-      });
-      break;
 
     case 'NoChallenger':
       modalSection.innerHTML = noChallengerHTML;
