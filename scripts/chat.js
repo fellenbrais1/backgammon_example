@@ -272,6 +272,7 @@ export async function connectToPlayer(opponent) {
 
     conn.on('data', (data) => {
       console.log('Received data:', data);
+      handleRPC(data);
     });
 
     return conn;
