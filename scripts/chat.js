@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     conn.on('data', (data) => {
-      console.log('Received data:', data);
+      console.log('Received data:', JSON.parse(data));
       handleRPC(data);
     });
 
