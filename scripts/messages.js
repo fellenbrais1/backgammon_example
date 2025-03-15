@@ -99,10 +99,7 @@ export function getOpponentName() {
 
 // Generates and posts a chatbox message from a pretend opponent
 // Called by an eventHandler on the 'Ask Jack - TEST' button
-export function opponentMessage(
-  opponentName,
-  chatContent = `'That would be an ecumenical matter...'`
-) {
+export function opponentMessage(opponentName, chatContent) {
   const messageHTML = createOpponentMessage(
     `${opponentName}`,
     `${chatContent}`

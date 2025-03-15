@@ -320,9 +320,11 @@ async function handleRPC(data) {
     changeModalContent('ChallengeRejected', challengerName);
   }
   if (rpcMessage.method === 'chat') {
-    console.log(`Chat message received: ${rpcMessage.params}`);
+    console.log(`Chat message received: ${JSON.stringify(rpcMessage.params)}`);
     const opponentName = messages.getOpponentName();
-    messages.opponentMessage(opponentName, rpcMessage.params);
+    messages.opponentMessage(
+      JSON.stringify(opponentName, JSON.stringify(rpcMessage.params))
+    );
   }
 }
 
