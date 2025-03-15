@@ -398,6 +398,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
 
       gamePlayers = await playerPairingUserChallenge();
       console.log(JSON.stringify(gamePlayers));
+      activeOpponent = gamePlayers.opponent;
       // console.log(conn);
       const conn = await assignConn(gamePlayers.opponent);
       console.log(JSON.stringify(gamePlayers.opponent));
