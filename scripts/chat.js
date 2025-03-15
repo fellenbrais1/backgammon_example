@@ -320,11 +320,10 @@ async function handleRPC(data) {
     changeModalContent('ChallengeRejected', challengerName);
   }
   if (rpcMessage.method === 'chat') {
-    console.log(`Chat message received: ${JSON.stringify(rpcMessage.params)}`);
+    const message = rpcMessage.params;
+    console.log(`Chat message received: ${message}`);
     const opponentName = messages.getOpponentName();
-    messages.opponentMessage(
-      JSON.stringify(opponentName, JSON.stringify(rpcMessage.params))
-    );
+    messages.opponentMessage(opponentName, message);
   }
 }
 
@@ -430,12 +429,12 @@ async function demoConnectToPlayer() {
 }
 
 // Step 4.1: Send an RPC message, e.g. send a chat message
-function demoChat() {
-  // get the message to send
-  const message = document.getElementById('p2pMessage').value.trim();
+// function demoChat() {
+//   // get the message to send
+//   const message = document.getElementById('p2pMessage').value.trim();
 
-  sendRPC('chat', { message });
-}
+//   sendRPC('chat', { message });
+// }
 
 // Step 4.2: Send an RPC message, e.g. a challenge
 async function demoChallenge() {

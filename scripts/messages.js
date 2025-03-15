@@ -33,7 +33,8 @@ chatInput.addEventListener('keydown', (event) => {
 
 testButton3.addEventListener('click', () => {
   const opponentName = activeOpponent.displayName;
-  opponentMessage(opponentName);
+  const message = 'Poop';
+  opponentMessage(opponentName, message);
 });
 
 ///////////////////////////////
@@ -45,7 +46,7 @@ function addChatMessage() {
   const message = chatInput.value;
   chatInput.value = '';
   const messageHTML = createChatMessage(message);
-  chat.sendRPC('chat', { message });
+  chat.sendRPC('chat', message);
   postChatMessage(messageHTML);
   displayLatestMessage();
 }
@@ -99,11 +100,9 @@ export function getOpponentName() {
 
 // Generates and posts a chatbox message from a pretend opponent
 // Called by an eventHandler on the 'Ask Jack - TEST' button
-export function opponentMessage(opponentName, chatContent) {
-  const messageHTML = createOpponentMessage(
-    `${opponentName}`,
-    `${chatContent}`
-  );
+export function opponentMessage(opponentName, message) {
+  console.log(message);
+  const messageHTML = createOpponentMessage(`${opponentName}`, `${message}`);
   postChatMessage(messageHTML);
   displayLatestMessage();
 }
@@ -123,6 +122,7 @@ function forfeitMessage() {
 // Creates a message form an opponent to them be posted in the chatbox, message styling is unique to the opponent to differentiate between player 1 and player 2
 // Called by pretendOpponentMessage()
 function createOpponentMessage(opponentName, message) {
+  console.log(message);
   const timeStamp = getTimeStamp();
   const messageClass = opponentMessageStyleToggle
     ? 'chat_entry_e'
