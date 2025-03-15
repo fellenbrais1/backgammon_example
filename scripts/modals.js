@@ -405,7 +405,9 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         cancelFlag = true;
         delay(5000);
         console.log(gamePlayers.you);
-        sendRPC('challenge', JSON.stringify(gamePlayers.you));
+        const userKey = gamePlayers.you.userKey;
+        console.log(userKey);
+        sendRPC('challenge', userKey);
         // sendRPC('chat', 'Hello');
         // TODO - CHANGE HERE
         // Code should 'hold' until a challenge confirmation message has been sent by the opponent, then a sendRPC message will be received, which calls this function with the case 'ChallengeAccepted'
