@@ -400,7 +400,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       // console.log(conn);
       const conn = await assignConn(gamePlayers.opponent);
       console.log(JSON.stringify(gamePlayers.opponent));
-      console.log(conn);
+      // console.log(conn);
       if (conn !== null) {
         console.log(conn);
         cancelFlag = true;
