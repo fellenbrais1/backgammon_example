@@ -425,7 +425,7 @@ playersChallengeButton.addEventListener('click', () => {
   if (challengerName === '') {
     modals.changeModalContent('NoChallenger');
   } else {
-    modals.changeModalContent('Challenge', challengerName);
+    modals.changeModalContent('ChallengeSent', challengerName);
     const storedObject = storage.loadLocalStorage();
     storedObject.lastOnline = Math.floor(Date.now() / 1000);
   }

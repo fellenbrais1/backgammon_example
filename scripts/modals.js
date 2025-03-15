@@ -24,6 +24,7 @@ import {
   fetchRecentPlayers,
   sendRPC,
   assignConn,
+  defineOpponent,
 } from './chat.js';
 import * as messages from './messages.js';
 
@@ -374,7 +375,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
 
       break;
 
-    case 'Challenge':
+    case 'ChallengeSent':
       cancelFlag = false;
       modalSection.innerHTML = challengeModalHTML;
       modalSection.classList.add('reveal');
@@ -451,24 +452,27 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         '.challenge_received_button_decline'
       );
 
+      const opponentName = data;
+
       acceptButton.addEventListener('click', async () => {
         activeOpponentHere = activeOpponent;
         playClickSound();
         challengeReceivedText.textContent = `You have accepted this challenge!`;
         sendRPC('challengeAccepted', '');
+
+        activeOpponentHere = await defineOpponent(opponentName);
+
         gamePlayers = await playerPairingChallengee(activeOpponentHere);
+        console.log(activeOpponentHere);
         console.log(JSON.stringify(gamePlayers));
-        // setTimeout(() => {
-        //   removeModal();
-        // }, 1000);
-        // FOR TESTING
+
         setTimeout(() => {
           playersSection.classList.remove('reveal');
           welcomeSection.classList.remove('reveal');
           returnSection.classList.remove('reveal');
           chatSection.classList.add('reveal');
           removeModal();
-          messages.startGameMessages(gamePlayers.opponent.displayName);
+          messages.startGameMessages(activeOpponentHere.displayName);
         }, 1000);
         // playerPairingOpponentChallenge();
       });

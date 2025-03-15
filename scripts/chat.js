@@ -528,3 +528,34 @@ export async function assignConn(opponent) {
   return conn;
 }
 // CODE END
+
+export async function defineOpponent(opponentName) {
+  const playersRef = database.ref('players');
+  console.log(playersRef);
+
+  delay(5000);
+
+  try {
+    // Query Firebase to check if displayName already exists
+    const querySnapshot = await playersRef
+      .orderByChild('displayName')
+      .equalTo(opponentName)
+      .once('value');
+
+    console.log(querySnapshot);
+    if (querySnapshot.exists()) {
+      console.log(`Everything is fine here!`);
+    } else {
+      console.log(`Opponent not found.`);
+      return null;
+    }
+
+    await delay(2000);
+
+    console.log(opponent);
+    return opponent;
+  } catch (error) {
+    console.log(`Problem getting opponent record - ${error}`);
+    return null;
+  }
+}
