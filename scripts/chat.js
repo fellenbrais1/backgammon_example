@@ -293,6 +293,7 @@ export function sendRPC(method, params) {
 function handleRPC(data) {
   console.log('handleRPC function called');
   const rpcMessage = JSON.parse(data);
+  console.log(rpcMessage);
   console.log('RPC Method:', rpcMessage.method);
   console.log('RPC Params:', rpcMessage.params);
   const parsedParams = JSON.parse(rpcMessage.params);
