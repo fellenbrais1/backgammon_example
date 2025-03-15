@@ -44,6 +44,8 @@ let cancelFlag = false;
 export let gamePlayers;
 let activeOpponentHere;
 
+let challengeInformation;
+
 // HTML variables
 const nameLengthProblemHTML = `<section class='modal_message_section'><p class="modal_section_message big_margin_top no_select">Please enter a display name between 3 and 12 characters long</p>
 <p class="modal_section_button1 button center_modal_button no_select" title='Ok'>Ok</p>
@@ -382,8 +384,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       const buttonChallengeCancel = modalSection.querySelector(
         '.challenge_button_cancel'
       );
-      const challengeInformation =
-        modalSection.querySelector('.challenge_text');
+      challengeInformation = modalSection.querySelector('.challenge_text');
       const challengerNameField = document.querySelector(
         '.challenge_text_names'
       );
@@ -507,6 +508,9 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       // modalChallengeSection2.style.backgroundColor = 'red';
       // const challengeInformation2 =
       //   modalSection.querySelector('.challenge_text');
+      const modalSection2 = document.querySelector('.modal_section');
+      const challengeInformation =
+        modalSection2.querySelector('.challenge_text');
       challengeInformation.textContent = `Challenge has been rejected!`;
       setTimeout(() => {
         removeModal();
