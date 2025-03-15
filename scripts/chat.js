@@ -7,7 +7,7 @@
 
 // IMPORTS
 import { firebaseApp, analytics, database } from '../scripts/firebaseConfig.js';
-import { challengerName, populatePlayers } from './welcome.js';
+import { challengerName, populatePlayers, activeOpponent } from './welcome.js';
 import * as messages from './messages.js';
 import { changeModalContent } from './modals.js';
 
@@ -17,7 +17,7 @@ console.log(analytics);
 console.log(db);
 
 export let peer;
-let activeOpponent;
+// let activeOpponent;
 // let remotePeerId = '';
 
 // BUG

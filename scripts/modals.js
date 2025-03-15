@@ -16,6 +16,7 @@ import {
   playerPairingUserChallenge,
   playerPairingChallengee,
   challengerName,
+  activeOpponent,
 } from './welcome.js';
 import * as storage from './localStorage.js';
 import {
