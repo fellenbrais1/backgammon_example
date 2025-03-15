@@ -33,7 +33,7 @@ chatInput.addEventListener('keydown', (event) => {
 
 testButton3.addEventListener('click', () => {
   const opponentName = activeOpponent.displayName;
-  pretendOpponentMessage(opponentName);
+  opponentMessage(opponentName);
 });
 
 ///////////////////////////////
@@ -99,7 +99,7 @@ export function getOpponentName() {
 
 // Generates and posts a chatbox message from a pretend opponent
 // Called by an eventHandler on the 'Ask Jack - TEST' button
-export function pretendOpponentMessage(
+export function opponentMessage(
   opponentName,
   chatContent = `'That would be an ecumenical matter...'`
 ) {

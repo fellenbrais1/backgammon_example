@@ -312,17 +312,17 @@ async function handleRPC(data) {
   }
   if (rpcMessage.method === 'challengeAccepted') {
     console.log(`Challenge accepted by ${challengerName}`);
-    changeModalContent('ChallengeAccepted');
+    changeModalContent('ChallengeAccepted', challengerName);
   }
   if (rpcMessage.method === 'challengeRejected') {
     // console.log(activeOpponent);
     console.log(`Challenge rejected by ${challengerName}`);
-    changeModalContent('ChallengeRejected');
+    changeModalContent('ChallengeRejected', challengerName);
   }
   if (rpcMessage.method === 'chat') {
-    // console.log(`Chat message received: ${parsedParams}`);
-    // const opponentName = messages.getOpponentName();
-    // messages.pretendOpponentMessage(opponentName, rpcMessage.params);
+    console.log(`Chat message received: ${rpcMessage.params}`);
+    const opponentName = messages.getOpponentName();
+    messages.opponentMessage(opponentName, rpcMessage.params);
   }
 }
 

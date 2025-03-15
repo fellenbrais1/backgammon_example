@@ -95,6 +95,22 @@ const challengeModalHTML = `<section class="challenge_section">
             </div>
           </section>`;
 
+const challengeModalAcceptedHTML = `<section class="challenge_section" style='background-color: lightgreen;'>
+          <div class="challenge_block">
+            <p class="challenge_text_big no_select">CHALLENGE SENT</p>
+            <p class="challenge_text_names no_select"></p>
+            <p class="challenge_text no_select">Waiting for a response...</p>
+          </div>
+        </section>`;
+
+const challengeModalRejectedHTML = `<section class="challenge_section">
+            <div class="challenge_block">
+              <p class="challenge_text_big no_select">CHALLENGE SENT</p>
+              <p class="challenge_text_names no_select"></p>
+              <p class="challenge_text no_select">Waiting for a response...</p>
+            </div>
+          </section>`;
+
 const challengeReceivedModalHTML = `<section class="challenge_received_section">
             <div class="challenge_received_block">
               <p class="challenge_received_text_big no_select">CHALLENGE RECEIVED</p>
@@ -227,8 +243,6 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
 
         let storageObject = storage.loadLocalStorage();
         console.log(storageObject);
-        // populatePlayersSectionData();
-        // populatePlayerSectionLanguages(data.languages);
         console.log(storageObject.peerID);
 
         try {
@@ -401,10 +415,8 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       gamePlayers = await playerPairingUserChallenge();
       console.log(JSON.stringify(gamePlayers));
       activeOpponentHere = gamePlayers.opponent;
-      // console.log(conn);
       const conn = await assignConn(gamePlayers.opponent);
       console.log(JSON.stringify(gamePlayers.opponent));
-      // console.log(conn);
       if (conn !== null) {
         console.log(conn);
         cancelFlag = true;
@@ -413,9 +425,6 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         const userKey = gamePlayers.you.userKey;
         console.log(userKey);
         sendRPC('challenge', userKey);
-        // sendRPC('chat', 'Hello');
-        // TODO - CHANGE HERE
-        // Code should 'hold' until a challenge confirmation message has been sent by the opponent, then a sendRPC message will be received, which calls this function with the case 'ChallengeAccepted'
         break;
       }
 
@@ -428,7 +437,6 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
           playClickSound();
           challengeInformation.textContent = 'Cancelling challenge...';
           setTimeout(() => {
-            // modalSection.classList.remove('reveal');
             removeModal();
           }, 1000);
         }, 20000);
@@ -473,8 +481,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
           chatSection.classList.add('reveal');
           removeModal();
           messages.startGameMessages(activeOpponentHere.displayName);
-        }, 1000);
-        // playerPairingOpponentChallenge();
+        }, 4000);
       });
 
       declineButton.addEventListener('click', () => {
@@ -488,10 +495,17 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       break;
 
     case 'ChallengeAccepted':
-      const modalChallengeSection =
-        document.querySelector('.challenge_section');
-      modalChallengeSection.style.backgroundColor = 'lightgreen';
-      challengeInformation.textContent = `Challenge has been accepted by ${gamePlayers.opponent.displayName}!`;
+      modalSection.innerHTML = challengeModalAcceptedHTML;
+      modalSection.style.backgroundColor = 'lightgreen';
+      const challengeInformation2 =
+        modalSection.querySelector('.challenge_text');
+      const challengerNameField2 = document.querySelector(
+        '.challenge_text_names'
+      );
+      challengerNameField2.textContent = `Challenging ${data}`;
+      delay(2000);
+      challengeInformation2.textContent = `Challenge has been accepted!`;
+
       setTimeout(() => {
         playersSection.classList.remove('reveal');
         welcomeSection.classList.remove('reveal');
@@ -499,21 +513,25 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         chatSection.classList.add('reveal');
         removeModal();
         messages.startGameMessages(gamePlayers.opponent.displayName);
-      }, 1000);
+      }, 2000);
+      break;
 
     case 'ChallengeRejected':
-      // const modalChallengeSection2 =
-      //   document.querySelector('.challenge_section');
-      // modalChallengeSection2.style.backgroundColor = 'red';
-      // const challengeInformation2 =
-      //   modalSection.querySelector('.challenge_text');
-      const modalSection2 = document.querySelector('.modal_section');
-      const challengeInformation2 =
-        modalSection2.querySelector('.challenge_text');
-      challengeInformation2.textContent = `Challenge has been rejected!`;
+      modalSection.innerHTML = challengeModalRejectedHTML;
+      const challengeInformation3 =
+        modalSection.querySelector('.challenge_text');
+      const challengerNameField3 = document.querySelector(
+        '.challenge_text_names'
+      );
+      challengerNameField3.textContent = `Challenging ${data}`;
+      console.log(challengeInformation3);
+      delay(2000);
+      console.log(challengeInformation3);
+      challengeInformation3.textContent = `Challenge has been rejected!`;
       setTimeout(() => {
         removeModal();
-      }, 1000);
+      }, 2000);
+      break;
 
     case 'NoChallenger':
       modalSection.innerHTML = noChallengerHTML;
