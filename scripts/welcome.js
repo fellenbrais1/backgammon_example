@@ -928,17 +928,17 @@ export async function playerPairingUserChallenge() {
   };
 }
 
-export async function playerPairingOpponentChallenge() {
+export async function playerPairingChallengee() {
   const storedObject = storage.loadLocalStorage();
   storedObject.lastOnline = Math.floor(Date.now() / 1000);
   const playerRed = storedObject;
-  let playerWhite = activeOpponent;
+  // let playerWhite = activeOpponent;
 
-  // const playerWhite = await getOpponentUserKey(activeOpponent);
-  // console.log(playerWhite);
+  const playerWhite = await getOpponentUserKey(activeOpponent);
+  console.log(playerWhite);
 
   // console.log(`Player White: ${JSON.stringify(playerWhite)}`);
-  console.log(`Player White: ${JSON.stringify(activeOpponent)}`);
+  console.log(`Player White: ${JSON.stringify(playerWhite)}`);
   console.log(`Player Red: ${JSON.stringify(playerRed)}`);
   return {
     you: playerRed,

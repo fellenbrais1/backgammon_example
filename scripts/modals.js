@@ -14,7 +14,7 @@ import {
   populatePlayerSectionLanguages,
   playersLanguageText,
   playerPairingUserChallenge,
-  playerPairingOpponentChallenge,
+  playerPairingChallengee,
   challengerName,
 } from './welcome.js';
 import * as storage from './localStorage.js';
@@ -448,10 +448,12 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         '.challenge_received_button_decline'
       );
 
-      acceptButton.addEventListener('click', () => {
+      acceptButton.addEventListener('click', async () => {
         playClickSound();
         challengeReceivedText.textContent = `You have accepted this challenge!`;
         sendRPC('challengeAccepted', '');
+        gamePlayers = await playerPairingChallengee();
+        console.log(JSON.stringify(gamePlayers));
         // setTimeout(() => {
         //   removeModal();
         // }, 1000);
