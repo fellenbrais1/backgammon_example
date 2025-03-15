@@ -385,25 +385,25 @@ continueButton.addEventListener('click', () => {
 
 continueButtonReturn.addEventListener('click', () => {
   playClickSound();
+  const storedObjectProto = storage.loadLocalStorage();
+  console.log(storedObjectProto);
+  storage.setLocalStorage({
+    displayName: storedObjectProto.displayName,
+    skillLevel: storedObjectProto.skillLevel,
+    languages: storedObjectProto.languages,
+    languagesChosen: storedObjectProto.languages,
+    userKey: storedObjectProto.userKey,
+    peerID: peer.id,
+  });
   const storedObject = storage.loadLocalStorage();
   console.log(storedObject);
-  storage.setLocalStorage({
+  const data = {
     displayName: storedObject.displayName,
     skillLevel: storedObject.skillLevel,
     languages: storedObject.languages,
     languagesChosen: storedObject.languages,
     userKey: storedObject.userKey,
-    peerID: peer.id,
-  });
-  const storedObject2 = storage.loadLocalStorage();
-  console.log(storedObject2);
-  const data = {
-    displayName: storedObject2.displayName,
-    skillLevel: storedObject2.skillLevel,
-    languages: storedObject2.languages,
-    languagesChosen: storedObject2.languages,
-    userKey: storedObject2.userKey,
-    peerID: storedObject2.peerID,
+    peerID: storedObject.peerID,
   };
   modals.changeModalContent('ReturnConfirmName', data);
 });
