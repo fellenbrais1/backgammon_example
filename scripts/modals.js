@@ -41,7 +41,6 @@ let sessionDisplayName = '';
 let cancelFlag = false;
 
 export let gamePlayers;
-let activeOpponentHere = activeOpponent;
 
 // HTML variables
 const nameLengthProblemHTML = `<section class='modal_message_section'><p class="modal_section_message big_margin_top no_select">Please enter a display name between 3 and 12 characters long</p>
@@ -452,6 +451,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       );
 
       acceptButton.addEventListener('click', async () => {
+        let activeOpponentHere = activeOpponent;
         playClickSound();
         challengeReceivedText.textContent = `You have accepted this challenge!`;
         sendRPC('challengeAccepted', '');
