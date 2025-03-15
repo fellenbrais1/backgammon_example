@@ -505,7 +505,8 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       // const modalChallengeSection2 =
       //   document.querySelector('.challenge_section');
       // modalChallengeSection2.style.backgroundColor = 'red';
-      const challengeInformation2 = document.querySelector('.challenge_text');
+      const challengeInformation2 =
+        modalSection.querySelector('.challenge_text');
       challengeInformation2.textContent = `Challenge has been rejected!`;
       setTimeout(() => {
         removeModal();
