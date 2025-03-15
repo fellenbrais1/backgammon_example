@@ -914,13 +914,14 @@ export async function playerPairingUserChallenge() {
   const storedObject = storage.loadLocalStorage();
   storedObject.lastOnline = Math.floor(Date.now() / 1000);
   const playerWhite = storedObject;
-  // let playerRed = activeOpponent;
+  let playerRed = activeOpponent;
 
-  const playerRed = await getOpponentUserKey(activeOpponent);
-  console.log(playerRed);
+  // const playerRed = await getOpponentUserKey(activeOpponent);
+  // console.log(playerRed);
 
   console.log(`Player White: ${JSON.stringify(playerWhite)}`);
   console.log(`Player Red: ${JSON.stringify(playerRed)}`);
+  // console.log(`Player Red: ${JSON.stringify(playerRed)}`);
   return {
     you: playerWhite,
     opponent: playerRed,
@@ -931,12 +932,13 @@ export async function playerPairingOpponentChallenge() {
   const storedObject = storage.loadLocalStorage();
   storedObject.lastOnline = Math.floor(Date.now() / 1000);
   const playerRed = storedObject;
-  // let playerWhite = activeOpponent;
+  let playerWhite = activeOpponent;
 
-  const playerWhite = await getOpponentUserKey(activeOpponent);
-  console.log(playerWhite);
+  // const playerWhite = await getOpponentUserKey(activeOpponent);
+  // console.log(playerWhite);
 
-  console.log(`Player White: ${JSON.stringify(playerWhite)}`);
+  // console.log(`Player White: ${JSON.stringify(playerWhite)}`);
+  console.log(`Player White: ${JSON.stringify(activeOpponent)}`);
   console.log(`Player Red: ${JSON.stringify(playerRed)}`);
   return {
     you: playerRed,

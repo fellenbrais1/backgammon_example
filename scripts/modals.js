@@ -450,19 +450,27 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
 
       acceptButton.addEventListener('click', () => {
         playClickSound();
-        challengeReceivedText.textContent = `${challengerName} has accepted your challenge!`;
-        sendRPC('challengeAccepted', challengerName);
-        setTimeout(() => {
-          removeModal();
-        }, 1000);
+        challengeReceivedText.textContent = `You have accepted this challenge!`;
+        sendRPC('challengeAccepted', '');
+        // setTimeout(() => {
+        //   removeModal();
+        // }, 1000);
         // FOR TESTING
-        playerPairingOpponentChallenge();
+        setTimeout(() => {
+          playersSection.classList.remove('reveal');
+          welcomeSection.classList.remove('reveal');
+          returnSection.classList.remove('reveal');
+          chatSection.classList.add('reveal');
+          removeModal();
+          messages.startGameMessages(gamePlayers.opponent.displayName);
+        }, 1000);
+        // playerPairingOpponentChallenge();
       });
 
       declineButton.addEventListener('click', () => {
         playClickSound();
-        challengeReceivedText.textContent = `${challengerName} has rejected your challenge!`;
-        sendRPC('challengeRejected', challengerName);
+        challengeReceivedText.textContent = `You have rejected this challenge!`;
+        sendRPC('challengeRejected', '');
         setTimeout(() => {
           removeModal();
         }, 1000);
@@ -473,7 +481,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       const modalChallengeSection =
         document.querySelector('.challenge_section');
       modalChallengeSection.style.backgroundColor = 'lightgreen';
-      challengeInformation.textContent = `Challenge has been accepted!`;
+      challengeInformation.textContent = `Challenge has been accepted by ${gamePlayers.opponent.displayName}!`;
       setTimeout(() => {
         playersSection.classList.remove('reveal');
         welcomeSection.classList.remove('reveal');

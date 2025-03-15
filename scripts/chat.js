@@ -305,13 +305,18 @@ async function handleRPC(data) {
   }
   if (rpcMessage.method === 'challenge') {
     activeOpponent = await fetchPlayerByKey(rpcMessage.params);
-    console.log(opponent);
+    console.log(activeOpponent);
     console.log(`Challenge received from ${activeOpponent.displayName}`);
     changeModalContent('ChallengeReceived', activeOpponent.displayName);
   }
+  if (rpcMessage.method === 'challengeAccepted') {
+    console.log(`Challenge accepted by ${challengerName}`);
+    changeModalContent('ChallengeAccepted');
+  }
   if (rpcMessage.method === 'challengeRejected') {
-    console.log(activeOpponent);
+    // console.log(activeOpponent);
     console.log(`Challenge rejected by ${challengerName}`);
+    changeModalContent('ChallengeRejected');
   }
   if (rpcMessage.method === 'chat') {
     // console.log(`Chat message received: ${parsedParams}`);
@@ -466,11 +471,11 @@ function demoSendMove() {
   sendRPC('pieceMove', sampleMove);
 }
 
-async function demoFetchPlayer() {
-  const remoteName = document.getElementById('remoteName').value.trim();
-  const remotePlayer = await fetchPlayer(remoteName);
-  console.log('remotePlayer:', remotePlayer);
-}
+// async function demoFetchPlayer() {
+//   const remoteName = document.getElementById('remoteName').value.trim();
+//   const remotePlayer = await fetchPlayer(remoteName);
+//   console.log('remotePlayer:', remotePlayer);
+// }
 
 export async function getOpponentUserKey(opponent) {
   function delay(ms) {
@@ -478,6 +483,9 @@ export async function getOpponentUserKey(opponent) {
   }
 
   const playersRef = database.ref('players');
+  console.log(playersRef);
+
+  delay(5000);
 
   try {
     // Query Firebase to check if displayName already exists
@@ -486,6 +494,7 @@ export async function getOpponentUserKey(opponent) {
       .equalTo(opponent.displayName)
       .once('value');
 
+    console.log(querySnapshot);
     if (querySnapshot.exists()) {
       querySnapshot.forEach((childSnapshot) => {
         // Access the key using childSnapshot.key
