@@ -63,7 +63,6 @@ const notYouButton = document.querySelector('.not_you_button');
 const continueButtonReturn = document.querySelector('.return_continue_button');
 
 // Players section elements
-const playersSection = document.querySelector('.players_section');
 const nextYouName = document.querySelector('.next_you_name');
 const nextYouSkill = document.querySelector('.next_you_skill');
 const nextYouFlags = document.querySelector('.next_you_flags');
@@ -82,7 +81,6 @@ export const playersLanguageText = document.getElementById(
 const playersLanguageSvg = document.getElementById('players_language_svg');
 
 // Test button elements
-// const testButton3 = document.querySelector('.test_button3');
 const testButton4 = document.querySelector('.test_button4');
 const testButton5 = document.querySelector('.test_button5');
 
@@ -100,77 +98,6 @@ let languageFilter = 'en';
 let sessionDisplayName = 'Guest';
 let sessionSkillLevel = 'Beginner';
 let sessionLanguages = [];
-
-// TODO
-// Mock variables to test player section population
-const mockPlayer1 = {
-  displayName: 'Bob',
-  skillLevel: '🏆',
-  languages: ['en', 'zh'],
-  lastOnline: 1740486329,
-};
-
-const mockPlayer2 = {
-  displayName: 'Jubilee',
-  skillLevel: '🏆🏆🏆',
-  languages: ['ja', 'es'],
-  lastOnline: 1740481329,
-};
-
-const mockPlayer3 = {
-  displayName: 'Arcturus',
-  skillLevel: '🏆',
-  languages: ['en', 'ja'],
-  lastOnline: 1740483329,
-};
-
-const mockPlayer4 = {
-  displayName: 'Jesper',
-  skillLevel: '🏆🏆🏆',
-  languages: ['en'],
-  lastOnline: 1740484329,
-};
-
-const mockPlayer5 = {
-  displayName: 'Ellim',
-  skillLevel: '🏆🏆',
-  languages: ['en', 'zh', 'es'],
-  lastOnline: 1740482329,
-};
-
-const mockPlayer6 = {
-  displayName: 'Tariger12345',
-  skillLevel: '🏆',
-  languages: ['en', 'zh', 'ja'],
-  lastOnline: 1740644195,
-};
-
-const mockPlayer7 = {
-  displayName: 'Juliano',
-  skillLevel: '🏆🏆',
-  languages: ['it'],
-  lastOnline: 1740649195,
-};
-
-export let mockPlayerObjects = [
-  mockPlayer1,
-  mockPlayer2,
-  mockPlayer3,
-  mockPlayer4,
-  mockPlayer5,
-  mockPlayer6,
-  mockPlayer7,
-];
-
-let playersInGame = [mockPlayer3];
-let playersOnline = [
-  mockPlayer1,
-  mockPlayer2,
-  mockPlayer3,
-  mockPlayer5,
-  mockPlayer6,
-  mockPlayer7,
-];
 
 // Challenger variables
 export let activeOpponent = '';
@@ -221,11 +148,6 @@ const italianHTML = `<p
 // EVENT LISTENERS
 
 // Test button event listeners
-// testButton3.addEventListener('click', () => {
-//   playClickSound();
-//   modals.changeModalContent('Challenge');
-// });
-
 testButton4.addEventListener('click', () => {
   playClickSound();
   modals.changeModalContent('ChallengeReceived', mockPlayer6.displayName);
@@ -437,7 +359,7 @@ playersChallengeButton.addEventListener('click', () => {
 // General accordion functions
 
 // Closes the accordion specified and rotates its svg icon
-// Called by event listeners on skillBegginer, skillAdvanced, skillMaster
+// Called by event listeners on skillBeginner, skillAdvanced, skillMaster
 // Called by threeLanguagesChosen(), populatePlayerSectionLanguages()
 function closeAccordion(accordionPanel, accordionSvg) {
   setTimeout(() => {
@@ -901,7 +823,6 @@ function filterPlayersByLanguage(languageFilter) {
   challengerName = '';
   playersDisplay.innerHTML = '';
   fetchRecentPlayers(languageFilter);
-  // populatePlayers(mockPlayerObject, languageFilter);
 }
 
 // Determines whether the languages in a user's chosen languages match with the languages in another player's languages and populates the player_display field accordingly
@@ -914,14 +835,13 @@ export async function playerPairingUserChallenge() {
   const storedObject = storage.loadLocalStorage();
   storedObject.lastOnline = Math.floor(Date.now() / 1000);
   const playerWhite = storedObject;
-  // let playerRed = activeOpponent;
 
   const playerRed = await getOpponentUserKey(activeOpponent);
   console.log(playerRed);
 
   console.log(`Player White: ${JSON.stringify(playerWhite)}`);
   console.log(`Player Red: ${JSON.stringify(playerRed)}`);
-  // console.log(`Player Red: ${JSON.stringify(playerRed)}`);
+
   return {
     you: playerWhite,
     opponent: playerRed,
@@ -933,12 +853,10 @@ export async function playerPairingChallengee(activeOpponentHere) {
   storedObject.lastOnline = Math.floor(Date.now() / 1000);
   const playerRed = storedObject;
   console.log(activeOpponentHere);
-  // let playerWhite = activeOpponent;
 
   const playerWhite = await getOpponentUserKey(activeOpponentHere);
   console.log(playerWhite);
 
-  // console.log(`Player White: ${JSON.stringify(playerWhite)}`);
   console.log(`Player White: ${JSON.stringify(playerWhite)}`);
   console.log(`Player Red: ${JSON.stringify(playerRed)}`);
   return {

@@ -9,12 +9,11 @@ console.log(`script.js running`);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // IMPORTS
+
 import {
   welcomeNameForm,
   checkForLocalStorageObject,
 } from '../scripts/welcome.js';
-// import { gamePlayers } from './modals.js';
-// // import { clearLocalStorage, testForLocalStorageData } from './localStorage.js';
 import * as storage from './localStorage.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -33,11 +32,6 @@ const welcomeSection = document.querySelector('.welcome_section');
 
 // Welcome return section elements
 const returnSection = document.querySelector('.return_section');
-
-// // Chatbox section elements
-// const chatboxSection = document.querySelector('.chatbox_section');
-// const chatBoxDisplay = document.querySelector('.chatbox_display');
-// const chatboxInput = document.getElementById('chat_input');
 
 // Ad section elements
 export const adNotification = document.querySelector('.ad_notification');
@@ -181,120 +175,5 @@ export function toggleClass(pageElement, property) {
     : pageElement.classList.add(property);
 }
 
-// MESSAGE SENDING AND RECEIVING FUNCTIONS
-function sendMessageToWebpage(message) {
-  window.parent.postMessage(JSON.stringify(message), '*'); // '*' means any origin can receive. For production, specify the exact origin of the iframe.
-}
-
-// TODO - FIX THIS FUNCTION TO BE ABLE TO ACCEPT MESSAGES ETC.
-function handleMessageFromParent(message) {
-  console.log('Iframe received:', message);
-  let roll, messageContent, firstTurnRollResults;
-  switch (message.method) {
-    case 'startGame':
-      startGame();
-      break;
-    case 'changeTurn':
-      changeGameState(message.params);
-      break;
-    case 'rollOnce':
-      roll = rollOnce();
-      console.log(roll);
-      sendMessageToWebpage({ method: '1DieResult', params: roll });
-      changeGameState('playerR firstTurn');
-      break;
-    case 'rollTwice':
-      roll = rollTwice();
-      console.log(roll);
-      sendMessageToWebpage({ method: '2DiceResult', params: roll });
-      break;
-    case 'chooseFirstPlayer':
-      firstTurnRollResults = message.params;
-      console.log(firstTurnRollResults);
-      console.log(firstTurnRollResults[0]);
-      console.log(firstTurnRollResults[1]);
-      if (firstTurnRollResults[0] === firstTurnRollResults[1]) {
-        sendMessageToWebpage({ method: 'rollResultDraw', params: 'none' });
-      }
-      if (firstTurnRollResults[0] > firstTurnRollResults[1]) {
-        console.log(`W goes first`);
-        changeGameState('playerW roll');
-        sendMessageToWebpage({
-          method: 'displayNotification',
-          params: 'W goes first',
-        });
-        sendMessageToWebpage({ method: 'gameState', params: 'playerW roll' });
-      } else if (firstTurnRollResults[0] < firstTurnRollResults[1]) {
-        console.log(`R goes first`);
-        changeGameState('playerR roll');
-        sendMessageToWebpage({
-          method: 'displayNotification',
-          params: 'R goes first',
-        });
-        sendMessageToWebpage({ method: 'gameState', params: 'playerR roll' });
-      }
-      break;
-    case 'resetBoard':
-      board.resetBoard();
-      pieces.forEach((current) => {
-        board.resetPiecesPosition(current);
-      });
-      console.log(`Resetting board...`);
-      break;
-    case 'chatMessage':
-      messageContent = message.params;
-      console.log(messageContent);
-      break;
-    case 'gameMessage':
-      messageContent = message.params;
-      console.log(messageContent);
-      break;
-    case 'winMessage':
-      messageContent = message.params;
-      console.log(message);
-      break;
-    case 'forfeitMessage':
-      messageContent = message.params;
-      console.log(message);
-      break;
-  }
-}
-
-function changeGameState(state) {
-  switch (state) {
-    case 'setup':
-      gameState2 = 'setup';
-      break;
-    case 'playerW firstTurn':
-      gameState2 = 'playerW firstTurn';
-      break;
-    case 'playerR firstTurn':
-      gameState2 = 'playerR firstTurn';
-      break;
-    case 'chooseFirstPlayer':
-      break;
-    // const diceRolls =
-    case 'playerW roll':
-      gameState2 = 'playerW roll';
-      break;
-    case 'playerW move':
-      gameState2 = 'playerW move';
-      break;
-    case 'playerR roll':
-      gameState2 = 'playerR roll';
-      break;
-    case 'playerR move':
-      gameState2 = 'playerR move';
-      break;
-    case 'end win':
-      gameState2 = 'end win';
-      break;
-    case 'end forfeit':
-      gameState2 = 'end forfeit';
-      break;
-  }
-  const gameStateMessage = { method: 'gameState', params: gameState2 };
-  sendMessageToWebpage(gameStateMessage);
-}
-
 // CODE END
+//////////////////////////////////////////////////////////////////////////////////////////

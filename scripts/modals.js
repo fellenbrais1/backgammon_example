@@ -3,11 +3,13 @@
 
 // NOTES
 // Updates the HTML content of the modal element based on when it is called by changeModalContent()
+
 'use strict';
 console.log(`modals.js running`);
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // IMPORTS
+
 import { playClickSound, adNotification } from './script.js';
 import {
   populatePlayersSectionData,
@@ -15,7 +17,6 @@ import {
   playersLanguageText,
   playerPairingUserChallenge,
   playerPairingChallengee,
-  challengerName,
   activeOpponent,
 } from './welcome.js';
 import * as storage from './localStorage.js';
@@ -30,6 +31,7 @@ import * as messages from './messages.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
+
 const modalSection = document.querySelector('.modal_section');
 const welcomeSection = document.querySelector('.welcome_section');
 const returnSection = document.querySelector('.return_section');
@@ -38,6 +40,7 @@ const chatSection = document.querySelector('.chat_section');
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
+
 let sessionDisplayName = '';
 let cancelFlag = false;
 

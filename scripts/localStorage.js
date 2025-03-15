@@ -1,12 +1,13 @@
+/////////////////////////////////////////////////////////////////////////////////////////
 // CODE START
 
 // NOTES
 // Sets up and exports a local storage object for storing user's data between sessions
 
 'use strict';
-
 console.log(`localStorage.js running`);
 
+/////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
 export const localStorage = window.localStorage;
 
@@ -19,7 +20,9 @@ const defaultLocalStorageObject = {
   peerID: '',
 };
 
+/////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTIONS
+
 // Creates a copy of the defaultLocalStorageObject to be used in the user's local storage
 // Exported to , called by setLocalStorage()
 export function createLocalStorage() {
@@ -99,3 +102,4 @@ export function clearLocalStorage() {
 }
 
 // CODE END
+/////////////////////////////////////////////////////////////////////////////////////////

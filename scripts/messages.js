@@ -1,14 +1,22 @@
+/////////////////////////////////////////////////////////////////////////////////////////
+// CODE START
+
+// NOTES
+// Handles message logic for the chat section
+
+'use strict';
+console.log(`messages.js running`);
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// IMPORTS
+
 import { gamePlayers } from './modals.js';
 import * as storage from './localStorage.js';
 import { activeOpponent } from './welcome.js';
 import * as chat from './chat.js';
 
-// Chat sounds
-const chatPop = document.getElementById('chat_sound');
-
-// Variable used to alternate message format in the chatbox
-let userMessageStyleToggle = false;
-let opponentMessageStyleToggle = false;
+/////////////////////////////////////////////////////////////////////////////////////////
+// DOM ELEMENT SELECTION
 
 // Chat section elements
 const chatSection = document.querySelector('.chat_section');
@@ -17,6 +25,22 @@ const chatInput = document.getElementById('chat_input');
 
 // Test button
 const testButton3 = document.querySelector('.test_button3');
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// SOUNDS
+
+// Chat sounds
+const chatPop = document.getElementById('chat_sound');
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// VARIABLES
+
+// Variables used to alternate message format in the chatbox
+let userMessageStyleToggle = false;
+let opponentMessageStyleToggle = false;
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// EVENT LISTENERS
 
 // Event listeners
 window.addEventListener('message', (event) => {
@@ -37,8 +61,8 @@ testButton3.addEventListener('click', () => {
   opponentMessage(opponentName, message);
 });
 
-///////////////////////////////
-// CHAT BOX
+//////////////////////////////////////////////////////////////////////////////////////////
+// FUNCTIONS
 
 // Captures a users chat message from the input box and adds it to the chat display
 // Called by an eventHandler when pressing enter in the chat input box
@@ -54,23 +78,11 @@ function addChatMessage() {
 // Assembles and returns  an HTML literal string to add to the chat display element
 // Called by addChatMessage()
 function createChatMessage(message) {
-  // const timeStamp = getTimeStamp();
   const messageClass = userMessageStyleToggle ? 'chat_entry_a' : 'chat_entry_b';
   const displayName = getUserDisplayName();
-  // const messageHTML = `<p class='${messageClass}'><strong class='player_name'>${displayName}:</strong> ${message} - ${timeStamp}</p>`;
   const messageHTML = `<p class='${messageClass}'><strong class='player_name'>${displayName}:</strong> ${message}</p>`;
   userMessageStyleToggle = userMessageStyleToggle ? false : true;
   return messageHTML;
-}
-
-// Generates a time stamp in minutes and seconds when a message is added to the chat display
-// Called by createChatMessage()
-function getTimeStamp() {
-  const now = new Date();
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
-  return `${hours}:${minutes}:${seconds}`;
 }
 
 // Adds a chat message HTML literal string to the chat display elements innerHTML
@@ -124,11 +136,9 @@ function forfeitMessage() {
 // Called by pretendOpponentMessage()
 function createOpponentMessage(opponentName, message) {
   console.log(message);
-  // const timeStamp = getTimeStamp();
   const messageClass = opponentMessageStyleToggle
     ? 'chat_entry_e'
     : 'chat_entry_f';
-  // const messageHTML = `<p class='${messageClass}'><strong class='opponent_name'>${opponentName}:</strong> ${message} - ${timeStamp}</p>`;
   const messageHTML = `<p class='${messageClass}'><strong class='opponent_name'>${opponentName}:</strong> ${message}</p>`;
   opponentMessageStyleToggle = opponentMessageStyleToggle ? false : true;
   return messageHTML;
@@ -155,9 +165,5 @@ function addGameNotification(HTML) {
   chatPop.play();
 }
 
-// MESSAGE SENDING AND RECEIVING FUNCTIONS
-function sendMessageToWebpage(message) {
-  window.parent.postMessage(JSON.stringify(message), '*'); // '*' means any origin can receive. For production, specify the exact origin of the iframe.
-}
-
-console.log(`messages.js is running`);
+// CODE END
+//////////////////////////////////////////////////////////////////////////////////////////

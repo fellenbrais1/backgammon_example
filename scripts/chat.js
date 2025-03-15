@@ -1,11 +1,15 @@
+/////////////////////////////////////////////////////////////////////////////////////////
 // CODE START
 
 // NOTES
 // Inter-player communication logic
 
 'use strict';
+console.log(`chat.js running`);
 
+/////////////////////////////////////////////////////////////////////////////////////////
 // IMPORTS
+
 import { firebaseApp, analytics, database } from '../scripts/firebaseConfig.js';
 import { challengerName, populatePlayers } from './welcome.js';
 import * as messages from './messages.js';
@@ -18,7 +22,6 @@ console.log(db);
 
 export let peer;
 let activeOpponent = '';
-// let remotePeerId = '';
 
 // BUG
 // Linter does not like the 'Peer' constructor in this function but it DOES work
@@ -315,7 +318,6 @@ async function handleRPC(data) {
     changeModalContent('ChallengeAccepted', challengerName);
   }
   if (rpcMessage.method === 'challengeRejected') {
-    // console.log(activeOpponent);
     console.log(`Challenge rejected by ${challengerName}`);
     changeModalContent('ChallengeRejected', challengerName);
   }
@@ -429,12 +431,12 @@ async function demoConnectToPlayer() {
 }
 
 // Step 4.1: Send an RPC message, e.g. send a chat message
-// function demoChat() {
-//   // get the message to send
-//   const message = document.getElementById('p2pMessage').value.trim();
+function demoChat() {
+  // get the message to send
+  const message = document.getElementById('p2pMessage').value.trim();
 
-//   sendRPC('chat', { message });
-// }
+  sendRPC('chat', { message });
+}
 
 // Step 4.2: Send an RPC message, e.g. a challenge
 async function demoChallenge() {
@@ -473,11 +475,11 @@ function demoSendMove() {
   sendRPC('pieceMove', sampleMove);
 }
 
-// async function demoFetchPlayer() {
-//   const remoteName = document.getElementById('remoteName').value.trim();
-//   const remotePlayer = await fetchPlayer(remoteName);
-//   console.log('remotePlayer:', remotePlayer);
-// }
+async function demoFetchPlayer() {
+  const remoteName = document.getElementById('remoteName').value.trim();
+  const remotePlayer = await fetchPlayers(remoteName);
+  console.log('remotePlayer:', remotePlayer);
+}
 
 export async function getOpponentUserKey(opponent) {
   function delay(ms) {
@@ -551,21 +553,19 @@ export async function defineOpponent(opponentName) {
     console.log(querySnapshot);
     if (querySnapshot.exists()) {
       const opponentData = querySnapshot.val();
-      const opponentKey = Object.keys(opponentData)[0]; // Get the first key (userKey)
-      const opponent = opponentData[opponentKey]; // Get the player object using the key
+      const opponentKey = Object.keys(opponentData)[0];
+      const opponent = opponentData[opponentKey];
       console.log(`Opponent found: ${JSON.stringify(opponent)}`);
       return opponent;
     } else {
       console.log(`Opponent not found.`);
       return null;
     }
-
-    // await delay(2000);
-
-    // console.log(opponent);
-    // return opponent;
   } catch (error) {
     console.log(`Problem getting opponent record - ${error}`);
     return null;
   }
 }
+
+// CODE END
+/////////////////////////////////////////////////////////////////////////////////////////
