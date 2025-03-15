@@ -54,10 +54,11 @@ function addChatMessage() {
 // Assembles and returns  an HTML literal string to add to the chat display element
 // Called by addChatMessage()
 function createChatMessage(message) {
-  const timeStamp = getTimeStamp();
+  // const timeStamp = getTimeStamp();
   const messageClass = userMessageStyleToggle ? 'chat_entry_a' : 'chat_entry_b';
   const displayName = getUserDisplayName();
-  const messageHTML = `<p class='${messageClass}'><strong class='player_name'>${displayName}:</strong> ${message} - ${timeStamp}</p>`;
+  // const messageHTML = `<p class='${messageClass}'><strong class='player_name'>${displayName}:</strong> ${message} - ${timeStamp}</p>`;
+  const messageHTML = `<p class='${messageClass}'><strong class='player_name'>${displayName}:</strong> ${message}</p>`;
   userMessageStyleToggle = userMessageStyleToggle ? false : true;
   return messageHTML;
 }
@@ -123,11 +124,12 @@ function forfeitMessage() {
 // Called by pretendOpponentMessage()
 function createOpponentMessage(opponentName, message) {
   console.log(message);
-  const timeStamp = getTimeStamp();
+  // const timeStamp = getTimeStamp();
   const messageClass = opponentMessageStyleToggle
     ? 'chat_entry_e'
     : 'chat_entry_f';
-  const messageHTML = `<p class='${messageClass}'><strong class='opponent_name'>${opponentName}:</strong> ${message} - ${timeStamp}</p>`;
+  // const messageHTML = `<p class='${messageClass}'><strong class='opponent_name'>${opponentName}:</strong> ${message} - ${timeStamp}</p>`;
+  const messageHTML = `<p class='${messageClass}'><strong class='opponent_name'>${opponentName}:</strong> ${message}</p>`;
   opponentMessageStyleToggle = opponentMessageStyleToggle ? false : true;
   return messageHTML;
 }
