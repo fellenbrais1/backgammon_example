@@ -530,6 +530,10 @@ export async function assignConn(opponent) {
 // CODE END
 
 export async function defineOpponent(opponentName) {
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   const playersRef = database.ref('players');
   console.log(playersRef);
 
@@ -544,16 +548,20 @@ export async function defineOpponent(opponentName) {
 
     console.log(querySnapshot);
     if (querySnapshot.exists()) {
-      console.log(`Everything is fine here!`);
+      const opponentData = querySnapshot.val();
+      const opponentKey = Object.keys(opponentData)[0]; // Get the first key (userKey)
+      const opponent = opponentData[opponentKey]; // Get the player object using the key
+      console.log(`Opponent found: ${JSON.stringify(opponent)}`);
+      return opponent;
     } else {
       console.log(`Opponent not found.`);
       return null;
     }
 
-    await delay(2000);
+    // await delay(2000);
 
-    console.log(opponent);
-    return opponent;
+    // console.log(opponent);
+    // return opponent;
   } catch (error) {
     console.log(`Problem getting opponent record - ${error}`);
     return null;
