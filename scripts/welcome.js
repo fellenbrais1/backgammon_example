@@ -928,14 +928,14 @@ export async function playerPairingUserChallenge() {
   };
 }
 
-export async function playerPairingChallengee() {
+export async function playerPairingChallengee(activeOpponentHere) {
   const storedObject = storage.loadLocalStorage();
   storedObject.lastOnline = Math.floor(Date.now() / 1000);
   const playerRed = storedObject;
-  console.log(activeOpponent);
+  console.log(activeOpponentHere);
   // let playerWhite = activeOpponent;
 
-  const playerWhite = await getOpponentUserKey(activeOpponent);
+  const playerWhite = await getOpponentUserKey(activeOpponentHere);
   console.log(playerWhite);
 
   // console.log(`Player White: ${JSON.stringify(playerWhite)}`);
