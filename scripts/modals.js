@@ -26,6 +26,7 @@ import {
   sendRPC,
   assignConn,
   defineOpponent,
+  checkForName,
 } from './chat.js';
 import * as messages from './messages.js';
 
@@ -67,6 +68,10 @@ const confirmNameHTML = `<section class='modal_message_section'><p class="modal_
                 No
               </p>
               </div>
+              </section>`;
+
+const nameExistsHTML = `<section class='modal_message_section'><p class="modal_section_message big_margin_top no_select">Please choose a different name as NAME has already been taken</p>
+<p class="modal_section_button1 button center_modal_button no_select" title='Ok'>Ok</p>
               </section>`;
 
 const goBackFromPlayersSectionHTML = `<section class='modal_message_section'><p class="modal_section_message no_select">Would you like to return to modify your details?</p>
@@ -204,6 +209,24 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       });
       break;
 
+    case 'NameExists':
+      modalSection.innerHTML = nameExistsHTML;
+      modalSection.classList.add('reveal');
+      const nameExistsYesButton = modalSection.querySelector(
+        '.modal_section_button1'
+      );
+      const nameText = modalSection.querySelector('.modal_section_message');
+      nameText.textContent = `Please choose a different name as '${data}' has already been taken`;
+
+      nameExistsYesButton.addEventListener('click', () => {
+        playClickSound();
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
+        return;
+      });
+      break;
+
     case 'IncompleteData':
       modalSection.innerHTML = incompleteDataHTML;
       modalSection.classList.add('reveal');
@@ -248,34 +271,41 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         console.log(storageObject);
         console.log(storageObject.peerID);
 
-        try {
-          const userKey = await registerForChat(null, data);
-          console.log(userKey);
-
-          storageObject.userKey = userKey;
-          console.log(JSON.stringify(storageObject));
-
-          storage.setLocalStorage({
-            displayName: storageObject.displayName,
-            skillLevel: storageObject.skillLevel,
-            languages: storageObject.languages,
-            peerID: storageObject.peerID,
-            userKey: storageObject.userKey,
-          });
-
-          populatePlayersSectionData();
-          populatePlayerSectionLanguages(data.languages);
-
-          fetchRecentPlayers();
-          setTimeout(() => {
-            welcomeSection.classList.remove('reveal');
-            playersSection.classList.add('reveal');
-            removeModal();
-          }, 1000);
+        const result = await checkForName(storageObject.displayName);
+        console.log(`RESULT IS: ${result}`);
+        if (result === 0) {
+          changeModalContent('NameExists', storageObject.displayName);
           return;
-        } catch (error) {
-          console.error(`Error registering for chat:`, error);
-          return;
+        } else {
+          try {
+            const userKey = await registerForChat(null, data);
+            console.log(userKey);
+
+            storageObject.userKey = userKey;
+            console.log(JSON.stringify(storageObject));
+
+            storage.setLocalStorage({
+              displayName: storageObject.displayName,
+              skillLevel: storageObject.skillLevel,
+              languages: storageObject.languages,
+              peerID: storageObject.peerID,
+              userKey: storageObject.userKey,
+            });
+
+            populatePlayersSectionData();
+            populatePlayerSectionLanguages(data.languages);
+
+            fetchRecentPlayers();
+            setTimeout(() => {
+              welcomeSection.classList.remove('reveal');
+              playersSection.classList.add('reveal');
+              removeModal();
+            }, 1000);
+            return;
+          } catch (error) {
+            console.error(`Error registering for chat:`, error);
+            return;
+          }
         }
       });
 

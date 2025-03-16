@@ -71,6 +71,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let conn;
 
+// TODO
+// Added function to allow checking if a name already exists only
+export async function checkForName(playerName) {
+  const playersRef = database.ref('players');
+
+  try {
+    // Query Firebase to check if displayName already exists
+    const querySnapshot = await playersRef
+      .orderByChild('displayName')
+      .equalTo(playerName)
+      .once('value');
+    const nameExists = querySnapshot.exists();
+
+    if (nameExists) {
+      console.error('Error: display name already exists');
+      return 0;
+    } else {
+      return 1;
+    }
+  } catch (error) {
+    console.error('Error handling player record: ', error);
+    return null;
+  }
+}
+
 // NOTES
 export async function registerForChat(key, player) {
   const playersRef = database.ref('players');
@@ -86,6 +111,7 @@ export async function registerForChat(key, player) {
     if (key === null) {
       if (nameExists) {
         console.error('Error: display name already exists');
+        changeModalContent('NameExists', player.displayName);
         return null;
       }
 
