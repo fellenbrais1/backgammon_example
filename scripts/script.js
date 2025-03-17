@@ -13,8 +13,10 @@ console.log(`script.js running`);
 import {
   welcomeNameForm,
   checkForLocalStorageObject,
+  activeOpponent,
 } from '../scripts/welcome.js';
 import * as storage from './localStorage.js';
+import { changeModalContent } from './modals.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -38,6 +40,13 @@ export const adNotification = document.querySelector('.ad_notification');
 const adSection = document.querySelector('.adbox');
 const currentAdLink = document.querySelector('.ad_link');
 const currentAdPicture = document.querySelector('.ad_picture');
+
+// Chat button elements
+const endTurnButton = document.querySelector('.end_turn_button');
+const forfeitGameButton = document.querySelector('.forfeit_game_button');
+const rulesButton = document.querySelector('.rules_button');
+const settingsButton = document.querySelector('.settings_button');
+const gamesButton = document.querySelector('.games_button');
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // SOUNDS
@@ -107,7 +116,7 @@ window.addEventListener('load', () => {
   setInterval(imgAdCycler, 15000);
 });
 
-// Debug button eventListeners
+// Debug button event listeners
 testButton1.addEventListener('click', () => {
   console.log(`Contents of localStorageObject reset to default`);
   storage.clearLocalStorage();
@@ -117,6 +126,16 @@ testButton1.addEventListener('click', () => {
 testButton2.addEventListener('click', () => {
   console.log(`Dad button activated`);
 });
+
+// Chat button event listeners
+forfeitGameButton.addEventListener('click', async () => {
+  console.log(`Forfeit game flow`);
+  console.log(activeOpponent.displayName);
+  changeModalContent('ForfeitGame');
+  return;
+});
+
+rulesButton.addEventListener('click', () => {});
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTIONS

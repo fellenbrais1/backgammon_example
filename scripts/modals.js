@@ -163,6 +163,18 @@ const forfeitModalHTML = `<section class="forfeit_section">
             </div>
           </section>`;
 
+const forfeitNotificationModalHTML = `<section class="forfeit_section">
+          <div class="forfeit_block">
+            <p class="forfeit_text_big no_select">VICTORY!</p>
+            <p class="forfeit_text no_select">
+              Are you sure you want to forfeit the game?
+            </p>
+            <div class="forfeit_button_div">
+              <p class="forfeit_button_ok button no_select">Ok</p>
+            </div>
+          </div>
+        </section>`;
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTIONS
 
@@ -582,7 +594,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       });
       break;
 
-    case 'ForfeitRequest':
+    case 'ForfeitGame':
       modalSection.classList.remove('reveal');
       modalSection.innerHTML = forfeitModalHTML;
       modalSection.classList.add('reveal');
@@ -600,6 +612,25 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       noButton.addEventListener('click', () => {
         playClickSound();
         console.log(`You have NOT forfeited the game!`);
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
+      });
+      break;
+
+    case 'ForfeitNotification':
+      modalSection.classList.remove('reveal');
+      modalSection.innerHTML = forfeitNotificationModalHTML;
+      modalSection.classList.add('reveal');
+      const forfeitNotificationInformation =
+        modalSection.querySelector('.forfeit_text');
+      const okButton = modalSection.querySelector('.forfeit_button_ok');
+
+      forfeitNotificationInformation.textContent = `${data} has forfeited the game! You win!`;
+
+      okButton.addEventListener('click', () => {
+        playClickSound();
+        console.log(`${data} has forfeited the game! You win!`);
         setTimeout(() => {
           removeModal();
         }, 1000);

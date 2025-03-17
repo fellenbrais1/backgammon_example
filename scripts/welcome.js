@@ -150,12 +150,14 @@ const italianHTML = `<p
 // Test button event listeners
 testButton4.addEventListener('click', () => {
   playClickSound();
-  modals.changeModalContent('ChallengeReceived', mockPlayer6.displayName);
+  const storedObject = storage.loadLocalStorage();
+  const playerName = storedObject.displayName;
+  modals.changeModalContent('ForfeitNotification', playerName);
 });
 
 testButton5.addEventListener('click', () => {
   playClickSound();
-  modals.changeModalContent('ForfeitRequest');
+  modals.changeModalContent('ForfeitGame');
 });
 
 // Player name form event listeners
