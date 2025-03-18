@@ -257,10 +257,6 @@ export async function fetchRecentPlayers(languageFilter = 'none') {
 }
 
 export async function connectToPlayer(opponent) {
-  function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   console.log(JSON.stringify(opponent));
   console.log(
     'Attempting to connect to ' +
@@ -284,8 +280,6 @@ export async function connectToPlayer(opponent) {
     const remotePeerId = snapshot.val().peerID;
     console.log(remotePeerId);
     conn = await peer.connect(remotePeerId);
-
-    delay(1000);
 
     console.log(conn);
 
@@ -378,10 +372,6 @@ export async function demoRegisterForChat() {
 
   key = await registerForChat(null, player);
 
-  function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   if (key) {
     mike_key = key;
     console.log('Mike - New player created with key:', key);
@@ -389,7 +379,7 @@ export async function demoRegisterForChat() {
     console.error('Mike - Error creating record');
   }
 
-  await delay(1000); // Wait 3 seconds
+  await delay(3000); // Wait 3 seconds
 
   // Trial 2 - Register Tom (should succeed)
   player.displayName = 'Tom';
@@ -402,7 +392,7 @@ export async function demoRegisterForChat() {
     console.error('Tom - Error creating record');
   }
 
-  await delay(1000); // Wait 3 seconds
+  await delay(3000); // Wait 3 seconds
 
   // Trial 3 - Register Mike again (should fail)
   player.displayName = 'Mike';
@@ -415,7 +405,7 @@ export async function demoRegisterForChat() {
     console.error('Mike (2) - Error creating record');
   }
 
-  await delay(1000); // Wait 3 seconds
+  await delay(3000); // Wait 3 seconds
 
   // Trial 4 - Updating Mike to speak Swahili (should succeed)
   if (mike_key) {
@@ -430,16 +420,16 @@ export async function demoRegisterForChat() {
     }
   }
 
-  await delay(1000); // Wait 3 seconds
+  await delay(3000); // Wait 3 seconds
 
   fetchPlayers();
 
-  await delay(1000); // Wait 3 seconds
+  await delay(3000); // Wait 3 seconds
 
   let mike_player = await fetchPlayerByKey(mike_key);
   console.log('Mike record is: ', mike_player);
 
-  await delay(1000); // Wait 3 seconds
+  await delay(3000); // Wait 3 seconds
 
   let recent_players = await fetchRecentPlayers();
   console.log('Recent players are: ', recent_players);
@@ -508,14 +498,8 @@ async function demoFetchPlayer() {
 }
 
 export async function getOpponentUserKey(opponent) {
-  function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   const playersRef = database.ref('players');
   console.log(playersRef);
-
-  delay(1000);
 
   try {
     // Query Firebase to check if displayName already exists
@@ -539,7 +523,7 @@ export async function getOpponentUserKey(opponent) {
     // const opponentRecord = querySnapshot.exists();
     // opponent.userKey = opponentRecord.key;
 
-    await delay(1000);
+    // await delay(1000);
 
     console.log(opponent);
     return opponent;
@@ -550,24 +534,13 @@ export async function getOpponentUserKey(opponent) {
 }
 
 export async function assignConn(opponent) {
-  function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
   conn = await connectToPlayer(opponent);
-  delay(1000);
   return conn;
 }
-// CODE END
 
 export async function defineOpponent(opponentName) {
-  function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   const playersRef = database.ref('players');
   console.log(playersRef);
-
-  delay(1000);
 
   try {
     // Query Firebase to check if displayName already exists

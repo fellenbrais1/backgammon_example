@@ -181,10 +181,6 @@ const forfeitNotificationModalHTML = `<section class="forfeit_section">
 // Changes the HTML content of the modal element depending on the tag in the call to the function
 // Called by various buttons on the webpage when a modal needs to be displayed
 export async function changeModalContent(tag = 'Challenge', data = '') {
-  function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   console.log(`DATA IS: ${JSON.stringify(data)}`);
   showModal();
 
@@ -465,7 +461,6 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       if (conn !== null) {
         console.log(conn);
         cancelFlag = true;
-        delay(1000);
         console.log(gamePlayers.you);
         const userKey = gamePlayers.you.userKey;
         console.log(userKey);
@@ -526,7 +521,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
           chatSection.classList.add('reveal');
           removeModal();
           messages.startGameMessages(activeOpponentHere.displayName);
-        }, 4000);
+        }, 3000);
       });
 
       declineButton.addEventListener('click', () => {
@@ -548,7 +543,6 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         '.challenge_text_names'
       );
       challengerNameField2.textContent = `Challenging ${data}`;
-      delay(1000);
       challengeInformation2.textContent = `Challenge has been accepted!`;
 
       setTimeout(() => {
@@ -570,7 +564,6 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       );
       challengerNameField3.textContent = `Challenging ${data}`;
       console.log(challengeInformation3);
-      delay(1000);
       console.log(challengeInformation3);
       challengeInformation3.textContent = `Challenge has been rejected!`;
       setTimeout(() => {
