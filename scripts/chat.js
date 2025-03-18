@@ -319,7 +319,7 @@ export function sendRPC(method, params) {
   console.log(JSON.stringify(rpcMessage));
   setTimeout(() => {
     conn.send(JSON.stringify(rpcMessage));
-  }, 5000);
+  }, 1000);
 }
 
 async function handleRPC(data) {
@@ -389,7 +389,7 @@ export async function demoRegisterForChat() {
     console.error('Mike - Error creating record');
   }
 
-  await delay(3000); // Wait 3 seconds
+  await delay(1000); // Wait 3 seconds
 
   // Trial 2 - Register Tom (should succeed)
   player.displayName = 'Tom';
@@ -402,7 +402,7 @@ export async function demoRegisterForChat() {
     console.error('Tom - Error creating record');
   }
 
-  await delay(3000); // Wait 3 seconds
+  await delay(1000); // Wait 3 seconds
 
   // Trial 3 - Register Mike again (should fail)
   player.displayName = 'Mike';
@@ -415,7 +415,7 @@ export async function demoRegisterForChat() {
     console.error('Mike (2) - Error creating record');
   }
 
-  await delay(3000); // Wait 3 seconds
+  await delay(1000); // Wait 3 seconds
 
   // Trial 4 - Updating Mike to speak Swahili (should succeed)
   if (mike_key) {
@@ -430,16 +430,16 @@ export async function demoRegisterForChat() {
     }
   }
 
-  await delay(3000); // Wait 3 seconds
+  await delay(1000); // Wait 3 seconds
 
   fetchPlayers();
 
-  await delay(3000); // Wait 3 seconds
+  await delay(1000); // Wait 3 seconds
 
   let mike_player = await fetchPlayerByKey(mike_key);
   console.log('Mike record is: ', mike_player);
 
-  await delay(3000); // Wait 3 seconds
+  await delay(1000); // Wait 3 seconds
 
   let recent_players = await fetchRecentPlayers();
   console.log('Recent players are: ', recent_players);
@@ -515,7 +515,7 @@ export async function getOpponentUserKey(opponent) {
   const playersRef = database.ref('players');
   console.log(playersRef);
 
-  delay(5000);
+  delay(1000);
 
   try {
     // Query Firebase to check if displayName already exists
@@ -539,7 +539,7 @@ export async function getOpponentUserKey(opponent) {
     // const opponentRecord = querySnapshot.exists();
     // opponent.userKey = opponentRecord.key;
 
-    await delay(2000);
+    await delay(1000);
 
     console.log(opponent);
     return opponent;
@@ -554,7 +554,7 @@ export async function assignConn(opponent) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
   conn = await connectToPlayer(opponent);
-  delay(2000);
+  delay(1000);
   return conn;
 }
 // CODE END
@@ -567,7 +567,7 @@ export async function defineOpponent(opponentName) {
   const playersRef = database.ref('players');
   console.log(playersRef);
 
-  delay(5000);
+  delay(1000);
 
   try {
     // Query Firebase to check if displayName already exists

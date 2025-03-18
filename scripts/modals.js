@@ -465,7 +465,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       if (conn !== null) {
         console.log(conn);
         cancelFlag = true;
-        delay(5000);
+        delay(1000);
         console.log(gamePlayers.you);
         const userKey = gamePlayers.you.userKey;
         console.log(userKey);
@@ -548,7 +548,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         '.challenge_text_names'
       );
       challengerNameField2.textContent = `Challenging ${data}`;
-      delay(2000);
+      delay(1000);
       challengeInformation2.textContent = `Challenge has been accepted!`;
 
       setTimeout(() => {
@@ -570,7 +570,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       );
       challengerNameField3.textContent = `Challenging ${data}`;
       console.log(challengeInformation3);
-      delay(2000);
+      delay(1000);
       console.log(challengeInformation3);
       challengeInformation3.textContent = `Challenge has been rejected!`;
       setTimeout(() => {
