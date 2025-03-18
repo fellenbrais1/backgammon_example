@@ -154,7 +154,7 @@ function showMain() {
     adSection.classList.add('reveal');
     adNotification.classList.add('show');
     boardMessage.textContent = `Have a go at moving the pieces!`;
-  }, 3000);
+  }, 1000);
   setTimeout(() => {
     if (doesUserAlreadyExist) {
       returnSection.classList.add('focus_element_thick');
@@ -185,7 +185,7 @@ function imgAdCycler() {
     currentAdPicture.title = adList[currentAdNumber].title;
     currentAdPicture.alt = adList[currentAdNumber].altText;
     currentAdLink.href = adList[currentAdNumber].href;
-  }, 0);
+  }, 500);
 }
 
 export function toggleClass(pageElement, property) {
