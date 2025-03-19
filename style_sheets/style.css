@@ -53,7 +53,7 @@ html {
 .test_button3,
 .test_button4,
 .test_button5,
-.time_display {
+.version_display {
   position: absolute;
   top: 10px;
   height: 40px;
@@ -88,10 +88,10 @@ html {
   left: 450px;
 }
 
-.time_display {
+.version_display {
   left: 560px;
   width: 300px;
-  font-size: 12px;
+  font-size: 24px;
   background-color: black;
 }
 
