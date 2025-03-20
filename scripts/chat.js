@@ -341,6 +341,10 @@ async function handleRPC(data) {
     console.log(`Challenge rejected by ${challengerName}`);
     changeModalContent('ChallengeRejected', challengerName);
   }
+  if (rpcMessage.method === 'forfeitGame') {
+    console.log(`Game forfeitted by ${challengerName}`);
+    changeModalContent('ForfeitNotification', challengerName);
+  }
   if (rpcMessage.method === 'chat') {
     const message = rpcMessage.params;
     console.log(`Chat message received: ${message}`);

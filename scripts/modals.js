@@ -626,6 +626,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       yesButton.addEventListener('click', () => {
         playClickSound();
         console.log(`You have forfeited the game!`);
+        sendRPC('forfeitGame', '');
         setTimeout(() => {
           removeModal();
         }, 1000);
@@ -775,6 +776,6 @@ function addCurrentGameClass(currentGameFlag) {
   }
 }
 
-addChatButtons();
+// addChatButtons();
 // CODE END
 //////////////////////////////////////////////////////////////////////////////////////////
