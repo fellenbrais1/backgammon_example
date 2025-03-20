@@ -579,7 +579,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         returnSection.classList.remove('reveal');
         chatSection.classList.add('reveal');
         removeModal();
-        addChatButtons();
+        // addChatButtons();
         messages.startGameMessages(gamePlayers.opponent.displayName);
       }, 2000);
       break;
@@ -626,7 +626,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       yesButton.addEventListener('click', () => {
         playClickSound();
         console.log(`You have forfeited the game!`);
-        sendRPC('forfeitGame', '');
+        sendRPC('forfeitGame', sessionDisplayName);
         setTimeout(() => {
           removeModal();
         }, 1000);
@@ -776,6 +776,6 @@ function addCurrentGameClass(currentGameFlag) {
   }
 }
 
-// addChatButtons();
+addChatButtons();
 // CODE END
 //////////////////////////////////////////////////////////////////////////////////////////
