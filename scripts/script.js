@@ -41,13 +41,6 @@ const adSection = document.querySelector('.adbox');
 const currentAdLink = document.querySelector('.ad_link');
 const currentAdPicture = document.querySelector('.ad_picture');
 
-// Chat button elements
-const endTurnButton = document.querySelector('.end_turn_button');
-const forfeitGameButton = document.querySelector('.forfeit_game_button');
-const rulesButton = document.querySelector('.rules_button');
-const settingsButton = document.querySelector('.settings_button');
-const gamesButton = document.querySelector('.games_button');
-
 /////////////////////////////////////////////////////////////////////////////////////////
 // SOUNDS
 
@@ -126,16 +119,6 @@ testButton1.addEventListener('click', () => {
 testButton2.addEventListener('click', () => {
   console.log(`Dad button activated`);
 });
-
-// Chat button event listeners
-forfeitGameButton.addEventListener('click', async () => {
-  console.log(`Forfeit game flow`);
-  console.log(activeOpponent.displayName);
-  changeModalContent('ForfeitGame');
-  return;
-});
-
-rulesButton.addEventListener('click', () => {});
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTIONS

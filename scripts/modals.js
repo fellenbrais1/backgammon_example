@@ -551,6 +551,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         returnSection.classList.remove('reveal');
         chatSection.classList.add('reveal');
         removeModal();
+        addChatButtons();
         messages.startGameMessages(gamePlayers.opponent.displayName);
       }, 2000);
       break;
@@ -646,6 +647,33 @@ function removeModal() {
   modalSection.classList.remove('reveal');
   modalSection.style.display = 'none';
   adNotification.classList.remove('blur_element');
+}
+
+function addChatButtons() {
+  const endTurnButton = document.querySelector('.end_turn_button');
+  const rulesButton = document.querySelector('.rules_button');
+  const settingsButton = document.querySelector('.settings_button');
+  const gamesButton = document.querySelector('.games_button');
+  const forfeitGameButton = document.querySelector('.forfeit_game_button');
+
+  rulesButton.addEventListener('click', () => {
+    console.log(`Rules flow`);
+  });
+  endTurnButton.addEventListener('click', () => {
+    console.log(`End turn flow`);
+  });
+  settingsButton.addEventListener('click', () => {
+    console.log(`Settings flow`);
+  });
+  gamesButton.addEventListener('click', () => {
+    console.log(`Games flow`);
+  });
+  forfeitGameButton.addEventListener('click', async () => {
+    console.log(`Forfeit game flow`);
+    console.log(activeOpponent.displayName);
+    changeModalContent('ForfeitGame');
+    return;
+  });
 }
 
 // CODE END
