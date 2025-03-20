@@ -840,7 +840,7 @@ html {
   border: 2px solid white;
   border-radius: 25px;
   background-color: var(--active_button_gold);
-  opacity: 1;
+  opacity: 0;
   transition: opacity 1s ease-in-out, transform;
   overflow: hidden;
 }
@@ -867,13 +867,15 @@ html {
 
 .chat_buttons_top {
   display: grid;
+  margin-left: 8px;
   grid-template-columns: 100px 100px;
-  gap: 10px;
+  gap: 6px;
 }
 
 .chat_buttons_bottom {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 70px 70px 70px;
+  gap: 6px;
 }
 
 .chat_button {
@@ -886,6 +888,13 @@ html {
   cursor: pointer;
   border: solid 2px white;
   border-radius: 4px;
+  font-size: 12px;
+  text-align: center;
+  padding-top: 2px;
+}
+
+.chat_button_big {
+  width: 100px;
 }
 
 .chat_entry_a,
@@ -948,9 +957,9 @@ html {
 .settings_section {
   row-gap: 48px;
   position: absolute;
-  top: 20px;
+  top: 0px;
   height: 504px;
-  width: 300px;
+  width: 250px;
   background-color: brown;
   border: 2px solid white;
   border-radius: 25px;
@@ -972,9 +981,9 @@ html {
   display: grid;
   grid-template-rows: 90% 10%;
   position: absolute;
-  top: 20px;
+  top: 0px;
   height: 504px;
-  width: 300px;
+  width: 250px;
   border: solid 2px white;
   border-radius: 25px;
   background-color: var(--youtube_red);
@@ -994,6 +1003,7 @@ html {
 
 .rules_info p {
   margin-bottom: 10px;
+  font-size: 14px;
 }
 
 .rules_info li {
@@ -1019,9 +1029,9 @@ html {
   display: grid;
   grid-template-rows: 10% 90%;
   position: absolute;
-  top: 40px;
+  top: 0px;
   height: 504px;
-  width: 300px;
+  width: 250px;
   background-color: var(--topbar_light_blue);
   border: solid 2px white;
   border-radius: 25px;
@@ -1040,7 +1050,7 @@ html {
 .game_button_murder_mansion {
   display: grid;
   grid-template-columns: 1fr 3fr;
-  width: 285px;
+  width: 235px;
   margin-top: 10px;
   margin-left: 5px;
   outline: solid 2px white;
@@ -1060,9 +1070,9 @@ html {
 .game_button_backgammon p,
 .game_button_murder_mansion p {
   margin: 0;
-  padding-top: 32px;
+  padding-top: 38px;
   padding-left: 5px;
-  font-size: 22px;
+  font-size: 16px;
   font-weight: bold;
 }
 

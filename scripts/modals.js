@@ -39,6 +39,14 @@ const returnSection = document.querySelector('.return_section');
 const playersSection = document.querySelector('.players_section');
 const chatSection = document.querySelector('.chat_section');
 
+const settingsSection = document.querySelector('.settings_section');
+const settingsXButton = document.querySelector('.settings_x_button');
+const rulesSection = document.querySelector('.rules_section');
+const rulesXButton = document.querySelector('.rules_x_button');
+const otherGamesSection = document.querySelector('.other_games_section');
+const otherGamesXButton = document.querySelector('.other_games_x_button');
+const otherGamesDisplay = document.querySelector('.other_games_display');
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
 
@@ -47,6 +55,26 @@ let cancelFlag = false;
 
 export let gamePlayers;
 let activeOpponentHere;
+
+let otherGamesPopulatedFlag = false;
+let otherGamesBackgammonButton;
+let otherGamesMurderMansionButton;
+const currentGameFlag = 'Backgammon';
+
+const otherGamesBackgammonButtonHTML = `<div class="game_button_backgammon" title="Backgammon">
+    <img src="../images/MOMABackgammon.png" alt="Backgammon game picture" />
+    <p>Backgammon</p>
+  </div>`;
+
+const otherGamesMurderMansionButtonHTML = `<div class="game_button_murder_mansion" title="Murder Mansion">
+  <img src="../images/murderMansion.jpg" alt="Murder Mansion game picture" />
+  <p>Murder Mansion</p>
+</div>`;
+
+const otherGamesHTML = [
+  otherGamesBackgammonButtonHTML,
+  otherGamesMurderMansionButtonHTML,
+];
 
 // HTML variables
 const nameLengthProblemHTML = `<section class='modal_message_section'><p class="modal_section_message big_margin_top no_select">Please enter a display name between 3 and 12 characters long</p>
@@ -658,15 +686,33 @@ function addChatButtons() {
 
   rulesButton.addEventListener('click', () => {
     console.log(`Rules flow`);
+    playClickSound();
+    setTimeout(() => {
+      rulesSection.classList.add('reveal');
+      chatSection.classList.remove('reveal');
+    }, 500);
   });
   endTurnButton.addEventListener('click', () => {
     console.log(`End turn flow`);
   });
   settingsButton.addEventListener('click', () => {
     console.log(`Settings flow`);
+    playClickSound();
+    setTimeout(() => {
+      settingsSection.classList.add('reveal');
+      chatSection.classList.remove('reveal');
+    }, 500);
   });
   gamesButton.addEventListener('click', () => {
     console.log(`Games flow`);
+    playClickSound();
+    setTimeout(() => {
+      otherGamesSection.classList.add('reveal');
+      chatSection.classList.remove('reveal');
+      populateOtherGames(otherGamesHTML);
+      addCurrentGameClass(currentGameFlag);
+      otherGamesPopulatedFlag = true;
+    }, 500);
   });
   forfeitGameButton.addEventListener('click', async () => {
     console.log(`Forfeit game flow`);
@@ -676,5 +722,59 @@ function addChatButtons() {
   });
 }
 
+rulesXButton.addEventListener('click', () => {
+  playClickSound();
+  setTimeout(() => {
+    rulesSection.classList.remove('reveal');
+    chatSection.classList.add('reveal');
+  }, 500);
+});
+
+settingsXButton.addEventListener('click', () => {
+  playClickSound();
+  setTimeout(() => {
+    settingsSection.classList.remove('reveal');
+    chatSection.classList.add('reveal');
+  }, 500);
+});
+
+otherGamesXButton.addEventListener('click', () => {
+  playClickSound();
+  setTimeout(() => {
+    otherGamesSection.classList.remove('reveal');
+    chatSection.classList.add('reveal');
+  }, 500);
+});
+
+function populateOtherGames(otherGamesHTML) {
+  if (otherGamesPopulatedFlag === false) {
+    let fullHTML = '';
+    otherGamesHTML.forEach((current) => {
+      fullHTML += current;
+    });
+    otherGamesDisplay.insertAdjacentHTML('beforeend', fullHTML);
+    otherGamesBackgammonButton = document.querySelector(
+      '.game_button_backgammon'
+    );
+    otherGamesMurderMansionButton = document.querySelector(
+      '.game_button_murder_mansion'
+    );
+  }
+}
+
+function addCurrentGameClass(currentGameFlag) {
+  if (otherGamesPopulatedFlag === false) {
+    switch (currentGameFlag) {
+      case 'Backgammon':
+        otherGamesBackgammonButton.classList.toggle('game_button_current');
+        break;
+      case 'Murder Mansion':
+        otherGamesMurderMansionButton.classList.toggle('game_button_current');
+        break;
+    }
+  }
+}
+
+addChatButtons();
 // CODE END
 //////////////////////////////////////////////////////////////////////////////////////////
