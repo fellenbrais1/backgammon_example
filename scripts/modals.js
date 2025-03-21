@@ -197,9 +197,7 @@ const forfeitNotificationModalHTML = `<section class="forfeit_section">
             <p class="forfeit_text no_select">
               Are you sure you want to forfeit the game?
             </p>
-            <div class="forfeit_button_div">
               <p class="forfeit_button_ok button no_select">Ok</p>
-            </div>
           </div>
         </section>`;
 
@@ -629,6 +627,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         sendRPC('forfeitGame', sessionDisplayName);
         setTimeout(() => {
           removeModal();
+          window.location.reload();
         }, 1000);
       });
 
@@ -656,6 +655,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         console.log(`${data} has forfeited the game! You win!`);
         setTimeout(() => {
           removeModal();
+          window.location.reload();
         }, 1000);
       });
       break;
@@ -717,7 +717,7 @@ function addChatButtons() {
   });
   forfeitGameButton.addEventListener('click', async () => {
     console.log(`Forfeit game flow`);
-    console.log(activeOpponent.displayName);
+    console.log(activeOpponentHere.displayName);
     changeModalContent('ForfeitGame');
     return;
   });
