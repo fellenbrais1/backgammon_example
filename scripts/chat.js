@@ -23,6 +23,8 @@ console.log(db);
 export let peer;
 let activeOpponent = '';
 
+// TODO
+// New variables for the looping delay to work, see other TODO.
 let connOpen = false;
 let attemptNo = 1;
 
