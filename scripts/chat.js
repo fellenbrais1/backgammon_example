@@ -293,6 +293,7 @@ export async function connectToPlayer(opponent) {
 
     conn.on('open', () => {
       console.log('Connected to peer:', remotePeerId);
+      connOpen = true;
       // Send a test message
       // conn.send(message);
     });
