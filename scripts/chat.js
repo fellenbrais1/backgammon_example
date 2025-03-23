@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   peer.on('open', (id) => {
     console.log('My unique peer ID is: ' + id);
-    connOpen = false;
   });
 
   // On the remote peer's side
@@ -46,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     conn.on('open', () => {
       console.log('Connection opened with:', connection.peer);
+      connOpen = true;
     });
 
     conn.on('data', (data) => {
@@ -307,15 +307,35 @@ export async function connectToPlayer(opponent) {
   }
 }
 
+// TODO
+// Added a looping delay that will retry sending the message until the connOpen variable is true, this is controlled by the conn.on(open) event
 export function sendRPC(method, params) {
-  const rpcMessage = {
-    method: method,
-    params: params,
-  };
-  console.log(JSON.stringify(rpcMessage));
-  setTimeout(() => {
-    conn.send(JSON.stringify(rpcMessage));
-  }, 1000);
+  let attemptNo = 1;
+  if (connOpen === true) {
+    const rpcMessage = {
+      method: method,
+      params: params,
+    };
+    console.log(JSON.stringify(rpcMessage));
+    setTimeout(() => {
+      conn.send(JSON.stringify(rpcMessage));
+    }, 1000);
+  } else {
+    if (attemptNo < 11) {
+      setTimeout(() => {
+        console.log(
+          `Waiting for open connection (5 seconds) Attempt ${attemptNo}`
+        );
+        attemptNo++;
+        sendRPC(method, params);
+      }, 5000);
+    } else {
+      console.log(`Error: Connection cannot be made with the other player.`);
+      alert(
+        `Error: Connection cannot be made with the other player. Please refresh your session and try again.`
+      );
+    }
+  }
 }
 
 async function handleRPC(data) {
