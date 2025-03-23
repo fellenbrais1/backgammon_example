@@ -22,6 +22,7 @@ console.log(db);
 
 export let peer;
 let activeOpponent = '';
+let connOpen = false;
 
 // BUG
 // Linter does not like the 'Peer' constructor in this function but it DOES work
@@ -35,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   peer.on('open', (id) => {
     console.log('My unique peer ID is: ' + id);
+    connOpen = false;
   });
 
   // On the remote peer's side
