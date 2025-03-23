@@ -22,7 +22,9 @@ console.log(db);
 
 export let peer;
 let activeOpponent = '';
+
 let connOpen = false;
+let attemptNo = 1;
 
 // BUG
 // Linter does not like the 'Peer' constructor in this function but it DOES work
@@ -310,8 +312,8 @@ export async function connectToPlayer(opponent) {
 // TODO
 // Added a looping delay that will retry sending the message until the connOpen variable is true, this is controlled by the conn.on(open) event
 export function sendRPC(method, params) {
-  let attemptNo = 1;
   if (connOpen === true) {
+    attemptNo = 1;
     const rpcMessage = {
       method: method,
       params: params,
@@ -320,6 +322,7 @@ export function sendRPC(method, params) {
     setTimeout(() => {
       conn.send(JSON.stringify(rpcMessage));
     }, 1000);
+    return;
   } else {
     if (attemptNo < 11) {
       setTimeout(() => {
@@ -330,10 +333,12 @@ export function sendRPC(method, params) {
         sendRPC(method, params);
       }, 5000);
     } else {
+      attemptNo = 1;
       console.log(`Error: Connection cannot be made with the other player.`);
       alert(
         `Error: Connection cannot be made with the other player. Please refresh your session and try again.`
       );
+      return;
     }
   }
 }
