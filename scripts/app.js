@@ -228,6 +228,28 @@ const game = {
   myPlayer: 'w',
   currentTurn: 'w',
   currentMove: {},
+
+  eventTurnFinished() {
+    // make it the other player's turn
+    if (this.currentTurn == 'w') {
+      this.currentTurn = 'r';
+    } else {
+      this.currentTurn = 'w';
+    }
+
+    this.applyControls();
+  },
+
+  applyControls() {
+    // enable and disable dice
+    const dice_red1 = document.getElementById('dice_red1');
+    console.log('Applying opacity to red dice 1');
+    dice_red1.style.opacity = '0.5';
+
+    const dice_white1 = document.getElementById('dice1');
+    console.log('Applying opacity to white dice 1');
+    dice_white1.style.opacity = '0.5';
+  },
 };
 
 const mapper = new CoordinateMapper();
@@ -445,6 +467,39 @@ function setupMouseEvents() {
   });
 }
 
+function isValidDiceMove(move) {
+  console.log(
+    'In isValidDiceMove turn = ' +
+      game.currentTurn +
+      ' move = ' +
+      JSON.stringify(move)
+  );
+
+  const moveDistance =
+    game.currentTurn == 'w' ? move.from - move.to : move.to - move.from;
+
+  for (let i = 0; i < board.diceThrows.length; i++) {
+    if (board.diceThrows[i] == moveDistance) return true;
+  }
+
+  return false;
+}
+
+function consumeDiceMove(move) {
+  const moveDistance =
+    game.currentTurn == 'w' ? move.from - move.to : move.to - move.from;
+
+  let totalDice = 0;
+
+  for (let i = 0; i < board.diceThrows.length; i++) {
+    if (board.diceThrows[i] == moveDistance) board.diceThrows[i] = 0;
+    totalDice += board.diceThrows[i];
+  }
+
+  // is the player's turn over?
+  if (totalDice == 0) game.eventTurnFinished();
+}
+
 async function applyMove(piece, move) {
   // either snap or return depending on move legality
 
@@ -460,7 +515,8 @@ async function applyMove(piece, move) {
     move.to == move.from ||
     (game.currentTurn == 'w' && move.to > move.from) ||
     (game.currentTurn == 'r' && move.to < move.from) ||
-    (toColor != '' && toColor != game.currentTurn && toOccupied > 1)
+    (toColor != '' && toColor != game.currentTurn && toOccupied > 1) ||
+    !isValidDiceMove(move) // moving an available throw
   ) {
     console.log(
       'Returning piece: toColor = ' + toColor + ', toOccupied = ' + toOccupied
@@ -497,6 +553,8 @@ async function applyMove(piece, move) {
     await animateMovePiece(blotPiece, x, y, 0.5);
     board.updatePointOccupation(barPoint);
 
+    consumeDiceMove(move);
+
     return;
   }
 
@@ -521,6 +579,7 @@ async function applyMove(piece, move) {
   // );
 
   board.updatePointOccupation(move.to);
+  consumeDiceMove(move);
   await animateMovePiece(piece, x, y, 0.5);
 }
 
