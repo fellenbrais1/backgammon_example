@@ -201,6 +201,28 @@ const forfeitNotificationModalHTML = `<section class="forfeit_section">
           </div>
         </section>`;
 
+// TODO
+// These might be better off using the modal_section tags as seen in the elements above, experiment
+const youWinHTML = `<section class="win_section">
+        <div class="win_block">
+          <p class="win_text_big no_select">VICTORY!</p>
+          <p class="win_text no_select">
+            You win!
+          </p>
+            <p class="win_button_ok button no_select">Ok</p>
+        </div>
+      </section>`;
+
+const youLoseHTML = `<section class="lose_section">
+      <div class="lose_block">
+        <p class="lose_text_big no_select">VICTORY!</p>
+        <p class="lose_text no_select">
+          You lose!
+        </p>
+          <p class="lose_button_ok button no_select">Ok</p>
+      </div>
+    </section>`;
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTIONS
 
@@ -577,7 +599,6 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         returnSection.classList.remove('reveal');
         chatSection.classList.add('reveal');
         removeModal();
-        // addChatButtons();
         messages.startGameMessages(gamePlayers.opponent.displayName);
       }, 2000);
       break;
@@ -615,7 +636,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       break;
 
     case 'ForfeitGame':
-      modalSection.classList.remove('reveal');
+      // modalSection.classList.remove('reveal');
       modalSection.innerHTML = forfeitModalHTML;
       modalSection.classList.add('reveal');
       const yesButton = modalSection.querySelector('.forfeit_button_yes');
@@ -641,7 +662,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       break;
 
     case 'ForfeitNotification':
-      modalSection.classList.remove('reveal');
+      // modalSection.classList.remove('reveal');
       modalSection.innerHTML = forfeitNotificationModalHTML;
       modalSection.classList.add('reveal');
       const forfeitNotificationInformation =
@@ -653,6 +674,76 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       okButton.addEventListener('click', () => {
         playClickSound();
         console.log(`${data} has forfeited the game! You win!`);
+        setTimeout(() => {
+          removeModal();
+          window.location.reload();
+        }, 1000);
+      });
+      break;
+
+    // TODO
+    // Test these and tweak as needed, win and lose events
+    case 'EventGameOverWin':
+      console.log(`Game over event - WIN`);
+
+      modalSection.innerHTML = youWinHTML;
+      modalSection.classList.add('reveal');
+      const youWinInformation = modalSection.querySelector('.win_text');
+      const winOkButton = modalSection.querySelector('.win_button_ok');
+
+      let gameWinResult = '';
+
+      switch (data.result) {
+        case 'win':
+          gameWinResult = '!';
+          break;
+        case 'gammon':
+          gameWinResult = ' with a Gammon!';
+          break;
+        case 'backgammon':
+          gameWinResult = ' with a Backgammon!';
+          break;
+      }
+
+      youWinInformation.textContent = `You have won the game${score}! Congratulations!`;
+
+      winOkButton.addEventListener('click', () => {
+        playClickSound();
+        console.log(`You win!`);
+        setTimeout(() => {
+          removeModal();
+          window.location.reload();
+        }, 1000);
+      });
+      break;
+
+    case 'EventGameOverLose':
+      console.log(`Game over event - LOSE`);
+
+      modalSection.innerHTML = youLoseHTML;
+      modalSection.classList.add('reveal');
+      const youLoseInformation = modalSection.querySelector('.lose_text');
+      const loseOkButton = modalSection.querySelector('.lose_button_ok');
+
+      let gameLoseResult = '';
+
+      switch (data.result) {
+        case 'win':
+          gameLoseResult = '!';
+          break;
+        case 'gammon':
+          gameLoseResult = ' with a Gammon!';
+          break;
+        case 'backgammon':
+          gameLoseResult = ' with a Backgammon!';
+          break;
+      }
+
+      youLoseInformation.textContent = `${data} has won the game${score}! Better luck next time!`;
+
+      loseOkButton.addEventListener('click', () => {
+        playClickSound();
+        console.log(`You lose!`);
         setTimeout(() => {
           removeModal();
           window.location.reload();
