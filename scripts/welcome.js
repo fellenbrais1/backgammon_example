@@ -351,7 +351,7 @@ playersChallengeButton.addEventListener('click', () => {
   } else {
     modals.changeModalContent('ChallengeSent', challengerName);
     const storedObject = storage.loadLocalStorage();
-    storedObject.lastOnline = Math.floor(Date.now());
+    storedObject.lastOnline = Date.now();
   }
 });
 
@@ -759,7 +759,7 @@ export function populatePlayers(playerList, filter = 'none') {
 // Checks if a player is in the online list or not and returns true or false
 // Called by populatePlayers()
 function checkPlayerOnline(lastOnline) {
-  const now = Math.floor(Date.now() / 1000);
+  const now = Date.now();
   const difference = now - lastOnline;
   console.log(`RESULT IS: ${difference}`);
 
@@ -790,11 +790,11 @@ function addPlayerEventListeners(playerList) {
     const timeNow = Date.now();
 
     DOMElement.forEach((current) => {
-      const timeSinceLastLoggedIn = Math.floor(timeNow - value.lastOnline);
+      const timeSinceLastLoggedIn = timeNow - value.lastOnline;
 
       const totalSeconds = Math.floor(timeSinceLastLoggedIn / 1000);
       const hours = Math.floor(totalSeconds / 3600);
-      const minutes = Math.floor(totalSeconds / 3600 / 60);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
 
       console.log(`Last Online (ms): ${value.lastOnline}`);
       console.log(`Time Since Last Login (ms): ${timeSinceLastLoggedIn}`);
@@ -844,7 +844,7 @@ function hasLanguageMatch(userLanguages, playerLanguages) {
 
 export async function playerPairingUserChallenge() {
   const storedObject = storage.loadLocalStorage();
-  storedObject.lastOnline = Math.floor(Date.now());
+  storedObject.lastOnline = Date.now();
   const playerWhite = storedObject;
 
   const playerRed = await getOpponentUserKey(activeOpponent);
@@ -861,7 +861,7 @@ export async function playerPairingUserChallenge() {
 
 export async function playerPairingChallengee(activeOpponentHere) {
   const storedObject = storage.loadLocalStorage();
-  storedObject.lastOnline = Math.floor(Date.now());
+  storedObject.lastOnline = Date.now();
   const playerRed = storedObject;
   console.log(activeOpponentHere);
 
