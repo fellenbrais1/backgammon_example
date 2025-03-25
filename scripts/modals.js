@@ -650,7 +650,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         setTimeout(() => {
           removeModal();
           window.location.reload();
-        }, 1000);
+        }, 5000);
       });
 
       noButton.addEventListener('click', () => {
