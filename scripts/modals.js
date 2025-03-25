@@ -174,7 +174,7 @@ const noChallengerHTML = `<section class='modal_message_section'><p class="modal
 <p class="modal_section_button1 button center_modal_button no_select" title='Ok'>Ok</p>
               </section>`;
 
-const forfeitModalHTML = `<section class="modal_message_section">
+const forfeitModalHTML = `<section class="forfeit_section">
             <div class="forfeit_block">
               <p class="forfeit_text_big no_select">FORFEIT GAME?</p>
               <p class="forfeit_text no_select">
@@ -213,7 +213,7 @@ const youWinHTML = `<section class="win_section">
         </div>
       </section>`;
 
-const youLoseHTML = `<section class="lose_section">
+const youLoseHTML = `<section class="modal_message_section">
       <div class="lose_block">
         <p class="lose_text_big no_select">VICTORY!</p>
         <p class="lose_text no_select">
@@ -692,9 +692,11 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       const youWinInformation = modalSection.querySelector('.win_text');
       const winOkButton = modalSection.querySelector('.win_button_ok');
 
+      console.log(`DATA is: ${data}`);
+
       let gameWinResult = '';
 
-      switch (data.result) {
+      switch (data) {
         case 'win':
           gameWinResult = '!';
           break;
@@ -706,7 +708,9 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
           break;
       }
 
-      youWinInformation.textContent = `You have won the game${score}! Congratulations!`;
+      sendRPC('eventGameOverLose', gameWinResult);
+
+      youWinInformation.textContent = `You have won the game${gameWinResult} Congratulations!`;
 
       winOkButton.addEventListener('click', () => {
         playClickSound();

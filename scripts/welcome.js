@@ -81,6 +81,7 @@ export const playersLanguageText = document.getElementById(
 const playersLanguageSvg = document.getElementById('players_language_svg');
 
 // Test button elements
+const testButton3 = document.querySelector('.test_button3');
 const testButton4 = document.querySelector('.test_button4');
 const testButton5 = document.querySelector('.test_button5');
 
@@ -148,11 +149,17 @@ const italianHTML = `<p
 // EVENT LISTENERS
 
 // Test button event listeners
+
+testButton3.addEventListener('click', () => {
+  playClickSound();
+  modals.changeModalContent('EventGameOverWin', 'win');
+});
+
 testButton4.addEventListener('click', () => {
   playClickSound();
-  const storedObject = storage.loadLocalStorage();
-  const playerName = storedObject.displayName;
-  modals.changeModalContent('ForfeitNotification', playerName);
+  // const storedObject = storage.loadLocalStorage();
+  // const playerName = storedObject.displayName;
+  modals.changeModalContent('EventGameOverLose', 'win');
 });
 
 testButton5.addEventListener('click', () => {
@@ -763,7 +770,7 @@ function checkPlayerOnline(lastOnline) {
   const difference = now - lastOnline;
   console.log(`RESULT IS: ${difference}`);
 
-  const onlineThreshold = 60 * 60 * 1000;
+  const onlineThreshold = 60 * 60 * 1000 * 2; // 2 HOURS
 
   // TODO = ADJUST AS NEEDED
   return difference < onlineThreshold;

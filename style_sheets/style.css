@@ -222,7 +222,8 @@ html {
 .return_continue_button,
 .welcome_name_form,
 .challenge_button,
-.forfeit_button_ok {
+.forfeit_button_ok,
+.win_button_ok {
   height: 40px;
   width: 220px;
   margin-bottom: 20px;
@@ -311,7 +312,8 @@ html {
   padding-top: 10px;
 }
 
-.forfeit_button_ok {
+.forfeit_button_ok,
+.win_button_ok {
   background-color: var(--youtube_red);
   /* padding-top: 10px; */
   border: solid 2px white;
@@ -1095,7 +1097,8 @@ html {
 }
 
 /* FORFEIT SECTION */
-.forfeit_section {
+.forfeit_section,
+.win_section {
   height: 250px;
   width: 540px;
   padding-top: 24px;
@@ -1104,24 +1107,28 @@ html {
   border-radius: 25px;
 }
 
-.forfeit_block {
-  margin-top: 20px;
+.forfeit_block,
+.win_block {
+  /* margin-top: 20px; */
   display: grid;
   grid-template-rows: 50px 40px auto;
 }
 
-.forfeit_text {
+.forfeit_text,
+.win_text {
   color: white;
   font-size: 24px;
   font-weight: bold;
 }
 
-.forfeit_text_big {
+.forfeit_text_big,
+.win_text_big {
   font-size: 30px;
   font-weight: bold;
 }
 
-.forfeit_text_small {
+.forfeit_text_small,
+.win_text_small {
   font-size: 16px;
 }
 

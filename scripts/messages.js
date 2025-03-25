@@ -23,7 +23,7 @@ const chatDisplay = document.querySelector('.chat_display');
 const chatInput = document.getElementById('chat_input');
 
 // Test button
-const testButton3 = document.querySelector('.test_button3');
+// const testButton3 = document.querySelector('.test_button3');
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // SOUNDS
@@ -54,11 +54,11 @@ chatInput.addEventListener('keydown', (event) => {
   }
 });
 
-testButton3.addEventListener('click', () => {
-  const opponentName = activeOpponent.displayName;
-  const message = 'Poop';
-  opponentMessage(opponentName, message);
-});
+// testButton3.addEventListener('click', () => {
+//   const opponentName = activeOpponent.displayName;
+//   const message = 'Poop';
+//   opponentMessage(opponentName, message);
+// });
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTIONS

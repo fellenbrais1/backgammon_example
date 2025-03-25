@@ -390,6 +390,12 @@ async function handleRPC(data) {
     const opponentName = messages.getOpponentName();
     messages.opponentMessage(opponentName, message);
   }
+  if (rpcMessage.method === 'eventGameOverLose') {
+    const message = rpcMessage.params;
+    console.log(`Chat message received: ${message}`);
+    const opponentName = messages.getOpponentName();
+    modals.changeModalContent('EventGameOverLose', message);
+  }
 }
 
 // NOTES
