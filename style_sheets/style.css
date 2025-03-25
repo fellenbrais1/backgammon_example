@@ -223,7 +223,8 @@ html {
 .welcome_name_form,
 .challenge_button,
 .forfeit_button_ok,
-.win_button_ok {
+.win_button_ok,
+.lose_button_ok {
   height: 40px;
   width: 220px;
   margin-bottom: 20px;
@@ -235,6 +236,11 @@ html {
   text-align: center;
   font-weight: bold;
   font-size: 24px;
+}
+
+.win_button_ok,
+.lose_button_ok {
+  margin-top: 20px;
 }
 
 .challenge_button {
@@ -313,7 +319,8 @@ html {
 }
 
 .forfeit_button_ok,
-.win_button_ok {
+.win_button_ok,
+.lose_button_ok {
   background-color: var(--youtube_red);
   /* padding-top: 10px; */
   border: solid 2px white;
@@ -1098,7 +1105,8 @@ html {
 
 /* FORFEIT SECTION */
 .forfeit_section,
-.win_section {
+.win_section,
+.lose_section {
   height: 250px;
   width: 540px;
   padding-top: 24px;
@@ -1108,7 +1116,8 @@ html {
 }
 
 .forfeit_block,
-.win_block {
+.win_block,
+.lose_block {
   /* margin-top: 20px; */
   display: grid;
   grid-template-rows: 50px 40px auto;
@@ -1116,20 +1125,24 @@ html {
 
 .forfeit_text,
 .win_text,
-.win_text2 {
+.win_text2,
+.lose_text,
+.lose_text2 {
   color: white;
   font-size: 24px;
   font-weight: bold;
 }
 
 .forfeit_text_big,
-.win_text_big {
+.win_text_big,
+.lose_text_big {
   font-size: 30px;
   font-weight: bold;
 }
 
 .forfeit_text_small,
-.win_text_small {
+.win_text_small,
+.lose_text_small {
   font-size: 16px;
 }
 

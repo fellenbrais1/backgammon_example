@@ -216,7 +216,7 @@ const youWinHTML = `<section class="win_section">
         </div>
       </section>`;
 
-const youLoseHTML = `<section class="modal_message_section">
+const youLoseHTML = `<section class="lose_section">
       <div class="lose_block">
         <p class="lose_text_big no_select">VICTORY!</p>
         <p class="lose_text no_select">
