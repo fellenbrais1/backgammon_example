@@ -732,7 +732,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
 
       let gameLoseResult = '';
 
-      switch (data.result) {
+      switch (data[0]) {
         case 'win':
           gameLoseResult = '!';
           break;
@@ -744,7 +744,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
           break;
       }
 
-      youLoseInformation.textContent = `${data} has won the game${gameLoseResult}!\nBetter luck next time!`;
+      youLoseInformation.textContent = `${data[1]} has won the game${gameLoseResult}!\nBetter luck next time!`;
 
       loseOkButton.addEventListener('click', () => {
         playClickSound();
