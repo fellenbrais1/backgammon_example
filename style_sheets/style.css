@@ -1173,6 +1173,13 @@ html {
   background-color: var(--button_dark_teal);
 }
 
+.win_text,
+.win_text2,
+.lose_text,
+.lose_text2 {
+  font-size: 20px;
+}
+
 /* FLOATING BUTTON ELEMENTS */
 .floating_buttons_main {
   display: grid;

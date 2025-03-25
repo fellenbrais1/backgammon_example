@@ -753,7 +753,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       //     break;
       // }
 
-      youLoseInformation.textContent = `${data[1]} has won the game${data[0]}!`;
+      youLoseInformation.textContent = `${data[1]} has won the game${data[0]}`;
       youLoseInformation2.textContent = `Better luck next time!`;
 
       loseOkButton.addEventListener('click', () => {
