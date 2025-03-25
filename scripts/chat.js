@@ -394,7 +394,7 @@ async function handleRPC(data) {
     const message = rpcMessage.params;
     console.log(`Chat message received: ${message}`);
     const opponentName = messages.getOpponentName();
-    modals.changeModalContent('EventGameOverLose', message);
+    changeModalContent('EventGameOverLose', message);
   }
 }
 
