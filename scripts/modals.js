@@ -730,21 +730,21 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       const youLoseInformation = modalSection.querySelector('.lose_text');
       const loseOkButton = modalSection.querySelector('.lose_button_ok');
 
-      let gameLoseResult = '';
+      // let gameLoseResult = '';
 
-      switch (data[0]) {
-        case 'win':
-          gameLoseResult = '!';
-          break;
-        case 'gammon':
-          gameLoseResult = ' with a Gammon!';
-          break;
-        case 'backgammon':
-          gameLoseResult = ' with a Backgammon!';
-          break;
-      }
+      // switch (data[0]) {
+      //   case 'win':
+      //     gameLoseResult = '!';
+      //     break;
+      //   case 'gammon':
+      //     gameLoseResult = ' with a Gammon!';
+      //     break;
+      //   case 'backgammon':
+      //     gameLoseResult = ' with a Backgammon!';
+      //     break;
+      // }
 
-      youLoseInformation.textContent = `${data[1]} has won the game${gameLoseResult}!\nBetter luck next time!`;
+      youLoseInformation.textContent = `${data[1]} has won the game${data[0]}!\nBetter luck next time!`;
 
       loseOkButton.addEventListener('click', () => {
         playClickSound();

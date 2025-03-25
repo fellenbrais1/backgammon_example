@@ -152,14 +152,14 @@ const italianHTML = `<p
 
 testButton3.addEventListener('click', () => {
   playClickSound();
-  modals.changeModalContent('EventGameOverWin', 'win');
+  modals.changeModalContent('EventGameOverWin', 'backgammon');
 });
 
 testButton4.addEventListener('click', () => {
   playClickSound();
   // const storedObject = storage.loadLocalStorage();
   // const playerName = storedObject.displayName;
-  modals.changeModalContent('EventGameOverLose', 'win');
+  modals.changeModalContent('EventGameOverLose', 'backgammon');
 });
 
 testButton5.addEventListener('click', () => {
