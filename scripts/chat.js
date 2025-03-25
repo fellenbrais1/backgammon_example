@@ -380,6 +380,7 @@ async function handleRPC(data) {
   if (rpcMessage.method === 'forfeitGame') {
     const opponentName = rpcMessage.params;
     console.log(opponentName);
+    messages.forfeitMessage();
     console.log(`Game forfeitted by ${opponentName}`);
     changeModalContent('ForfeitNotification', opponentName);
   }

@@ -645,6 +645,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       yesButton.addEventListener('click', () => {
         playClickSound();
         console.log(`You have forfeited the game!`);
+        messages.forfeitMessage();
         sendRPC('forfeitGame', sessionDisplayName);
         setTimeout(() => {
           removeModal();

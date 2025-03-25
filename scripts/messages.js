@@ -19,7 +19,6 @@ import * as chat from './chat.js';
 // DOM ELEMENT SELECTION
 
 // Chat section elements
-const chatSection = document.querySelector('.chat_section');
 const chatDisplay = document.querySelector('.chat_display');
 const chatInput = document.getElementById('chat_input');
 
@@ -120,7 +119,7 @@ export function opponentMessage(opponentName, message) {
   displayLatestMessage();
 }
 
-function forfeitMessage() {
+export function forfeitMessage() {
   let chatHTML, chatHTML2;
   const displayName = getUserDisplayName();
   const opponentName = getOpponentName();
