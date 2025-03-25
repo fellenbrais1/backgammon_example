@@ -77,19 +77,19 @@ const otherGamesHTML = [
 ];
 
 // HTML variables
-const nameLengthProblemHTML = `<section class='modal_message_section'><p class="modal_section_message big_margin_top no_select">Please enter a display name between 3 and 12 characters long</p>
+const nameLengthProblemHTML = `<section class='modal_message_section'><p class="modal_section_text big_margin_top no_select">Please enter a display name between 3 and 12 characters long</p>
 <p class="modal_section_button1 button center_modal_button no_select" title='Ok'>Ok</p>
               </section>`;
 
-const noNameHTML = `<section class='modal_message_section'><p class="modal_section_message big_margin_top no_select">Please enter a display name to use in the game</p>
+const noNameHTML = `<section class='modal_message_section'><p class="modal_section_text big_margin_top no_select">Please enter a display name to use in the game</p>
               <p class="modal_section_button1 button center_modal_button no_select" title='Ok'>Ok</p>
                             </section>`;
 
-const incompleteDataHTML = `<section class='modal_message_section'><p class="modal_section_message big_margin_top no_select">Please make sure you have entered a name, chosen a skill level, and chosen at least one language</p>
+const incompleteDataHTML = `<section class='modal_message_section'><p class="modal_section_text no_select">Please make sure you have entered a name, chosen a skill level, and chosen at least one language</p>
 <p class="modal_section_button1 button center_modal_button no_select" title='Ok'>Ok</p>
               </section>`;
 
-const confirmNameHTML = `<section class='modal_message_section'><p class="modal_section_message no_select">Are you sure you want to be known as <u class='modal_name'>${sessionDisplayName}</u>?</p>
+const confirmNameHTML = `<section class='modal_message_section'><p class="modal_section_text big_margin_top no_select">Are you sure you want to be known as <u class='modal_name'>${sessionDisplayName}</u>?</p>
               <div class='modal_section_buttons'>
               <p class="modal_section_button1 button no_select" title='Yes'>Yes</p>
               <p class="modal_section_button2 button no_select" title="No">
@@ -98,11 +98,11 @@ const confirmNameHTML = `<section class='modal_message_section'><p class="modal_
               </div>
               </section>`;
 
-const nameExistsHTML = `<section class='modal_message_section'><p class="modal_section_message big_margin_top no_select">Please choose a different name as NAME has already been taken</p>
+const nameExistsHTML = `<section class='modal_message_section'><p class="modal_section_text big_margin_top no_select">Please choose a different name as NAME has already been taken</p>
 <p class="modal_section_button1 button center_modal_button no_select" title='Ok'>Ok</p>
               </section>`;
 
-const goBackFromPlayersSectionHTML = `<section class='modal_message_section'><p class="modal_section_message no_select">Would you like to return to modify your details?</p>
+const goBackFromPlayersSectionHTML = `<section class='modal_message_section'><p class="modal_section_text no_select">Would you like to return to modify your details?</p>
               <div class='modal_section_buttons'>
               <p class="modal_section_button1 button no_select" title='Yes'>Yes</p>
               <p class="modal_section_button2 button no_select" title="No">
@@ -111,7 +111,7 @@ const goBackFromPlayersSectionHTML = `<section class='modal_message_section'><p 
               </div>
               </section>`;
 
-const notYouHTML = `<section class='modal_message_section'><p class="modal_section_message no_select">Would you like to return to modify your details?</p>
+const notYouHTML = `<section class='modal_message_section'><p class="modal_section_text no_select">Would you like to enter new player details?</p>
 <div class='modal_section_buttons'>
 <p class="modal_section_button1 button no_select" title='Yes'>Yes</p>
 <p class="modal_section_button2 button no_select" title="No">
@@ -120,7 +120,7 @@ const notYouHTML = `<section class='modal_message_section'><p class="modal_secti
 </div>
 </section>`;
 
-const challengeModalHTML = `<section class="challenge_section">
+const challengeModalHTML = `<section class="modal_message_section">
             <div class="challenge_block">
               <p class="challenge_text_big no_select">CHALLENGE SENT</p>
               <p class="challenge_text_names no_select"></p>
@@ -131,7 +131,7 @@ const challengeModalHTML = `<section class="challenge_section">
             </div>
           </section>`;
 
-const challengeModalAcceptedHTML = `<section class="challenge_section" style='background-color: lightgreen;'>
+const challengeModalAcceptedHTML = `<section class="modal_message_section" style='background-color: lightgreen;'>
           <div class="challenge_block">
             <p class="challenge_text_big no_select">CHALLENGE SENT</p>
             <p class="challenge_text_names no_select"></p>
@@ -139,7 +139,7 @@ const challengeModalAcceptedHTML = `<section class="challenge_section" style='ba
           </div>
         </section>`;
 
-const challengeModalRejectedHTML = `<section class="challenge_section">
+const challengeModalRejectedHTML = `<section class="modal_message_section">
             <div class="challenge_block">
               <p class="challenge_text_big no_select">CHALLENGE SENT</p>
               <p class="challenge_text_names no_select"></p>
@@ -147,7 +147,7 @@ const challengeModalRejectedHTML = `<section class="challenge_section">
             </div>
           </section>`;
 
-const challengeReceivedModalHTML = `<section class="challenge_received_section">
+const challengeReceivedModalHTML = `<section class="modal_message_section">
             <div class="challenge_received_block">
               <p class="challenge_received_text_big no_select">CHALLENGE RECEIVED</p>
               <p class="challenge_received_text no_select">
@@ -170,11 +170,11 @@ const challengeReceivedModalHTML = `<section class="challenge_received_section">
             </div>
           </section>`;
 
-const noChallengerHTML = `<section class='modal_message_section'><p class="modal_section_message big_margin_top no_select">Please select a player to challenge, then press the challenge button, or, wait to be challenged!</p>
+const noChallengerHTML = `<section class='modal_message_section'><p class="modal_section_text no_select">Please select a player to challenge, then press the challenge button, or, wait to be challenged!</p>
 <p class="modal_section_button1 button center_modal_button no_select" title='Ok'>Ok</p>
               </section>`;
 
-const forfeitModalHTML = `<section class="forfeit_section">
+const forfeitModalHTML = `<section class="modal_message_section">
             <div class="forfeit_block">
               <p class="forfeit_text_big no_select">FORFEIT GAME?</p>
               <p class="forfeit_text no_select">
@@ -191,7 +191,7 @@ const forfeitModalHTML = `<section class="forfeit_section">
             </div>
           </section>`;
 
-const forfeitNotificationModalHTML = `<section class="forfeit_section">
+const forfeitNotificationModalHTML = `<section class="modal_message_section">
           <div class="forfeit_block">
             <p class="forfeit_text_big no_select">VICTORY!</p>
             <p class="forfeit_text no_select">
@@ -271,7 +271,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       const nameExistsYesButton = modalSection.querySelector(
         '.modal_section_button1'
       );
-      const nameText = modalSection.querySelector('.modal_section_message');
+      const nameText = modalSection.querySelector('.modal_section_text');
       nameText.textContent = `Please choose a different name as '${data}' has already been taken`;
 
       nameExistsYesButton.addEventListener('click', () => {
@@ -647,8 +647,8 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         console.log(`You have forfeited the game!`);
         messages.forfeitMessage();
         sendRPC('forfeitGame', sessionDisplayName);
+        removeModal();
         setTimeout(() => {
-          removeModal();
           window.location.reload();
         }, 5000);
       });

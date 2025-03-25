@@ -663,7 +663,7 @@ html {
   background-color: orange;
 }
 
-.modal_section_message {
+.modal_section_text {
   font-size: 20px;
   margin-top: 48px;
   padding-left: 48px;
@@ -753,6 +753,7 @@ html {
 }
 
 .challenge_text_names {
+  margin-top: 10px;
   font-size: 20px;
   color: white;
   font-weight: bold;
@@ -796,6 +797,7 @@ html {
 .challenge_received_block {
   display: grid;
   grid-template-rows: 50px 40px auto;
+  margin-top: 20px;
   row-gap: 16px;
 }
 
@@ -806,6 +808,7 @@ html {
 }
 
 .challenge_received_text_big {
+  margin-top: 20px;
   font-size: 24px;
   font-weight: bold;
 }
@@ -1102,6 +1105,7 @@ html {
 }
 
 .forfeit_block {
+  margin-top: 20px;
   display: grid;
   grid-template-rows: 50px 40px auto;
 }
@@ -1316,6 +1320,10 @@ html {
 .not_free.skill_marker,
 .not_free.player_flag {
   cursor: help;
+}
+
+.big_margin_top {
+  margin-top: 60px;
 }
 
 /* CODE END */

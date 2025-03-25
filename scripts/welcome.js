@@ -351,7 +351,7 @@ playersChallengeButton.addEventListener('click', () => {
   } else {
     modals.changeModalContent('ChallengeSent', challengerName);
     const storedObject = storage.loadLocalStorage();
-    storedObject.lastOnline = Math.floor(Date.now() / 1000);
+    storedObject.lastOnline = Math.floor(Date.now());
   }
 });
 
@@ -760,13 +760,13 @@ export function populatePlayers(playerList, filter = 'none') {
 // Called by populatePlayers()
 function checkPlayerOnline(lastOnline) {
   const now = Math.floor(Date.now() / 1000);
-  const result = now - lastOnline;
+  const difference = now - lastOnline;
+  console.log(`RESULT IS: ${difference}`);
+
+  const onlineThreshold = 60 * 60 * 1000;
+
   // TODO = ADJUST AS NEEDED
-  if (result < 12000000000000) {
-    return true;
-  } else {
-    return false;
-  }
+  return difference < onlineThreshold;
 }
 
 // Checks if a player is in a game or is free and returns true or false
@@ -787,11 +787,20 @@ function addPlayerEventListeners(playerList) {
     const newName = value.displayName.replace(' ', '_');
     const element = '.player_is_' + newName;
     const DOMElement = document.querySelectorAll(element);
-    const timeNow = Math.floor(Date.now() / 1000);
+    const timeNow = Date.now();
+
     DOMElement.forEach((current) => {
       const timeSinceLastLoggedIn = Math.floor(timeNow - value.lastOnline);
-      const hours = Math.floor(timeSinceLastLoggedIn % (3600 * 24)) / 3600;
-      const minutes = Math.floor((timeSinceLastLoggedIn % 3600) / 60);
+
+      const totalSeconds = Math.floor(timeSinceLastLoggedIn / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor(totalSeconds / 3600 / 60);
+
+      console.log(`Last Online (ms): ${value.lastOnline}`);
+      console.log(`Time Since Last Login (ms): ${timeSinceLastLoggedIn}`);
+      console.log(`Hours ago: ${hours}`);
+      console.log(`Minutes ago: ${minutes}`);
+
       const status = current.classList.contains('not_free')
         ? 'IN GAME'
         : 'FREE';
@@ -835,7 +844,7 @@ function hasLanguageMatch(userLanguages, playerLanguages) {
 
 export async function playerPairingUserChallenge() {
   const storedObject = storage.loadLocalStorage();
-  storedObject.lastOnline = Math.floor(Date.now() / 1000);
+  storedObject.lastOnline = Math.floor(Date.now());
   const playerWhite = storedObject;
 
   const playerRed = await getOpponentUserKey(activeOpponent);
@@ -852,7 +861,7 @@ export async function playerPairingUserChallenge() {
 
 export async function playerPairingChallengee(activeOpponentHere) {
   const storedObject = storage.loadLocalStorage();
-  storedObject.lastOnline = Math.floor(Date.now() / 1000);
+  storedObject.lastOnline = Math.floor(Date.now());
   const playerRed = storedObject;
   console.log(activeOpponentHere);
 
