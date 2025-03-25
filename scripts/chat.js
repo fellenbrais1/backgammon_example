@@ -314,7 +314,13 @@ export async function connectToPlayer(opponent) {
 
 // TODO
 // Added a looping delay that will retry sending the message until the connOpen variable is true, this is controlled by the conn.on(open) event
-export function sendRPC(method, params) {
+export async function sendRPC(method, params) {
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  await delay(1000);
+
   if (connOpen === true) {
     attemptNo = 1;
     const rpcMessage = {
