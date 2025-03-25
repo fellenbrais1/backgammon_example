@@ -209,6 +209,9 @@ const youWinHTML = `<section class="win_section">
           <p class="win_text no_select">
             You win!
           </p>
+          <p class="win_text2 no_select">
+            You win!
+          </p>
             <p class="win_button_ok button no_select">Ok</p>
         </div>
       </section>`;
@@ -217,6 +220,9 @@ const youLoseHTML = `<section class="modal_message_section">
       <div class="lose_block">
         <p class="lose_text_big no_select">VICTORY!</p>
         <p class="lose_text no_select">
+          You lose!
+        </p>
+        <p class="lose_text2 no_select">
           You lose!
         </p>
           <p class="lose_button_ok button no_select">Ok</p>
@@ -690,6 +696,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       modalSection.innerHTML = youWinHTML;
       modalSection.classList.add('reveal');
       const youWinInformation = modalSection.querySelector('.win_text');
+      const youWinInformation2 = modalSection.querySelector('.win_text2');
       const winOkButton = modalSection.querySelector('.win_button_ok');
 
       console.log(`DATA is: ${data}`);
@@ -710,7 +717,8 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
 
       sendRPC('eventGameOverLose', gameWinResult);
 
-      youWinInformation.textContent = `You have won the game${gameWinResult}\nCongratulations!`;
+      youWinInformation.textContent = `You have won the game${gameWinResult}`;
+      youWinInformation2.textContent = `Congratulations!`;
 
       winOkButton.addEventListener('click', () => {
         playClickSound();
@@ -728,6 +736,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       modalSection.innerHTML = youLoseHTML;
       modalSection.classList.add('reveal');
       const youLoseInformation = modalSection.querySelector('.lose_text');
+      const youLoseInformation2 = modalSection.querySelector('.lose_text2');
       const loseOkButton = modalSection.querySelector('.lose_button_ok');
 
       // let gameLoseResult = '';
@@ -744,7 +753,8 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       //     break;
       // }
 
-      youLoseInformation.textContent = `${data[1]} has won the game${data[0]}!\nBetter luck next time!`;
+      youLoseInformation.textContent = `${data[1]} has won the game${data[0]}!`;
+      youLoseInformation2.textContent = `Better luck next time!`;
 
       loseOkButton.addEventListener('click', () => {
         playClickSound();

@@ -1115,7 +1115,8 @@ html {
 }
 
 .forfeit_text,
-.win_text {
+.win_text,
+.win_text2 {
   color: white;
   font-size: 24px;
   font-weight: bold;
