@@ -149,7 +149,6 @@ const italianHTML = `<p
 // EVENT LISTENERS
 
 // Test button event listeners
-
 testButton3.addEventListener('click', () => {
   playClickSound();
   modals.changeModalContent('EventGameOverWin', 'backgammon');
@@ -157,8 +156,6 @@ testButton3.addEventListener('click', () => {
 
 testButton4.addEventListener('click', () => {
   playClickSound();
-  // const storedObject = storage.loadLocalStorage();
-  // const playerName = storedObject.displayName;
   modals.changeModalContent('EventGameOverLose', 'backgammon');
 });
 
@@ -772,7 +769,6 @@ function checkPlayerOnline(lastOnline) {
 
   const onlineThreshold = 60 * 60 * 1000 * 2; // 2 HOURS
 
-  // TODO = ADJUST AS NEEDED
   return difference < onlineThreshold;
 }
 

@@ -642,7 +642,6 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       break;
 
     case 'ForfeitGame':
-      // modalSection.classList.remove('reveal');
       modalSection.innerHTML = forfeitModalHTML;
       modalSection.classList.add('reveal');
       const yesButton = modalSection.querySelector('.forfeit_button_yes');
@@ -669,7 +668,6 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       break;
 
     case 'ForfeitNotification':
-      // modalSection.classList.remove('reveal');
       modalSection.innerHTML = forfeitNotificationModalHTML;
       modalSection.classList.add('reveal');
       const forfeitNotificationInformation =
@@ -688,8 +686,6 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       });
       break;
 
-    // TODO
-    // Test these and tweak as needed, win and lose events
     case 'EventGameOverWin':
       console.log(`Game over event - WIN`);
 
@@ -738,20 +734,6 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       const youLoseInformation = modalSection.querySelector('.lose_text');
       const youLoseInformation2 = modalSection.querySelector('.lose_text2');
       const loseOkButton = modalSection.querySelector('.lose_button_ok');
-
-      // let gameLoseResult = '';
-
-      // switch (data[0]) {
-      //   case 'win':
-      //     gameLoseResult = '!';
-      //     break;
-      //   case 'gammon':
-      //     gameLoseResult = ' with a Gammon!';
-      //     break;
-      //   case 'backgammon':
-      //     gameLoseResult = ' with a Backgammon!';
-      //     break;
-      // }
 
       youLoseInformation.textContent = `${data[1]} has won the game${data[0]}`;
       youLoseInformation2.textContent = `Better luck next time!`;

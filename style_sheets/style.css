@@ -322,7 +322,6 @@ html {
 .win_button_ok,
 .lose_button_ok {
   background-color: var(--youtube_red);
-  /* padding-top: 10px; */
   border: solid 2px white;
   padding-bottom: 10px;
   margin-left: auto;
@@ -1118,7 +1117,6 @@ html {
 .forfeit_block,
 .win_block,
 .lose_block {
-  /* margin-top: 20px; */
   display: grid;
   grid-template-rows: 50px 40px auto;
 }

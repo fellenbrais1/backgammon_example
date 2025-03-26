@@ -13,10 +13,8 @@ console.log(`script.js running`);
 import {
   welcomeNameForm,
   checkForLocalStorageObject,
-  activeOpponent,
 } from '../scripts/welcome.js';
 import * as storage from './localStorage.js';
-import { changeModalContent } from './modals.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION

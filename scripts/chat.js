@@ -23,13 +23,10 @@ console.log(db);
 export let peer;
 let activeOpponent = '';
 
-// TODO
-// New variables for the looping delay to work, see other TODO.
+// Variables for the looping delay to work in sendRPC()
 let connOpen = false;
 let attemptNo = 1;
 
-// BUG
-// Linter does not like the 'Peer' constructor in this function but it DOES work
 document.addEventListener('DOMContentLoaded', () => {
   peer = new Peer({
     host: '0.peerjs.com',
@@ -77,8 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let conn;
 
-// TODO
-// Added function to allow checking if a name already exists only
 export async function checkForName(playerName) {
   const playersRef = database.ref('players');
 
@@ -102,7 +97,6 @@ export async function checkForName(playerName) {
   }
 }
 
-// NOTES
 export async function registerForChat(key, player) {
   const playersRef = database.ref('players');
 
@@ -194,7 +188,7 @@ export async function fetchPlayers(languageFilter = 'none') {
       }
     }, 1000);
 
-    return playersArray; // Now correctly in scope
+    return playersArray;
   } catch (error) {
     console.error('Error retrieving players:', error);
     return [];
@@ -204,15 +198,10 @@ export async function fetchPlayers(languageFilter = 'none') {
 async function fetchPlayerByKey(playerKey) {
   try {
     const playerRef = database.ref('players').child(playerKey);
-
-    // Modern approach with get()
     const snapshot = await playerRef.get();
 
-    // Older approach with once()
-    // const snapshot = await playerRef.once('value');
-
     if (snapshot.exists()) {
-      return snapshot.val(); // Returns the player data object
+      return snapshot.val();
     } else {
       console.log('No player found with that key');
       return null;
@@ -225,7 +214,7 @@ async function fetchPlayerByKey(playerKey) {
 
 export async function fetchRecentPlayers(languageFilter = 'none') {
   const playersRef = database.ref('players');
-  const oneHourAgo = Date.now() - 60 * 60 * 1000; // 1 hour ago in milliseconds
+  const oneHourAgo = Date.now() - 60 * 60 * 1000; // 1 HOUR
 
   try {
     const snapshot = await playersRef
@@ -254,7 +243,6 @@ export async function fetchRecentPlayers(languageFilter = 'none') {
       }
     }, 1000);
 
-    // console.log('Players online in the last hour:', playersArray);
     return playersArray;
   } catch (error) {
     console.error('Error retrieving recent players:', error);
@@ -296,8 +284,6 @@ export async function connectToPlayer(opponent) {
     conn.on('open', () => {
       console.log('Connected to peer:', remotePeerId);
       connOpen = true;
-      // Send a test message
-      // conn.send(message);
     });
 
     conn.on('data', (data) => {
@@ -312,7 +298,6 @@ export async function connectToPlayer(opponent) {
   }
 }
 
-// TODO
 // Added a looping delay that will retry sending the message until the connOpen variable is true, this is controlled by the conn.on(open) event
 export async function sendRPC(method, params) {
   function delay(ms) {
@@ -499,7 +484,7 @@ async function demoConnectToPlayer() {
 
 // Step 4.1: Send an RPC message, e.g. send a chat message
 function demoChat() {
-  // get the message to send
+  // Get the message to send
   const message = document.getElementById('p2pMessage').value.trim();
 
   sendRPC('chat', { message });
@@ -522,7 +507,7 @@ async function demoChallenge() {
 
 // Step 4.3: Send an RPC response to challenge - accept
 function demoChallengeResponse() {
-  sendRPC('challengeResponse', 'accept'); // or 'reject'
+  sendRPC('challengeResponse', 'accept'); // Or 'reject'
 }
 
 // Step 4.4: send a dice roll
@@ -570,11 +555,6 @@ export async function getOpponentUserKey(opponent) {
       opponent.userKey = null;
       return null;
     }
-
-    // const opponentRecord = querySnapshot.exists();
-    // opponent.userKey = opponentRecord.key;
-
-    // await delay(1000);
 
     console.log(opponent);
     return opponent;

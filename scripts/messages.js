@@ -12,7 +12,6 @@ console.log(`messages.js running`);
 
 import { gamePlayers } from './modals.js';
 import * as storage from './localStorage.js';
-import { activeOpponent } from './welcome.js';
 import * as chat from './chat.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -21,9 +20,6 @@ import * as chat from './chat.js';
 // Chat section elements
 const chatDisplay = document.querySelector('.chat_display');
 const chatInput = document.getElementById('chat_input');
-
-// Test button
-// const testButton3 = document.querySelector('.test_button3');
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // SOUNDS
@@ -53,12 +49,6 @@ chatInput.addEventListener('keydown', (event) => {
     addChatMessage();
   }
 });
-
-// testButton3.addEventListener('click', () => {
-//   const opponentName = activeOpponent.displayName;
-//   const message = 'Poop';
-//   opponentMessage(opponentName, message);
-// });
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTIONS
@@ -91,7 +81,7 @@ function postChatMessage(messageHTML, position = 'beforeend') {
   chatPop.play();
 }
 
-// Scrolls the chat box display down to the lcoation of the latest message - could be annoying when trying to look back through chats later? - UX?
+// Scrolls the chat box display down to the lcoation of the latest message
 // Called by addChatMessage()
 function displayLatestMessage() {
   chatDisplay.scrollTop = chatDisplay.scrollHeight;
@@ -111,7 +101,6 @@ export function getOpponentName() {
 }
 
 // Generates and posts a chatbox message from a pretend opponent
-// Called by an eventHandler on the 'Ask Jack - TEST' button
 export function opponentMessage(opponentName, message) {
   console.log(message);
   const messageHTML = createOpponentMessage(`${opponentName}`, `${message}`);

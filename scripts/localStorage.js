@@ -24,7 +24,6 @@ const defaultLocalStorageObject = {
 // FUNCTIONS
 
 // Creates a copy of the defaultLocalStorageObject to be used in the user's local storage
-// Exported to , called by setLocalStorage()
 export function createLocalStorage() {
   const localStorageObject = { ...defaultLocalStorageObject };
   localStorage.setItem(
@@ -35,7 +34,6 @@ export function createLocalStorage() {
 }
 
 // Sets the user's data on their copy of the localStorageObject
-// Exported to , called by
 export function setLocalStorage({
   displayName = '',
   skillLevel = 'beginner',
@@ -65,7 +63,6 @@ export function setLocalStorage({
 }
 
 // Loads the data from the perviously created localStorageObject, or supplies default values if an object does not exist.
-// Exported to , called by
 export function loadLocalStorage() {
   const storedObject = localStorage.getItem('localStorageObject');
   if (storedObject) {
