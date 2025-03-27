@@ -829,7 +829,7 @@ html {
   grid-template-columns: auto auto;
   column-gap: 18px;
   width: 60%;
-  margin-left: 35%;
+  margin-left: 15%;
 }
 
 .challenge_received_button_accept,
@@ -1148,7 +1148,7 @@ html {
   grid-template-columns: auto auto;
   column-gap: 18px;
   width: 60%;
-  margin-left: 20%;
+  margin-left: 15%;
   padding-top: 16px;
 }
 
@@ -1328,7 +1328,7 @@ html {
 }
 
 .center_modal_button {
-  margin-top: 48px;
+  /* margin-top: 48px; */
   margin-left: 180px;
 }
 

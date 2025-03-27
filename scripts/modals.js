@@ -144,7 +144,7 @@ const challengeModalRejectedHTML = `<section class="modal_message_section">
               <p class="challenge_text_big no_select">CHALLENGE SENT</p>
               <p class="challenge_text_names no_select"></p>
               <p class="challenge_text no_select">Waiting for a response...</p>
-              <p class="modal_section_button button_red button no_select">Ok</p>
+              <p class="modal_section_button button_red center_modal_button button no_select">Ok</p>
             </div>
           </section>`;
 
@@ -198,7 +198,7 @@ const forfeitNotificationModalHTML = `<section class="modal_message_section">
             <p class="forfeit_text no_select">
               Are you sure you want to forfeit the game?
             </p>
-              <p class="modal_section_button button_red button no_select">Ok</p>
+              <p class="modal_section_button button_red center_modal_button button no_select">Ok</p>
           </div>
         </section>`;
 
@@ -213,7 +213,7 @@ const youWinHTML = `<section class="modal_message_section">
           <p class="win_text2 no_select">
             You win!
           </p>
-            <p class="modal_section_button button no_select">Ok</p>
+            <p class="modal_section_button center_modal_button button no_select">Ok</p>
         </div>
       </section>`;
 
@@ -226,7 +226,7 @@ const youLoseHTML = `<section class="modal_message_section">
         <p class="lose_text2 no_select">
           You lose!
         </p>
-          <p class="modal_section_button button_red button no_select">Ok</p>
+          <p class="modal_section_button button_red center_modal_button button no_select">Ok</p>
       </div>
     </section>`;
 
