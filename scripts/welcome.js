@@ -151,17 +151,17 @@ const italianHTML = `<p
 // Test button event listeners
 testButton3.addEventListener('click', () => {
   playClickSound();
-  modals.changeModalContent('EventGameOverWin', 'backgammon');
+  modals.changeModalContent('eventGameOverWin', 'backgammon');
 });
 
 testButton4.addEventListener('click', () => {
   playClickSound();
-  modals.changeModalContent('EventGameOverLose', 'backgammon');
+  modals.changeModalContent('eventGameOverLose', 'backgammon');
 });
 
 testButton5.addEventListener('click', () => {
   playClickSound();
-  modals.changeModalContent('ForfeitGame');
+  modals.changeModalContent('forfeitGame');
 });
 
 // Player name form event listeners
@@ -173,7 +173,7 @@ welcomeNameForm.addEventListener('keydown', (event) => {
     if (welcomeNameInput.value !== '') {
       if (welcomeName.length >= 3) {
         if (welcomeName.length > 12) {
-          modals.changeModalContent('NameProblem');
+          modals.changeModalContent('nameProblem');
           return;
         } else {
           youName.textContent = welcomeName;
@@ -184,11 +184,11 @@ welcomeNameForm.addEventListener('keydown', (event) => {
           return;
         }
       } else {
-        modals.changeModalContent('NameProblem');
+        modals.changeModalContent('nameProblem');
         return;
       }
     } else {
-      modals.changeModalContent('NoName');
+      modals.changeModalContent('noName');
       welcomeNameInput.value = sessionDisplayName;
       return;
     }
@@ -333,27 +333,27 @@ continueButtonReturn.addEventListener('click', () => {
     userKey: storedObject.userKey,
     peerID: storedObject.peerID,
   };
-  modals.changeModalContent('ReturnConfirmName', data);
+  modals.changeModalContent('returnConfirmName', data);
 });
 
 // Welcome back return section event listeners
 notYouButton.addEventListener('click', () => {
   playClickSound();
-  modals.changeModalContent('NotYou');
+  modals.changeModalContent('notYou');
 });
 
 // Players section event listeners
 playersXButton.addEventListener('click', () => {
   playClickSound();
-  modals.changeModalContent('Return');
+  modals.changeModalContent('return');
 });
 
 playersChallengeButton.addEventListener('click', () => {
   playClickSound();
   if (challengerName === '') {
-    modals.changeModalContent('NoChallenger');
+    modals.changeModalContent('noChallenger');
   } else {
-    modals.changeModalContent('ChallengeSent', challengerName);
+    modals.changeModalContent('challengeSent', challengerName);
     const storedObject = storage.loadLocalStorage();
     storedObject.lastOnline = Date.now();
   }
@@ -562,9 +562,9 @@ function createUserData() {
       peerID: peer.id,
     };
     console.log(JSON.stringify(data));
-    modals.changeModalContent('ConfirmName', data);
+    modals.changeModalContent('confirmName', data);
   } else {
-    modals.changeModalContent('IncompleteData');
+    modals.changeModalContent('incompleteData');
     return;
   }
 }

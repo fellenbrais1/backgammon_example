@@ -1,4 +1,4 @@
-import { demoRegisterForChat } from './chat.js';
+// import { demoRegisterForChat } from './chat.js';
 import { firebaseApp, analytics, database } from '../scripts/firebaseConfig.js';
 
 const PIECE_RADIUS = 18;

@@ -10,11 +10,8 @@ console.log(`script.js running`);
 /////////////////////////////////////////////////////////////////////////////////////////
 // IMPORTS
 
-import {
-  welcomeNameForm,
-  checkForLocalStorageObject,
-} from '../scripts/welcome.js';
-import * as storage from './localStorage.js';
+import { welcomeNameForm, checkForLocalStorageObject } from './welcome.js';
+import { clearLocalStorage, testForLocalStorageData } from './localStorage.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -35,6 +32,7 @@ const returnSection = document.querySelector('.return_section');
 
 // Ad section elements
 export const adNotification = document.querySelector('.ad_notification');
+
 const adSection = document.querySelector('.adbox');
 const currentAdLink = document.querySelector('.ad_link');
 const currentAdPicture = document.querySelector('.ad_picture');
@@ -99,21 +97,29 @@ let currentAdNumber = 0;
 // EVENT LISTENERS
 
 // Window listeners
+
+// Displays the main elements and checks to see if there has been a player object set to local storage previously, also cycles site ads
+// Runs on window load event
 window.addEventListener('load', () => {
   showMain();
-  storage.testForLocalStorageData();
+  testForLocalStorageData();
   imbedGame.classList.add('show');
   imbedGame.classList.remove('no_pointer_events');
   setInterval(imgAdCycler, 15000);
 });
 
 // Debug button event listeners
+
+// Clears the local storage object set previously in order to test resetting the user object
+// On the 'TEST 1' button
 testButton1.addEventListener('click', () => {
   console.log(`Contents of localStorageObject reset to default`);
-  storage.clearLocalStorage();
+  clearLocalStorage();
   window.location.reload();
 });
 
+// Test button for Dad's usage, currently does nothing
+// On the 'TEST 2' button
 testButton2.addEventListener('click', () => {
   console.log(`Dad button activated`);
 });
@@ -122,7 +128,9 @@ testButton2.addEventListener('click', () => {
 // FUNCTIONS
 
 // Main display functions
+
 // Shows the pages main elements on load or a site reset event
+// Called by 'load' event handler on the window object
 function showMain() {
   const doesUserAlreadyExist = checkForLocalStorageObject();
   console.log(doesUserAlreadyExist);
@@ -149,13 +157,16 @@ function showMain() {
 }
 
 // Sound functions
-// Plays the set click sound for the webpage
+
+// Plays the button click sound
 export function playClickSound() {
   buttonClickSound.play();
 }
 
 // Ad section functions
-// Cycles through the available ads using random numbers, changes properties of image ad elements on the webpage
+
+// Cycles through the available ads using random numbers, which changes properties of ad elements on the webpage
+// Called by 'load' event handler on the window object
 function imgAdCycler() {
   setTimeout(() => {
     const oldAdNumber = currentAdNumber;
@@ -167,12 +178,6 @@ function imgAdCycler() {
     currentAdPicture.alt = adList[currentAdNumber].altText;
     currentAdLink.href = adList[currentAdNumber].href;
   }, 500);
-}
-
-export function toggleClass(pageElement, property) {
-  pageElement.classList.contains(property)
-    ? pageElement.classList.remove(property)
-    : pageElement.classList.add(property);
 }
 
 // CODE END

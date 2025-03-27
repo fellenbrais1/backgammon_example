@@ -88,6 +88,8 @@ export function loadLocalStorage() {
   }
 }
 
+// Tests to see if a user object has previously been set to local storage
+// Called by
 export function testForLocalStorageData() {
   const storedObject = loadLocalStorage();
   console.log(`User localStorageObject = ${JSON.stringify(storedObject)}`);

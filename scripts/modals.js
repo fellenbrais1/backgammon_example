@@ -234,12 +234,12 @@ const youLoseHTML = `<section class="lose_section">
 
 // Changes the HTML content of the modal element depending on the tag in the call to the function
 // Called by various buttons on the webpage when a modal needs to be displayed
-export async function changeModalContent(tag = 'Challenge', data = '') {
+export async function changeModalContent(tag = 'challenge', data = '') {
   console.log(`DATA IS: ${JSON.stringify(data)}`);
   showModal();
 
   switch (tag) {
-    case 'NameProblem':
+    case 'nameProblem':
       modalSection.innerHTML = nameLengthProblemHTML;
       modalSection.classList.add('reveal');
       const nameProblemYesButton = modalSection.querySelector(
@@ -255,7 +255,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       });
       break;
 
-    case 'NoName':
+    case 'noName':
       modalSection.innerHTML = noNameHTML;
       modalSection.classList.add('reveal');
       const noNameYesButton = modalSection.querySelector(
@@ -271,7 +271,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       });
       break;
 
-    case 'NameExists':
+    case 'nameExists':
       modalSection.innerHTML = nameExistsHTML;
       modalSection.classList.add('reveal');
       const nameExistsYesButton = modalSection.querySelector(
@@ -289,7 +289,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       });
       break;
 
-    case 'IncompleteData':
+    case 'incompleteData':
       modalSection.innerHTML = incompleteDataHTML;
       modalSection.classList.add('reveal');
       const incompleteDataYesButton = modalSection.querySelector(
@@ -305,7 +305,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       });
       break;
 
-    case 'ConfirmName':
+    case 'confirmName':
       sessionDisplayName = data.displayName;
       modalSection.innerHTML = confirmNameHTML;
       modalSection.classList.add('reveal');
@@ -336,7 +336,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         const result = await checkForName(storageObject.displayName);
         console.log(`RESULT IS: ${result}`);
         if (result === 0) {
-          changeModalContent('NameExists', storageObject.displayName);
+          changeModalContent('nameExists', storageObject.displayName);
           return;
         } else {
           try {
@@ -379,7 +379,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       });
       break;
 
-    case 'ReturnConfirmName':
+    case 'returnConfirmName':
       sessionDisplayName = data.displayName;
       modalSection.innerHTML = confirmNameHTML;
       modalSection.classList.add('reveal');
@@ -422,7 +422,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       });
       break;
 
-    case 'Return':
+    case 'return':
       modalSection.innerHTML = goBackFromPlayersSectionHTML;
       modalSection.classList.add('reveal');
       const returnYesButton = modalSection.querySelector(
@@ -454,7 +454,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
 
       break;
 
-    case 'NotYou':
+    case 'notYou':
       modalSection.innerHTML = notYouHTML;
       modalSection.classList.add('reveal');
       const notYouYesButton = modalSection.querySelector(
@@ -484,7 +484,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
 
       break;
 
-    case 'ChallengeSent':
+    case 'challengeSent':
       cancelFlag = false;
       modalSection.innerHTML = challengeModalHTML;
       modalSection.classList.add('reveal');
@@ -537,7 +537,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
         break;
       }
 
-    case 'ChallengeReceived':
+    case 'challengeReceived':
       modalSection.innerHTML = challengeReceivedModalHTML;
       modalSection.classList.add('reveal');
       const challengeReceivedText = modalSection.querySelector(
@@ -588,7 +588,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       });
       break;
 
-    case 'ChallengeAccepted':
+    case 'challengeAccepted':
       modalSection.innerHTML = challengeModalAcceptedHTML;
       modalSection.style.backgroundColor = 'lightgreen';
       const challengeInformation2 =
@@ -609,7 +609,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       }, 2000);
       break;
 
-    case 'ChallengeRejected':
+    case 'challengeRejected':
       modalSection.innerHTML = challengeModalRejectedHTML;
       const challengeInformation3 =
         modalSection.querySelector('.challenge_text');
@@ -625,7 +625,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       }, 2000);
       break;
 
-    case 'NoChallenger':
+    case 'noChallenger':
       modalSection.innerHTML = noChallengerHTML;
       modalSection.classList.add('reveal');
       const noChallengerYesButton = modalSection.querySelector(
@@ -641,7 +641,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       });
       break;
 
-    case 'ForfeitGame':
+    case 'forfeitGame':
       modalSection.innerHTML = forfeitModalHTML;
       modalSection.classList.add('reveal');
       const yesButton = modalSection.querySelector('.forfeit_button_yes');
@@ -667,7 +667,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       });
       break;
 
-    case 'ForfeitNotification':
+    case 'forfeitNotification':
       modalSection.innerHTML = forfeitNotificationModalHTML;
       modalSection.classList.add('reveal');
       const forfeitNotificationInformation =
@@ -686,7 +686,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       });
       break;
 
-    case 'EventGameOverWin':
+    case 'eventGameOverWin':
       console.log(`Game over event - WIN`);
 
       modalSection.innerHTML = youWinHTML;
@@ -711,7 +711,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
           break;
       }
 
-      sendRPC('eventGameOverLose', gameWinResult);
+      sendRPC('gameOver', gameWinResult);
 
       youWinInformation.textContent = `You have won the game${gameWinResult}`;
       youWinInformation2.textContent = `Congratulations!`;
@@ -726,7 +726,7 @@ export async function changeModalContent(tag = 'Challenge', data = '') {
       });
       break;
 
-    case 'EventGameOverLose':
+    case 'eventGameOverLose':
       console.log(`Game over event - LOSE`);
 
       modalSection.innerHTML = youLoseHTML;
@@ -806,7 +806,7 @@ function addChatButtons() {
   forfeitGameButton.addEventListener('click', async () => {
     console.log(`Forfeit game flow`);
     console.log(activeOpponentHere.displayName);
-    changeModalContent('ForfeitGame');
+    changeModalContent('forfeitGame');
     return;
   });
 }
