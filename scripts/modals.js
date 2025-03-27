@@ -518,7 +518,7 @@ export async function changeModalContent(tag = 'challenge', data = '') {
         console.log(gamePlayers.you);
         const userKey = gamePlayers.you.userKey;
         console.log(userKey);
-        sendRPC('challenge', userKey);
+        sendRPC('challengeSent', userKey);
         break;
       }
 
