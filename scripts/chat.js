@@ -448,7 +448,7 @@ function eventChallengeRejected() {
 }
 
 function eventForfeitGame(message) {
-  const opponentName = message.params;
+  const opponentName = message;
   console.log(opponentName);
   forfeitMessage();
   console.log(`Game forfeitted by ${opponentName}`);

@@ -690,8 +690,7 @@ html {
   margin-left: 78px;
 }
 
-.modal_section_button1,
-.modal_section_button2 {
+.modal_section_button {
   padding-top: 10px;
   background-color: green;
   width: 180px;
@@ -702,7 +701,7 @@ html {
   border: solid 2px white;
 }
 
-.modal_section_button2 {
+.button_red {
   background-color: var(--youtube_red);
 }
 
