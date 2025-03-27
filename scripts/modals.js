@@ -186,7 +186,7 @@ const forfeitModalHTML = `<section class="modal_message_section">
                 a loss
               </p>
               <div class="forfeit_button_div">
-                <p class="modal_section_button_yes button no_select">Forfeit</p>
+                <p class="modal_section_button button no_select">Forfeit</p>
                 <p class="modal_section_button button_red button no_select">Cancel</p>
               </div>
             </div>
