@@ -19,7 +19,11 @@ import {
   playerPairingChallengee,
   activeOpponent,
 } from './welcome.js';
-import * as storage from './localStorage.js';
+import {
+  setLocalStorage,
+  loadLocalStorage,
+  clearLocalStorage,
+} from './localStorage.js';
 import {
   registerForChat,
   fetchRecentPlayers,
@@ -28,7 +32,7 @@ import {
   defineOpponent,
   checkForName,
 } from './chat.js';
-import * as messages from './messages.js';
+import { startGameMessages, forfeitMessage } from './messages.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -321,14 +325,14 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         console.log(`LANGAUGES = ${data.languages}`);
         console.log(`PEERID = ${data.peerID}`);
         playClickSound();
-        storage.setLocalStorage({
+        setLocalStorage({
           displayName: data.displayName,
           skillLevel: data.skillLevel,
           languages: data.languages,
           peerID: data.peerID,
         });
 
-        let storageObject = storage.loadLocalStorage();
+        let storageObject = loadLocalStorage();
         console.log(storageObject);
         console.log(storageObject.peerID);
 
@@ -345,7 +349,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
             storageObject.userKey = userKey;
             console.log(JSON.stringify(storageObject));
 
-            storage.setLocalStorage({
+            setLocalStorage({
               displayName: storageObject.displayName,
               skillLevel: storageObject.skillLevel,
               languages: storageObject.languages,
@@ -432,7 +436,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         playClickSound();
         playersSection.classList.remove('reveal');
         welcomeSection.classList.add('reveal');
-        storage.clearLocalStorage();
+        clearLocalStorage();
         playersLanguageText.textContent = `Select`;
         setTimeout(() => {
           removeModal();
@@ -460,7 +464,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
       notYouYesButton.addEventListener('click', () => {
         playClickSound();
-        storage.clearLocalStorage();
+        clearLocalStorage();
         setTimeout(() => {
           removeModal();
           window.location.reload();
@@ -562,7 +566,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           returnSection.classList.remove('reveal');
           chatSection.classList.add('reveal');
           removeModal();
-          messages.startGameMessages(activeOpponentHere.displayName);
+          startGameMessages(activeOpponentHere.displayName);
         }, 3000);
       });
 
@@ -593,7 +597,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         returnSection.classList.remove('reveal');
         chatSection.classList.add('reveal');
         removeModal();
-        messages.startGameMessages(gamePlayers.opponent.displayName);
+        startGameMessages(gamePlayers.opponent.displayName);
       }, 2000);
       break;
 
@@ -653,7 +657,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       yesButton.addEventListener('click', () => {
         playClickSound();
         console.log(`You have forfeited the game!`);
-        messages.forfeitMessage();
+        forfeitMessage();
         sendRPC('forfeitGame', sessionDisplayName);
         removeModal();
         setTimeout(() => {

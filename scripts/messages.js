@@ -11,8 +11,8 @@ console.log(`messages.js running`);
 // IMPORTS
 
 import { gamePlayers } from './modals.js';
-import * as storage from './localStorage.js';
-import * as chat from './chat.js';
+import { loadLocalStorage } from './localStorage.js';
+import { sendRPC } from './chat.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -59,7 +59,7 @@ function addChatMessage() {
   const message = chatInput.value;
   chatInput.value = '';
   const messageHTML = createChatMessage(message);
-  chat.sendRPC('chat', message);
+  sendRPC('chat', message);
   postChatMessage(messageHTML);
   displayLatestMessage();
 }
@@ -90,7 +90,7 @@ function displayLatestMessage() {
 // Captures the users display name or 'Guest' if one is not set and returns it
 // Called by startGameMessages(), createChatMessage()
 function getUserDisplayName() {
-  const storedObject = storage.loadLocalStorage();
+  const storedObject = loadLocalStorage();
   const displayName = storedObject.displayName;
   return displayName;
 }

@@ -11,8 +11,8 @@ console.log(`welcome.js running`);
 // IMPORTS
 
 import { playClickSound } from './script.js';
-import * as storage from './localStorage.js';
-import * as modals from './modals.js';
+import { loadLocalStorage, setLocalStorage } from './localStorage.js';
+import { changeModalContent } from './modals.js';
 import { fetchRecentPlayers, getOpponentUserKey, peer } from './chat.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -151,17 +151,17 @@ const italianHTML = `<p
 // Test button event listeners
 testButton3.addEventListener('click', () => {
   playClickSound();
-  modals.changeModalContent('eventGameOverWin', 'backgammon');
+  changeModalContent('eventGameOverWin', 'backgammon');
 });
 
 testButton4.addEventListener('click', () => {
   playClickSound();
-  modals.changeModalContent('eventGameOverLose', 'backgammon');
+  changeModalContent('eventGameOverLose', 'backgammon');
 });
 
 testButton5.addEventListener('click', () => {
   playClickSound();
-  modals.changeModalContent('forfeitGame');
+  changeModalContent('forfeitGame');
 });
 
 // Player name form event listeners
@@ -173,7 +173,7 @@ welcomeNameForm.addEventListener('keydown', (event) => {
     if (welcomeNameInput.value !== '') {
       if (welcomeName.length >= 3) {
         if (welcomeName.length > 12) {
-          modals.changeModalContent('nameProblem');
+          changeModalContent('nameProblem');
           return;
         } else {
           youName.textContent = welcomeName;
@@ -184,11 +184,11 @@ welcomeNameForm.addEventListener('keydown', (event) => {
           return;
         }
       } else {
-        modals.changeModalContent('nameProblem');
+        changeModalContent('nameProblem');
         return;
       }
     } else {
-      modals.changeModalContent('noName');
+      changeModalContent('noName');
       welcomeNameInput.value = sessionDisplayName;
       return;
     }
@@ -313,9 +313,9 @@ continueButton.addEventListener('click', () => {
 
 continueButtonReturn.addEventListener('click', () => {
   playClickSound();
-  const storedObjectProto = storage.loadLocalStorage();
+  const storedObjectProto = loadLocalStorage();
   console.log(storedObjectProto);
-  storage.setLocalStorage({
+  setLocalStorage({
     displayName: storedObjectProto.displayName,
     skillLevel: storedObjectProto.skillLevel,
     languages: storedObjectProto.languages,
@@ -323,7 +323,7 @@ continueButtonReturn.addEventListener('click', () => {
     userKey: storedObjectProto.userKey,
     peerID: peer.id,
   });
-  const storedObject = storage.loadLocalStorage();
+  const storedObject = loadLocalStorage();
   console.log(storedObject);
   const data = {
     displayName: storedObject.displayName,
@@ -333,28 +333,28 @@ continueButtonReturn.addEventListener('click', () => {
     userKey: storedObject.userKey,
     peerID: storedObject.peerID,
   };
-  modals.changeModalContent('returnConfirmName', data);
+  changeModalContent('returnConfirmName', data);
 });
 
 // Welcome back return section event listeners
 notYouButton.addEventListener('click', () => {
   playClickSound();
-  modals.changeModalContent('notYou');
+  changeModalContent('notYou');
 });
 
 // Players section event listeners
 playersXButton.addEventListener('click', () => {
   playClickSound();
-  modals.changeModalContent('return');
+  changeModalContent('return');
 });
 
 playersChallengeButton.addEventListener('click', () => {
   playClickSound();
   if (challengerName === '') {
-    modals.changeModalContent('noChallenger');
+    changeModalContent('noChallenger');
   } else {
-    modals.changeModalContent('challengeSent', challengerName);
-    const storedObject = storage.loadLocalStorage();
+    changeModalContent('challengeSent', challengerName);
+    const storedObject = loadLocalStorage();
     storedObject.lastOnline = Date.now();
   }
 });
@@ -562,9 +562,9 @@ function createUserData() {
       peerID: peer.id,
     };
     console.log(JSON.stringify(data));
-    modals.changeModalContent('confirmName', data);
+    changeModalContent('confirmName', data);
   } else {
-    modals.changeModalContent('incompleteData');
+    changeModalContent('incompleteData');
     return;
   }
 }
@@ -572,7 +572,7 @@ function createUserData() {
 // Checks to see if there is data already written into local storage and returns true or false
 // Called by showMain() in script.js
 export function checkForLocalStorageObject() {
-  const storedObject = storage.loadLocalStorage();
+  const storedObject = loadLocalStorage();
   if (
     storedObject.displayName !== '' &&
     storedObject.displayName.length > 3 &&
@@ -590,7 +590,7 @@ export function checkForLocalStorageObject() {
 // Populates page field's with user data if local storage has already been written to
 // Called by checkForLocalStroageObject()
 function welcomeBackPopulateFields() {
-  const storedObject = storage.loadLocalStorage();
+  const storedObject = loadLocalStorage();
   returnYouName.textContent = storedObject.displayName;
   returnYouSkill.textContent = storedObject.skillLevel;
   languagesChosenReturn = storedObject.languages;
@@ -602,7 +602,7 @@ function welcomeBackPopulateFields() {
 // Populates the players section's you elements with data from the local storage object
 // Called by changeModalContent() in modals.js
 export function populatePlayersSectionData() {
-  const storedObject = storage.loadLocalStorage();
+  const storedObject = loadLocalStorage();
   console.log(JSON.stringify(storedObject));
   nextYouName.textContent = storedObject.displayName;
   nextYouSkill.textContent = storedObject.skillLevel;
@@ -670,7 +670,7 @@ export function populatePlayerSectionLanguages(languagesChosen) {
 // Populates the players section's player_display element with available players
 // Called by filterPlayersByLanguage()
 export function populatePlayers(playerList, filter = 'none') {
-  const storedObject = storage.loadLocalStorage();
+  const storedObject = loadLocalStorage();
   playersDisplay.innerHTML = '';
   let HTML;
   playerList.forEach((value) => {
@@ -846,7 +846,7 @@ function hasLanguageMatch(userLanguages, playerLanguages) {
 }
 
 export async function playerPairingUserChallenge() {
-  const storedObject = storage.loadLocalStorage();
+  const storedObject = loadLocalStorage();
   storedObject.lastOnline = Date.now();
   const playerWhite = storedObject;
 
@@ -863,7 +863,7 @@ export async function playerPairingUserChallenge() {
 }
 
 export async function playerPairingChallengee(activeOpponentHere) {
-  const storedObject = storage.loadLocalStorage();
+  const storedObject = loadLocalStorage();
   storedObject.lastOnline = Date.now();
   const playerRed = storedObject;
   console.log(activeOpponentHere);
