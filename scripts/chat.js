@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     conn.on('data', (data) => {
       console.log('Received data:', data);
 
-      parsedData = JSON.parse(data);
+      const parsedData = JSON.parse(data);
 
       console.log(
         'Data received. method=' +
@@ -310,7 +310,7 @@ export async function connectToPlayer(opponent) {
     conn.on('data', (data) => {
       console.log('Received data:', data);
 
-      parsedData = JSON.parse(data);
+      const parsedData = JSON.parse(data);
 
       console.log(
         'Data received. method=' +

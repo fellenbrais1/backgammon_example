@@ -234,7 +234,7 @@ const youLoseHTML = `<section class="lose_section">
 
 // Changes the HTML content of the modal element depending on the tag in the call to the function
 // Called by various buttons on the webpage when a modal needs to be displayed
-export async function changeModalContent(tag = 'challenge', data = '') {
+export async function changeModalContent(tag = 'challengeSent', data = '') {
   console.log(`DATA IS: ${JSON.stringify(data)}`);
   showModal();
 
