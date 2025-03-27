@@ -502,6 +502,7 @@ function dispatchMessage(parsedData) {
     case 'challengeRejected':
       console.log('Calling eventChallengeRejected()');
       eventChallengeRejected();
+      break;
     case 'forfeitGame':
       console.log('Send ' + parsedData.params + ' data to eventForfeitGame()');
       eventForfeitGame(parsedData.params);
@@ -509,6 +510,7 @@ function dispatchMessage(parsedData) {
     case 'gameOver':
       console.log('Send ' + parsedData.params + ' data to eventGameOver()');
       eventGameOver(parsedData.params);
+      break;
   }
 }
 
