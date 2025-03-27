@@ -673,7 +673,7 @@ html {
 
 .modal_section_text {
   font-size: 20px;
-  margin-top: 48px;
+  margin-top: 20px;
   padding-left: 48px;
   padding-right: 48px;
   text-align: center;
@@ -683,7 +683,7 @@ html {
 }
 
 .modal_section_buttons {
-  margin-top: 48px;
+  margin-top: 24px;
   display: grid;
   grid-template-columns: 180px 180px;
   gap: 24px;
@@ -747,12 +747,12 @@ html {
 
 .challenge_block {
   display: grid;
-  grid-template-rows: 50px 40px 40px 60px;
+  grid-template-rows: 50px 40px 60px;
   row-gap: 10px;
   z-index: 9;
 }
 
-.challenge_text {
+/* .challenge_text {
   font-size: 20px;
   color: white;
   font-weight: bold;
@@ -765,16 +765,16 @@ html {
   color: white;
   font-weight: bold;
   z-index: 9;
-}
+} */
 
-.challenge_text_big {
+.modal_section_text_big {
   font-size: 24px;
   font-weight: bold;
-  margin-top: 26px;
+  margin-top: 20px;
   z-index: 9;
 }
 
-.challenge_text_small {
+.modal_section_text_small {
   font-size: 16px;
 }
 
@@ -1328,7 +1328,7 @@ html {
 }
 
 .center_modal_button {
-  /* margin-top: 48px; */
+  margin-top: 48px;
   margin-left: 180px;
 }
 
@@ -1349,6 +1349,10 @@ html {
 
 .big_margin_top {
   margin-top: 60px;
+}
+
+.no_margin_top {
+  margin-top: 0px;
 }
 
 /* CODE END */
