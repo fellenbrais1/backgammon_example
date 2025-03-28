@@ -10,7 +10,7 @@ console.log(`chat.js running`);
 /////////////////////////////////////////////////////////////////////////////////////////
 // IMPORTS
 
-import { firebaseApp, analytics, database } from '../scripts/firebaseConfig.js';
+import { firebaseApp, analytics, database } from './firebaseConfig.js';
 import { challengerName, populatePlayers } from './welcome.js';
 import {
   forfeitMessage,
@@ -71,7 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
           ', params=' +
           JSON.stringify(parsedData.params)
       );
-      // processMessage(parsedData);
       dispatchMessage(parsedData);
     });
 
@@ -89,7 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   peer.on('disconnected', () => {
     console.log('Peer disconnected');
-    // removePeerIdFromDatabase(peer.id);
   });
 });
 
@@ -318,8 +316,6 @@ export async function connectToPlayer(opponent) {
           ', params=' +
           JSON.stringify(parsedData.params)
       );
-      // console.log('Received data:', JSON.parse(data));
-      // processMessage(parsedData);
       dispatchMessage(parsedData);
     });
 
@@ -369,108 +365,6 @@ export async function sendRPC(method, params) {
   }
 }
 
-// async function processMessage(message) {
-//   console.log('processMessage function called');
-
-//   // const rpcMessage = JSON.parse(data);
-
-//   console.log(JSON.stringify(message));
-//   console.log('RPC Method:', message.method);
-//   console.log('RPC Params:', message.params);
-
-//   // Handle the RPC message based on the contents of its method property
-//   if (message.method === 'move') {
-//     playbackMove(message.params);
-//     // console.log('Player moved to:', parsedParams.position);
-//   }
-
-//   if (message.method === 'diceRoll') {
-//     playbackDiceRoll(message.params);
-//   }
-
-//   if (message.method === 'challenge') {
-//     activeOpponent = await fetchPlayerByKey(message.params);
-//     console.log(activeOpponent);
-//     console.log(`Challenge received from ${activeOpponent.displayName}`);
-//     changeModalContent('challengeReceived', activeOpponent.displayName);
-//   }
-
-//   if (message.method === 'challengeAccepted') {
-//     console.log(`Challenge accepted by ${challengerName}`);
-//     changeModalContent('challengeAccepted', challengerName);
-//   }
-
-//   if (message.method === 'challengeRejected') {
-//     console.log(`Challenge rejected by ${challengerName}`);
-//     changeModalContent('challengeRejected', challengerName);
-//   }
-
-//   if (message.method === 'forfeitGame') {
-//     const opponentName = message.params;
-//     console.log(opponentName);
-//     forfeitMessage();
-//     console.log(`Game forfeitted by ${opponentName}`);
-//     changeModalContent('forfeitNotification', opponentName);
-//   }
-
-//   if (message.method === 'chat') {
-//     const chatMessage = message.params;
-//     console.log(`Chat message received: ${chatMessage}`);
-//     const opponentName = getOpponentName();
-//     opponentMessage(opponentName, chatMessage);
-//   }
-
-//   if (message.method === 'eventGameOverLose') {
-//     let gameOverMessage = [];
-//     const opponentName = getOpponentName();
-//     gameOverMessage[0] = message.params;
-//     gameOverMessage[1] = opponentName;
-//     console.log(`Chat message received: ${JSON.stringify(gameOverMessage)}`);
-//     changeModalContent('eventGameOverLose', gameOverMessage);
-//   }
-// }
-
-async function eventChallengeSent(message) {
-  activeOpponent = await fetchPlayerByKey(message);
-  console.log(activeOpponent);
-  console.log(`Challenge received from ${activeOpponent.displayName}`);
-  changeModalContent('challengeReceived', activeOpponent.displayName);
-}
-
-function eventChallengeAccepted() {
-  console.log(`Challenge accepted by ${challengerName}`);
-  changeModalContent('challengeAccepted', challengerName);
-}
-
-function eventChallengeRejected() {
-  console.log(`Challenge rejected by ${challengerName}`);
-  changeModalContent('challengeRejected', challengerName);
-}
-
-function eventForfeitGame(message) {
-  const opponentName = message;
-  console.log(opponentName);
-  forfeitMessage();
-  console.log(`Game forfeitted by ${opponentName}`);
-  changeModalContent('forfeitNotification', opponentName);
-}
-
-function eventChatMessage(data) {
-  const chatMessage = data;
-  console.log(`Chat message received: ${chatMessage}`);
-  const opponentName = getOpponentName();
-  opponentMessage(opponentName, chatMessage);
-}
-
-function eventGameOver(message) {
-  let gameOverMessage = [];
-  const opponentName = getOpponentName();
-  gameOverMessage[0] = message;
-  gameOverMessage[1] = opponentName;
-  console.log(`Chat message received: ${JSON.stringify(gameOverMessage)}`);
-  changeModalContent('eventGameOverLose', gameOverMessage);
-}
-
 function dispatchMessage(parsedData) {
   console.log(JSON.stringify(parsedData));
   console.log('dispatchMessage() Method:', parsedData.method);
@@ -514,153 +408,46 @@ function dispatchMessage(parsedData) {
   }
 }
 
-// NOTES
-// DEMO functions
+async function eventChallengeSent(message) {
+  activeOpponent = await fetchPlayerByKey(message);
+  console.log(activeOpponent);
+  console.log(`Challenge received from ${activeOpponent.displayName}`);
+  changeModalContent('challengeReceived', activeOpponent.displayName);
+}
 
-// Step 1: When displayName is set, registerForChat(your_display_name)
-// export async function demoRegisterForChat() {
-//   function delay(ms) {
-//     return new Promise((resolve) => setTimeout(resolve, ms));
-//   }
+function eventChallengeAccepted() {
+  console.log(`Challenge accepted by ${challengerName}`);
+  changeModalContent('challengeAccepted', challengerName);
+}
 
-//   let player;
-//   let key;
-//   let mike_key;
+function eventChallengeRejected() {
+  console.log(`Challenge rejected by ${challengerName}`);
+  changeModalContent('challengeRejected', challengerName);
+}
 
-//   // Trial 1 - Register Mike (should succeed)
-//   player = {
-//     displayName: 'Mike',
-//     languages: ['English', 'Spanish'],
-//     peerId: peer.id,
-//     skillLevel: 'beginner',
-//   };
+function eventForfeitGame(message) {
+  const opponentName = message;
+  console.log(opponentName);
+  forfeitMessage();
+  console.log(`Game forfeitted by ${opponentName}`);
+  changeModalContent('forfeitNotification', opponentName);
+}
 
-//   key = await registerForChat(null, player);
+function eventChatMessage(data) {
+  const chatMessage = data;
+  console.log(`Chat message received: ${chatMessage}`);
+  const opponentName = getOpponentName();
+  opponentMessage(opponentName, chatMessage);
+}
 
-//   if (key) {
-//     mike_key = key;
-//     console.log('Mike - New player created with key:', key);
-//   } else {
-//     console.error('Mike - Error creating record');
-//   }
-
-//   await delay(3000); // Wait 3 seconds
-
-//   // Trial 2 - Register Tom (should succeed)
-//   player.displayName = 'Tom';
-
-//   key = await registerForChat(null, player);
-
-//   if (key) {
-//     console.log('Tom - New player created with key:', key);
-//   } else {
-//     console.error('Tom - Error creating record');
-//   }
-
-//   await delay(3000); // Wait 3 seconds
-
-//   // Trial 3 - Register Mike again (should fail)
-//   player.displayName = 'Mike';
-
-//   key = await registerForChat(null, player);
-
-//   if (key) {
-//     console.log('Mike (2) - New player created with key:', key);
-//   } else {
-//     console.error('Mike (2) - Error creating record');
-//   }
-
-//   await delay(3000); // Wait 3 seconds
-
-//   // Trial 4 - Updating Mike to speak Swahili (should succeed)
-//   if (mike_key) {
-//     player.languages = ['Swahili'];
-//     player.displayName = 'Tom';
-
-//     const key = await registerForChat(mike_key, player);
-//     if (key) {
-//       console.log('Mike updated to speak Swahili, key:', key);
-//     } else {
-//       console.error('Mike update - Error updating record');
-//     }
-//   }
-
-//   await delay(3000); // Wait 3 seconds
-
-//   fetchPlayers();
-
-//   await delay(3000); // Wait 3 seconds
-
-//   let mike_player = await fetchPlayerByKey(mike_key);
-//   console.log('Mike record is: ', mike_player);
-
-//   await delay(3000); // Wait 3 seconds
-
-//   let recent_players = await fetchRecentPlayers();
-//   console.log('Recent players are: ', recent_players);
-// }
-
-// // Step 2: Get the records of other players
-// function demoFetchPlayers() {
-//   fetchPlayers();
-// }
-
-// // Step 3: User picks a player from the list, then connects to that player
-// async function demoConnectToPlayer() {
-//   const remoteName = document.getElementById('remoteName').value.trim();
-//   conn = await connectToPlayer(remoteName);
-// }
-
-// // Step 4.1: Send an RPC message, e.g. send a chat message
-// function demoChat() {
-//   // Get the message to send
-//   const message = document.getElementById('p2pMessage').value.trim();
-
-//   sendRPC('chat', { message });
-// }
-
-// // Step 4.2: Send an RPC message, e.g. a challenge
-// async function demoChallenge() {
-//   const userName = document.getElementById('userName').value.trim();
-//   const remoteName = document.getElementById('remoteName').value.trim();
-
-//   console.log('Attempting to challenge ' + remoteName);
-//   const user = await fetchPlayers(userName);
-//   console.log('User record for ' + userName + ': ', user);
-
-//   if (user) {
-//     // Get my user object to send as part of the challenge
-//     sendRPC('challengeSent', user);
-//   }
-// }
-
-// // Step 4.3: Send an RPC response to challenge - accept
-// function demoChallengeResponse() {
-//   sendRPC('challengeResponse', 'accept'); // Or 'reject'
-// }
-
-// // Step 4.4: send a dice roll
-// function demoSendDiceRoll() {
-//   let sampleRoll = [2, 0, 0, 0];
-//   sendRPC('diceRoll', sampleRoll);
-// }
-
-// // Step 4.5: send a move
-// function demoSendMove() {
-//   let sampleMove = {
-//     player: 'r',
-//     from: 24,
-//     to: 22,
-//   };
-
-//   sendRPC('pieceMove', sampleMove);
-// }
-
-// async function demoFetchPlayer() {
-//   const remoteName = document.getElementById('remoteName').value.trim();
-//   const remotePlayer = await fetchPlayers(remoteName);
-//   console.log('remotePlayer:', remotePlayer);
-// }
+function eventGameOver(message) {
+  let gameOverMessage = [];
+  const opponentName = getOpponentName();
+  gameOverMessage[0] = message;
+  gameOverMessage[1] = opponentName;
+  console.log(`Chat message received: ${JSON.stringify(gameOverMessage)}`);
+  changeModalContent('eventGameOverLose', gameOverMessage);
+}
 
 export async function getOpponentUserKey(opponent) {
   const playersRef = database.ref('players');
