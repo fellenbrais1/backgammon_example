@@ -19,38 +19,38 @@ console.log(db);
 // add dice
 document.addEventListener('DOMContentLoaded', function () {
   // Create new image elements
-  let dice1 = document.createElement('img');
-  dice1.id = 'dice1';
-  let dice2 = document.createElement('img');
-  dice2.id = 'dice2';
+  let dice_white1 = document.createElement('img');
+  dice_white1.id = 'dice_white1';
+  let dice_white2 = document.createElement('img');
+  dice_white2.id = 'dice_white2';
   let dice_red1 = document.createElement('img');
   dice_red1.id = 'dice_red1';
   let dice_red2 = document.createElement('img');
   dice_red2.id = 'dice_red2';
 
   // Set the source of the images
-  dice1.src = 'images/dice-six.png';
-  dice2.src = 'images/dice-six.png';
+  dice_white1.src = 'images/dice-six.png';
+  dice_white2.src = 'images/dice-six.png';
   dice_red1.src = 'images/dice-red-six.png';
   dice_red2.src = 'images/dice-red-six.png';
 
   // Set the size of the images (40px wide and 40px tall)
-  dice1.width = 40;
-  dice1.height = 40;
-  dice2.width = 40;
-  dice2.height = 40;
+  dice_white1.width = 40;
+  dice_white1.height = 40;
+  dice_white2.width = 40;
+  dice_white2.height = 40;
   dice_red1.width = 40;
   dice_red1.height = 40;
   dice_red2.width = 40;
   dice_red2.height = 40;
 
   // Set the style to position the images
-  dice1.style.position = 'absolute';
-  dice1.style.top = '110px';
-  dice1.style.left = '10px';
-  dice2.style.position = 'absolute';
-  dice2.style.top = '160px';
-  dice2.style.left = '10px';
+  dice_white1.style.position = 'absolute';
+  dice_white1.style.top = '110px';
+  dice_white1.style.left = '10px';
+  dice_white2.style.position = 'absolute';
+  dice_white2.style.top = '160px';
+  dice_white2.style.left = '10px';
 
   dice_red1.style.position = 'absolute';
   dice_red1.style.top = '310px';
@@ -60,13 +60,13 @@ document.addEventListener('DOMContentLoaded', function () {
   dice_red2.style.left = '10px';
 
   // Append the images to the 'board' div
-  document.getElementById('board').appendChild(dice1);
-  document.getElementById('board').appendChild(dice2);
+  document.getElementById('board').appendChild(dice_white1);
+  document.getElementById('board').appendChild(dice_white2);
   document.getElementById('board').appendChild(dice_red1);
   document.getElementById('board').appendChild(dice_red2);
 
-  dice1.addEventListener('click', rollDice);
-  dice2.addEventListener('click', rollDice);
+  dice_white1.addEventListener('click', rollDice);
+  dice_white2.addEventListener('click', rollDice);
   dice_red1.addEventListener('click', rollRedDice);
   dice_red2.addEventListener('click', rollRedDice);
 });
@@ -85,8 +85,8 @@ async function rollDice() {
   // clear previous throw
   board.diceThrows.fill(0);
 
-  const dice1 = document.getElementById('dice1');
-  const dice2 = document.getElementById('dice2');
+  const dice_white1 = document.getElementById('dice_white1');
+  const dice_white2 = document.getElementById('dice_white2');
 
   // Array of dice image paths
   var diceFaces = [
@@ -105,8 +105,8 @@ async function rollDice() {
     let randomIndex2 = Math.floor(Math.random() * diceFaces.length);
 
     // Change the dice image to a random face
-    dice1.src = diceFaces[randomIndex1];
-    dice2.src = diceFaces[randomIndex2];
+    dice_white1.src = diceFaces[randomIndex1];
+    dice_white2.src = diceFaces[randomIndex2];
 
     // Wait for 100ms before changing the face again
     await sleep(100);
@@ -118,8 +118,8 @@ async function rollDice() {
   // Final roll
   let finalIndex1 = Math.floor(Math.random() * diceFaces.length);
   let finalIndex2 = Math.floor(Math.random() * diceFaces.length);
-  dice1.src = diceFaces[finalIndex1];
-  dice2.src = diceFaces[finalIndex2];
+  dice_white1.src = diceFaces[finalIndex1];
+  dice_white2.src = diceFaces[finalIndex2];
 
   board.diceThrows[0] = finalIndex1 + 1;
   board.diceThrows[1] = finalIndex2 + 1;
@@ -241,14 +241,34 @@ const game = {
   },
 
   applyControls() {
-    // enable and disable dice
+    // dice
     const dice_red1 = document.getElementById('dice_red1');
-    console.log('Applying opacity to red dice 1');
-    dice_red1.style.opacity = '0.5';
+    console.log(JSON.stringify(dice_red1));
+    const dice_red2 = document.getElementById('dice_red2');
+    const dice_white1 = document.getElementById('dice_white1');
+    const dice_white2 = document.getElementById('dice_white2');
 
-    const dice_white1 = document.getElementById('dice1');
-    console.log('Applying opacity to white dice 1');
-    dice_white1.style.opacity = '0.5';
+    if (this.currentTurn == 'r') {
+      // enable red dice
+      dice_red1.style.opacity = '1.0';
+      dice_red2.style.opacity = '1.0';
+      dice_white1.style.opacity = '0.5';
+      dice_white2.style.opacity = '0.5';
+    } else {
+      dice_red1.style.opacity = '0.5';
+      dice_red2.style.opacity = '0.5';
+      dice_white1.style.opacity = '1.0';
+      dice_white2.style.opacity = '1.0';
+    }
+
+    // enable and disable dice
+    // const dice_red1 = document.getElementById('dice_red1');
+    // console.log('Applying opacity to red dice 1');
+    // dice_red1.style.opacity = '0.5';
+
+    // const dice_white1 = document.getElementById('dice_white1');
+    // console.log('Applying opacity to white dice 1');
+    // dice_white1.style.opacity = '0.5';
   },
 };
 
@@ -362,13 +382,14 @@ const board = {
   },
 };
 
-export function startGame() {
+export async function startGame() {
   pieces.forEach((current) => {
     board.resetPiecesPosition(current);
   });
   board.resetBoard();
   setupMouseEvents();
-  drawBoardWithAnimation();
+  await drawBoardWithAnimation();
+  game.applyControls();
 }
 
 startGame();
@@ -513,8 +534,8 @@ async function applyMove(piece, move) {
     move.to == 25 ||
     move.to == 26 ||
     move.to == move.from ||
-    (game.currentTurn == 'w' && move.to > move.from) ||
-    (game.currentTurn == 'r' && move.to < move.from) ||
+    // (game.currentTurn == 'w' && move.to > move.from) ||
+    // (game.currentTurn == 'r' && move.to < move.from) ||
     (toColor != '' && toColor != game.currentTurn && toOccupied > 1) ||
     !isValidDiceMove(move) // moving an available throw
   ) {
