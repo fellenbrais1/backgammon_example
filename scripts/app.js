@@ -1,5 +1,6 @@
 // import { demoRegisterForChat } from './chat.js';
 import { firebaseApp, analytics, database } from '../scripts/firebaseConfig.js';
+import { sendRPC } from './chat.js';
 
 const PIECE_RADIUS = 18;
 const PIECE_DIAMETER = PIECE_RADIUS + PIECE_RADIUS;
@@ -65,8 +66,8 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('board').appendChild(dice_red1);
   document.getElementById('board').appendChild(dice_red2);
 
-  dice_white1.addEventListener('click', rollDice);
-  dice_white2.addEventListener('click', rollDice);
+  dice_white1.addEventListener('click', rollWhiteDice);
+  dice_white2.addEventListener('click', rollWhiteDice);
   dice_red1.addEventListener('click', rollRedDice);
   dice_red2.addEventListener('click', rollRedDice);
 });
@@ -76,17 +77,29 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// animate rolling dice
-async function rollDice() {
+// Playback functions
+export async function playbackDiceRoll(params) {
+  console.log('In playbackDiceRoll, params = ' + JSON.stringify(params));
+}
+
+export async function playbackMove(params) {
+  console.log('In playbackMove, params = ' + JSON.stringify(params));
+}
+
+// animate rolling white dice - call with predetermined dice numbers, or via event listener for a real 'throw'
+// note that if rollWhiteDice is invoked from an event listener, the first param will be an event. We can use this to
+// determine whether to have default values for the dice throws.
+async function rollWhiteDice(param) {
+  let finalIndex1, finalIndex2;
+
   if (game.currentTurn != 'w') return; // can be operated by white player only
 
-  console.log('Dice clicked! Rolling the dice...');
+  // Check if first parameter is an event (from event listener)
+  const isEvent = param && param.target !== undefined;
 
-  // clear previous throw
-  board.diceThrows.fill(0);
-
-  const dice_white1 = document.getElementById('dice_white1');
-  const dice_white2 = document.getElementById('dice_white2');
+  // Set default values accordingly
+  const dice1Result = isEvent ? 0 : param.dice1 ?? 0;
+  const dice2Result = isEvent ? 0 : param.dice2 ?? 0;
 
   // Array of dice image paths
   var diceFaces = [
@@ -97,6 +110,29 @@ async function rollDice() {
     'images/dice-five.png',
     'images/dice-six.png',
   ];
+
+  if (dice1Result == 0 && dice2Result == 0) {
+    finalIndex1 = Math.floor(Math.random() * diceFaces.length);
+    finalIndex2 = Math.floor(Math.random() * diceFaces.length);
+
+    // communicate to the other player via RPC
+    sendRPC('diceRoll', {
+      player: 'w',
+      dice1: finalIndex1 + 1,
+      dice2: finalIndex2 + 1,
+    });
+  } else {
+    finalIndex1 = dice1Result - 1; // make 0-based
+    finalIndex2 = dice2Result - 1;
+  }
+
+  console.log('White dice clicked! Rolling the dice...');
+
+  // clear previous throw
+  board.diceThrows.fill(0);
+
+  const dice_white1 = document.getElementById('dice_white1');
+  const dice_white2 = document.getElementById('dice_white2');
 
   // Simulate rolling by changing the dice face multiple times
   for (let i = 0; i < 5; i++) {
@@ -116,8 +152,6 @@ async function rollDice() {
   await sleep(100);
 
   // Final roll
-  let finalIndex1 = Math.floor(Math.random() * diceFaces.length);
-  let finalIndex2 = Math.floor(Math.random() * diceFaces.length);
   dice_white1.src = diceFaces[finalIndex1];
   dice_white2.src = diceFaces[finalIndex2];
 
@@ -127,20 +161,21 @@ async function rollDice() {
     board.diceThrows[2] = board.diceThrows[3] = board.diceThrows[0];
   }
 
-  console.log('Dice rolled: ', board.diceThrows);
+  console.log('White dice rolled: ', board.diceThrows);
 }
 
 // animate rolling red dice
-async function rollRedDice() {
+async function rollRedDice(param) {
+  let finalIndex1, finalIndex2;
+
   if (game.currentTurn != 'r') return; // can be operated by red player only
 
-  console.log('Red Dice clicked! Rolling the red dice...');
+  // Check if first parameter is an event (from event listener)
+  const isEvent = param && param.target !== undefined;
 
-  // clear previous throw
-  board.diceThrows.fill(0);
-
-  const dice_red1 = document.getElementById('dice_red1');
-  const dice_red2 = document.getElementById('dice_red2');
+  // Set default values accordingly
+  const dice1Result = isEvent ? 0 : param.dice1 ?? 0;
+  const dice2Result = isEvent ? 0 : param.dice2 ?? 0;
 
   // Array of dice image paths
   var diceFaces = [
@@ -151,6 +186,29 @@ async function rollRedDice() {
     'images/dice-red-five.png',
     'images/dice-red-six.png',
   ];
+
+  if (dice1Result == 0 && dice2Result == 0) {
+    finalIndex1 = Math.floor(Math.random() * diceFaces.length);
+    finalIndex2 = Math.floor(Math.random() * diceFaces.length);
+
+    // communicate to the other player via RPC
+    sendRPC('diceRoll', {
+      player: 'r',
+      dice1: finalIndex1 + 1,
+      dice2: finalIndex2 + 1,
+    });
+  } else {
+    finalIndex1 = dice1Result - 1; // make 0-based
+    finalIndex2 = dice2Result - 1;
+  }
+
+  console.log('Red dice clicked! Rolling the dice...');
+
+  // clear previous throw
+  board.diceThrows.fill(0);
+
+  const dice_red1 = document.getElementById('dice_red1');
+  const dice_red2 = document.getElementById('dice_red2');
 
   // Simulate rolling by changing the dice face multiple times
   for (let i = 0; i < 5; i++) {
@@ -166,12 +224,10 @@ async function rollRedDice() {
     await sleep(100);
   }
 
-  // Wait for half a second before the final roll
+  // Wait for some time before the final roll
   await sleep(100);
 
   // Final roll
-  let finalIndex1 = Math.floor(Math.random() * diceFaces.length);
-  let finalIndex2 = Math.floor(Math.random() * diceFaces.length);
   dice_red1.src = diceFaces[finalIndex1];
   dice_red2.src = diceFaces[finalIndex2];
 
@@ -181,7 +237,7 @@ async function rollRedDice() {
     board.diceThrows[2] = board.diceThrows[3] = board.diceThrows[0];
   }
 
-  console.log('Red Dice rolled: ', board.diceThrows);
+  console.log('Red dice rolled: ', board.diceThrows);
 }
 
 document.querySelector('.test_button2').addEventListener('click', function () {

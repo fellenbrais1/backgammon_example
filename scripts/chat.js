@@ -18,6 +18,7 @@ import {
   opponentMessage,
 } from './messages.js';
 import { changeModalContent } from './modals.js';
+import { playbackDiceRoll, playbackMove } from './app.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
@@ -376,11 +377,17 @@ function dispatchMessage(parsedData) {
       eventChatMessage(parsedData.params);
       break;
     case 'move':
-      console.log('Send ' + parsedData.params + ' data to playbackMove()');
+      console.log(
+        'Send ' + JSON.stringify(parsedData.params) + ' data to playbackMove()'
+      );
       playbackMove(parsedData.params);
       break;
     case 'diceRoll':
-      console.log('Send ' + parsedData.params + ' data to playbackDiceRoll()');
+      console.log(
+        'Send ' +
+          JSON.stringify(parsedData.params) +
+          ' data to playbackDiceRoll()'
+      );
       playbackDiceRoll(parsedData.params);
       break;
     case 'challengeSent':
