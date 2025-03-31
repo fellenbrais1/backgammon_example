@@ -66,12 +66,12 @@ let otherGamesMurderMansionButton;
 const currentGameFlag = 'Backgammon';
 
 const otherGamesBackgammonButtonHTML = `<div class="game_button_backgammon" title="Backgammon">
-    <img src="../images/MOMABackgammon.png" alt="Backgammon game picture" />
+    <img src="images/MOMABackgammon.png" alt="Backgammon game picture" />
     <p>Backgammon</p>
   </div>`;
 
 const otherGamesMurderMansionButtonHTML = `<div class="game_button_murder_mansion" title="Murder Mansion">
-  <img src="../images/murderMansion.jpg" alt="Murder Mansion game picture" />
+  <img src="images/murderMansion.jpg" alt="Murder Mansion game picture" />
   <p>Murder Mansion</p>
 </div>`;
 
@@ -211,13 +211,13 @@ const forfeitNotificationModalHTML = `<section class="modal_message_section ligh
 const youWinHTML = `<section class="modal_message_section light_green_background">
         <div class="win_block">
           <p class="modal_section_text_big no_select">VICTORY!</p>
-          <p class="modal_section_text no_select" id=win_text'>
+          <p class="modal_section_text no_select" id='win_text'>
             You win!
           </p>
           <p class="modal_section_text no_select" id='win_text2'>
             You win!
           </p>
-            <p class="modal_section_button center_modal_button button no_select">Ok</p>
+            <p class="modal_section_button center_modal_button button no_margin_top no_select">Ok</p>
         </div>
       </section>`;
 
@@ -230,7 +230,7 @@ const youLoseHTML = `<section class="modal_message_section red_background">
         <p class="modal_section_text no_select" id='lose_text2'>
           You lose!
         </p>
-          <p class="modal_section_button button_red center_modal_button button no_select">Ok</p>
+          <p class="modal_section_button button_red center_modal_button button no_margin_top no_select">Ok</p>
       </div>
     </section>`;
 
