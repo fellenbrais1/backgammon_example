@@ -626,7 +626,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       modalSection.innerHTML = challengeModalRejectedHTML;
 
       const challengeInformation3 = document.getElementById(
-        'challenge_accepted_message_text'
+        'challenge_rejected_message_text'
       );
       const challengerNameField3 = document.getElementById(
         'challenge_rejected_opponent_name'
