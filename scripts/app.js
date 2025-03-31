@@ -79,7 +79,7 @@ function sleep(ms) {
 
 // Playback functions
 export async function playbackDiceRoll(param) {
-  console.log('In playbackDiceRoll, params = ' + JSON.stringify(params));
+  console.log('In playbackDiceRoll, param = ' + JSON.stringify(param));
 
   if (params.player == 'w') {
     rollWhiteDice(param);
