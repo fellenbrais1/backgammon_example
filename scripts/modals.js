@@ -124,7 +124,7 @@ const notYouHTML = `<section class='modal_message_section'><p class="modal_secti
 </div>
 </section>`;
 
-const challengeModalHTML = `<section class="modal_message_section">
+const challengeModalHTML = `<section class="modal_message_section purple_background">
             <div class="challenge_block">
               <p class="modal_section_text_big no_select">CHALLENGE SENT</p>
               <p class="modal_section_text no_select" id='challenge_opponent_name'></p>
@@ -135,7 +135,7 @@ const challengeModalHTML = `<section class="modal_message_section">
             </div>
           </section>`;
 
-const challengeModalAcceptedHTML = `<section class="modal_message_section" style='background-color: lightgreen;'>
+const challengeModalAcceptedHTML = `<section class="modal_message_section light_green_background">
           <div class="challenge_block">
             <p class="modal_section_text_big no_select">CHALLENGE SENT</p>
             <p class="modal_section_text no_select" id='challenge_accepted_opponent_name'></p>
@@ -143,16 +143,16 @@ const challengeModalAcceptedHTML = `<section class="modal_message_section" style
           </div>
         </section>`;
 
-const challengeModalRejectedHTML = `<section class="modal_message_section">
+const challengeModalRejectedHTML = `<section class="modal_message_section red_background">
             <div class="challenge_block">
               <p class="modal_section_text_big no_select">CHALLENGE SENT</p>
               <p class="modal_section_text no_select" id='challenge_rejected_opponent_name'></p>
               <p class="modal_section_text no_select" id='challenge_rejected_message_text'>Waiting for a response...</p>
-              <p class="modal_section_button button_red center_modal_button button no_select">Ok</p>
+              <p class="modal_section_button button_red center_modal_button button no_margin_top no_select">Ok</p>
             </div>
           </section>`;
 
-const challengeReceivedModalHTML = `<section class="modal_message_section">
+const challengeReceivedModalHTML = `<section class="modal_message_section purple_background">
             <div class="challenge_received_block">
               <p class="modal_section_text_big no_select" id='challenge_received_message_text'>CHALLENGE RECEIVED</p>
               <p class="modal_section_text no_select" id='challenge_received_opponent_name'>
@@ -179,7 +179,7 @@ const noChallengerHTML = `<section class='modal_message_section'><p class="modal
 <p class="modal_section_button button center_modal_button no_select" title='Ok'>Ok</p>
               </section>`;
 
-const forfeitModalHTML = `<section class="modal_message_section">
+const forfeitModalHTML = `<section class="modal_message_section purple_background">
             <div class="forfeit_block">
               <p class="modal_section_text_big no_select">FORFEIT GAME?</p>
               <p class="modal_section_text no_select">
@@ -196,7 +196,7 @@ const forfeitModalHTML = `<section class="modal_message_section">
             </div>
           </section>`;
 
-const forfeitNotificationModalHTML = `<section class="modal_message_section">
+const forfeitNotificationModalHTML = `<section class="modal_message_section light_green_background">
           <div class="forfeit_block">
             <p class="modal_section_text_big no_select">VICTORY!</p>
             <p class="modal_section_text no_select" id='forfeit_text'>
@@ -208,7 +208,7 @@ const forfeitNotificationModalHTML = `<section class="modal_message_section">
 
 // TODO
 // These might be better off using the modal_section tags as seen in the elements above, experiment
-const youWinHTML = `<section class="modal_message_section">
+const youWinHTML = `<section class="modal_message_section light_green_background">
         <div class="win_block">
           <p class="modal_section_text_big no_select">VICTORY!</p>
           <p class="modal_section_text no_select" id=win_text'>
@@ -221,7 +221,7 @@ const youWinHTML = `<section class="modal_message_section">
         </div>
       </section>`;
 
-const youLoseHTML = `<section class="modal_message_section">
+const youLoseHTML = `<section class="modal_message_section red_background">
       <div class="lose_block">
         <p class="modal_section_text_big no_select">DEFEAT!</p>
         <p class="modal_section_text no_select" id='lose_text'>
@@ -644,7 +644,6 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         console.log(`Challenge has been rejected.`);
         setTimeout(() => {
           removeModal();
-          window.location.reload();
         }, 1000);
       });
       break;
