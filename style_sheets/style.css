@@ -705,6 +705,12 @@ html {
   grid-template-rows: 50px 40px auto;
 }
 
+.win_block,
+.lose_block {
+  display: grid;
+  grid-template-rows: 50px auto auto auto;
+}
+
 /* CHAT SECTION ELEMENTS */
 .chat_section {
   position: absolute;
@@ -1113,6 +1119,10 @@ html {
 
 .no_margin_top {
   margin-top: 0px;
+}
+
+.smaller_margin_top {
+  margin-top: 12px;
 }
 
 .red_background {

@@ -217,7 +217,7 @@ const youWinHTML = `<section class="modal_message_section light_green_background
           <p class="modal_section_text no_select" id='win_text2'>
             You win!
           </p>
-            <p class="modal_section_button center_modal_button button no_margin_top no_select">Ok</p>
+            <p class="modal_section_button center_modal_button button smaller_margin_top no_select">Ok</p>
         </div>
       </section>`;
 
@@ -230,7 +230,7 @@ const youLoseHTML = `<section class="modal_message_section red_background">
         <p class="modal_section_text no_select" id='lose_text2'>
           You lose!
         </p>
-          <p class="modal_section_button button_red center_modal_button button no_margin_top no_select">Ok</p>
+          <p class="modal_section_button button_red center_modal_button button smaller_margin_top no_select">Ok</p>
       </div>
     </section>`;
 
