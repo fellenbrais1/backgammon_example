@@ -66,12 +66,12 @@ let otherGamesMurderMansionButton;
 const currentGameFlag = 'Backgammon';
 
 const otherGamesBackgammonButtonHTML = `<div class="game_button_backgammon" title="Backgammon">
-    <img src="../images/MOMABackgammon.png" alt="Backgammon game picture" />
+    <img src="images/MOMABackgammon.png" alt="Backgammon game picture" />
     <p>Backgammon</p>
   </div>`;
 
 const otherGamesMurderMansionButtonHTML = `<div class="game_button_murder_mansion" title="Murder Mansion">
-  <img src="../images/murderMansion.jpg" alt="Murder Mansion game picture" />
+  <img src="images/murderMansion.jpg" alt="Murder Mansion game picture" />
   <p>Murder Mansion</p>
 </div>`;
 
@@ -93,7 +93,7 @@ const incompleteDataHTML = `<section class='modal_message_section'><p class="mod
 <p class="modal_section_button button center_modal_button no_select" title='Ok'>Ok</p>
               </section>`;
 
-const confirmNameHTML = `<section class='modal_message_section'><p class="modal_section_text big_margin_top no_select">Are you sure you want to be known as <u class='modal_name'>${sessionDisplayName}</u>?</p>
+const confirmNameHTML = `<section class='modal_message_section'><p class="modal_section_text big_margin_top no_select">Are you sure you want to be known as <u id='confirm_name_player_name'>${sessionDisplayName}</u>?</p>
               <div class='modal_section_buttons'>
               <p class="modal_section_button button no_select" title='Yes'>Yes</p>
               <p class="modal_section_button button_red button no_select" title="No">
@@ -102,7 +102,7 @@ const confirmNameHTML = `<section class='modal_message_section'><p class="modal_
               </div>
               </section>`;
 
-const nameExistsHTML = `<section class='modal_message_section'><p class="modal_section_text big_margin_top no_select">Please choose a different name as NAME has already been taken</p>
+const nameExistsHTML = `<section class='modal_message_section'><p class="modal_section_text big_margin_top no_select" id='name_exists_text'>Please choose a different name as NAME has already been taken</p>
 <p class="modal_section_button button center_modal_button no_select" title='Ok'>Ok</p>
               </section>`;
 
@@ -124,38 +124,38 @@ const notYouHTML = `<section class='modal_message_section'><p class="modal_secti
 </div>
 </section>`;
 
-const challengeModalHTML = `<section class="modal_message_section">
+const challengeModalHTML = `<section class="modal_message_section purple_background">
             <div class="challenge_block">
               <p class="modal_section_text_big no_select">CHALLENGE SENT</p>
-              <p class="modal_section_text challenge_text_names no_select"></p>
-              <p class="modal_section_text challenge_text no_select">Waiting for a response...</p>
+              <p class="modal_section_text no_select" id='challenge_opponent_name'></p>
+              <p class="modal_section_text challenge_text no_select" id='challenge_message_text'>Waiting for a response...</p>
               <p class="modal_section_button button_red button center_modal_button no_margin_top no_select" title="Cancel Challenge">
                 Cancel
               </p>
             </div>
           </section>`;
 
-const challengeModalAcceptedHTML = `<section class="modal_message_section" style='background-color: lightgreen;'>
+const challengeModalAcceptedHTML = `<section class="modal_message_section light_green_background">
           <div class="challenge_block">
             <p class="modal_section_text_big no_select">CHALLENGE SENT</p>
-            <p class="modal_section_text challenge_text_names no_select"></p>
-            <p class="modal_section_text challenge_text no_select">Waiting for a response...</p>
+            <p class="modal_section_text no_select" id='challenge_accepted_opponent_name'></p>
+            <p class="modal_section_text no_select" id='challenge_accepted_message_text'>Waiting for a response...</p>
           </div>
         </section>`;
 
-const challengeModalRejectedHTML = `<section class="modal_message_section">
+const challengeModalRejectedHTML = `<section class="modal_message_section red_background">
             <div class="challenge_block">
               <p class="modal_section_text_big no_select">CHALLENGE SENT</p>
-              <p class="modal_section_text challenge_text_names no_select"></p>
-              <p class="modal_section_text challenge_text no_select">Waiting for a response...</p>
-              <p class="modal_section_button button_red center_modal_button button no_select">Ok</p>
+              <p class="modal_section_text no_select" id='challenge_rejected_opponent_name'></p>
+              <p class="modal_section_text no_select" id='challenge_rejected_message_text'>Waiting for a response...</p>
+              <p class="modal_section_button button_red center_modal_button button no_margin_top no_select">Ok</p>
             </div>
           </section>`;
 
-const challengeReceivedModalHTML = `<section class="modal_message_section">
+const challengeReceivedModalHTML = `<section class="modal_message_section purple_background">
             <div class="challenge_received_block">
-              <p class="modal_section_text_big no_select">CHALLENGE RECEIVED</p>
-              <p class="modal_section_text challenge_received_text no_select">
+              <p class="modal_section_text_big no_select" id='challenge_received_message_text'>CHALLENGE RECEIVED</p>
+              <p class="modal_section_text no_select" id='challenge_received_opponent_name'>
                 {Other player} wants to play a game!
               </p>
               <div class="modal_section_buttons">
@@ -179,10 +179,10 @@ const noChallengerHTML = `<section class='modal_message_section'><p class="modal
 <p class="modal_section_button button center_modal_button no_select" title='Ok'>Ok</p>
               </section>`;
 
-const forfeitModalHTML = `<section class="modal_message_section">
+const forfeitModalHTML = `<section class="modal_message_section purple_background">
             <div class="forfeit_block">
               <p class="modal_section_text_big no_select">FORFEIT GAME?</p>
-              <p class="modal_section_text forfeit_text no_select">
+              <p class="modal_section_text no_select">
                 Are you sure you want to forfeit the game?
               </p>
               <p class="modal_section_text_small no_select">
@@ -196,10 +196,10 @@ const forfeitModalHTML = `<section class="modal_message_section">
             </div>
           </section>`;
 
-const forfeitNotificationModalHTML = `<section class="modal_message_section">
+const forfeitNotificationModalHTML = `<section class="modal_message_section light_green_background">
           <div class="forfeit_block">
             <p class="modal_section_text_big no_select">VICTORY!</p>
-            <p class="modal_section_text forfeit_text no_select">
+            <p class="modal_section_text no_select" id='forfeit_text'>
               Are you sure you want to forfeit the game?
             </p>
               <p class="modal_section_button button_red center_modal_button button no_select">Ok</p>
@@ -208,29 +208,29 @@ const forfeitNotificationModalHTML = `<section class="modal_message_section">
 
 // TODO
 // These might be better off using the modal_section tags as seen in the elements above, experiment
-const youWinHTML = `<section class="modal_message_section">
+const youWinHTML = `<section class="modal_message_section light_green_background">
         <div class="win_block">
           <p class="modal_section_text_big no_select">VICTORY!</p>
-          <p class="win_text no_select">
+          <p class="modal_section_text no_select" id='win_text'>
             You win!
           </p>
-          <p class="win_text2 no_select">
+          <p class="modal_section_text no_select" id='win_text2'>
             You win!
           </p>
-            <p class="modal_section_button center_modal_button button no_select">Ok</p>
+            <p class="modal_section_button center_modal_button button smaller_margin_top no_select">Ok</p>
         </div>
       </section>`;
 
-const youLoseHTML = `<section class="modal_message_section">
+const youLoseHTML = `<section class="modal_message_section red_background">
       <div class="lose_block">
         <p class="modal_section_text_big no_select">DEFEAT!</p>
-        <p class="modal_section_text lose_text no_select">
+        <p class="modal_section_text no_select" id='lose_text'>
           You lose!
         </p>
-        <p class="modal_section_text lose_text2 no_select">
+        <p class="modal_section_text no_select" id='lose_text2'>
           You lose!
         </p>
-          <p class="modal_section_button button_red center_modal_button button no_select">Ok</p>
+          <p class="modal_section_button button_red center_modal_button button smaller_margin_top no_select">Ok</p>
       </div>
     </section>`;
 
@@ -247,6 +247,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
     case 'nameProblem':
       modalSection.innerHTML = nameLengthProblemHTML;
       modalSection.classList.add('reveal');
+
       const nameProblemYesButton = modalSection.querySelector(
         '.modal_section_button'
       );
@@ -263,6 +264,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
     case 'noName':
       modalSection.innerHTML = noNameHTML;
       modalSection.classList.add('reveal');
+
       const noNameYesButton = modalSection.querySelector(
         '.modal_section_button'
       );
@@ -279,10 +281,12 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
     case 'nameExists':
       modalSection.innerHTML = nameExistsHTML;
       modalSection.classList.add('reveal');
+
       const nameExistsYesButton = modalSection.querySelector(
         '.modal_section_button'
       );
-      const nameText = modalSection.querySelector('.modal_section_text');
+      const nameText = document.getElementById('name_exists_text');
+
       nameText.textContent = `Please choose a different name as '${data}' has already been taken`;
 
       nameExistsYesButton.addEventListener('click', () => {
@@ -297,6 +301,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
     case 'incompleteData':
       modalSection.innerHTML = incompleteDataHTML;
       modalSection.classList.add('reveal');
+
       const incompleteDataYesButton = modalSection.querySelector(
         '.modal_section_button'
       );
@@ -314,11 +319,13 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       sessionDisplayName = data.displayName;
       modalSection.innerHTML = confirmNameHTML;
       modalSection.classList.add('reveal');
-      const modalName = modalSection.querySelector('.modal_name');
+
+      const modalName = document.getElementById('confirm_name_player_name');
       const confirmNameYesButton = modalSection.querySelector(
         '.modal_section_button'
       );
       const confirmNameNoButton = modalSection.querySelector('.button_red');
+
       modalName.textContent = sessionDisplayName;
 
       confirmNameYesButton.addEventListener('click', async () => {
@@ -386,12 +393,16 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       sessionDisplayName = data.displayName;
       modalSection.innerHTML = confirmNameHTML;
       modalSection.classList.add('reveal');
-      const returnModalName = modalSection.querySelector('.modal_name');
+
+      const returnModalName = document.getElementById(
+        'confirm_name_player_name'
+      );
       const returnConfirmNameYesButton = modalSection.querySelector(
         '.modal_section_button'
       );
       const returnConfirmNameNoButton =
         modalSection.querySelector('.button_red');
+
       returnModalName.textContent = sessionDisplayName;
 
       returnConfirmNameYesButton.addEventListener('click', async () => {
@@ -427,6 +438,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
     case 'return':
       modalSection.innerHTML = goBackFromPlayersSectionHTML;
       modalSection.classList.add('reveal');
+
       const returnYesButton = modalSection.querySelector(
         '.modal_section_button'
       );
@@ -457,6 +469,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
     case 'notYou':
       modalSection.innerHTML = notYouHTML;
       modalSection.classList.add('reveal');
+
       const notYouYesButton = modalSection.querySelector(
         '.modal_section_button'
       );
@@ -486,12 +499,15 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       cancelFlag = false;
       modalSection.innerHTML = challengeModalHTML;
       modalSection.classList.add('reveal');
+
       const buttonChallengeCancel = modalSection.querySelector('.button_red');
-      const challengeInformation =
-        modalSection.querySelector('.challenge_text');
-      const challengerNameField = document.querySelector(
-        '.challenge_text_names'
+      const challengeInformation = document.getElementById(
+        'challenge_message_text'
       );
+      const challengerNameField = document.getElementById(
+        'challenge_opponent_name'
+      );
+
       challengerNameField.textContent = `Challenging ${data}`;
 
       buttonChallengeCancel.addEventListener('click', () => {
@@ -536,15 +552,17 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
     case 'challengeReceived':
       modalSection.innerHTML = challengeReceivedModalHTML;
       modalSection.classList.add('reveal');
-      const challengeReceivedText = modalSection.querySelector(
-        '.challenge_received_text_big'
+
+      const challengeReceivedText = document.getElementById(
+        'challenge_received_message_text'
       );
-      const challengerNameText = document.querySelector(
-        '.challenge_received_text'
+      const challengerNameText = document.getElementById(
+        'challenge_received_opponent_name'
       );
-      challengerNameText.textContent = `${data} wants to play a game!`;
       const acceptButton = modalSection.querySelector('.modal_section_button');
       const declineButton = modalSection.querySelector('.button_red');
+
+      challengerNameText.textContent = `${data} wants to play a game!`;
 
       const opponentName = data;
 
@@ -583,11 +601,14 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
     case 'challengeAccepted':
       modalSection.innerHTML = challengeModalAcceptedHTML;
       modalSection.style.backgroundColor = 'lightgreen';
-      const challengeInformation2 =
-        modalSection.querySelector('.challenge_text');
-      const challengerNameField2 = document.querySelector(
-        '.challenge_text_names'
+
+      const challengeInformation2 = document.getElementById(
+        'challenge_accepted_message_text'
       );
+      const challengerNameField2 = document.getElementById(
+        'challenge_accepted_opponent_name'
+      );
+
       challengerNameField2.textContent = `Challenging ${data}`;
       challengeInformation2.textContent = `Challenge has been accepted!`;
 
@@ -603,31 +624,26 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
     case 'challengeRejected':
       modalSection.innerHTML = challengeModalRejectedHTML;
-      const challengeInformation3 =
-        modalSection.querySelector('.challenge_text');
-      const challengerNameField3 = document.querySelector(
-        '.challenge_text_names'
-      );
-      challengerNameField3.textContent = `Challenging ${data}`;
-      console.log(challengeInformation3);
-      console.log(challengeInformation3);
-      challengeInformation3.textContent = `Challenge has been rejected!`;
-      setTimeout(() => {
-        removeModal();
-      }, 2000);
 
+      const challengeInformation3 = document.getElementById(
+        'challenge_rejected_message_text'
+      );
+      const challengerNameField3 = document.getElementById(
+        'challenge_rejected_opponent_name'
+      );
       const rejectedOkButton = modalSection.querySelector(
         '.modal_section_button'
       );
 
-      forfeitNotificationInformation.textContent = `${data} has forfeited the game! You win!`;
+      challengerNameField3.textContent = `Challenging ${data}`;
+      console.log(challengeInformation3);
+      challengeInformation3.textContent = `Challenge has been rejected!`;
 
       rejectedOkButton.addEventListener('click', () => {
         playClickSound();
         console.log(`Challenge has been rejected.`);
         setTimeout(() => {
           removeModal();
-          window.location.reload();
         }, 1000);
       });
       break;
@@ -635,6 +651,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
     case 'noChallenger':
       modalSection.innerHTML = noChallengerHTML;
       modalSection.classList.add('reveal');
+
       const noChallengerYesButton = modalSection.querySelector(
         '.modal_section_button'
       );
@@ -651,6 +668,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
     case 'forfeitGame':
       modalSection.innerHTML = forfeitModalHTML;
       modalSection.classList.add('reveal');
+
       const yesButton = modalSection.querySelector('.modal_section_button');
       const noButton = modalSection.querySelector('.button_red');
 
@@ -677,8 +695,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
     case 'forfeitNotification':
       modalSection.innerHTML = forfeitNotificationModalHTML;
       modalSection.classList.add('reveal');
+
       const forfeitNotificationInformation =
-        modalSection.querySelector('.forfeit_text');
+        document.getElementById('forfeit_text');
       const okButton = modalSection.querySelector('.modal_section_button');
 
       forfeitNotificationInformation.textContent = `${data} has forfeited the game! You win!`;
@@ -698,8 +717,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
       modalSection.innerHTML = youWinHTML;
       modalSection.classList.add('reveal');
-      const youWinInformation = modalSection.querySelector('.win_text');
-      const youWinInformation2 = modalSection.querySelector('.win_text2');
+
+      const youWinInformation = document.getElementById('win_text');
+      const youWinInformation2 = document.getElementById('win_text2');
       const winOkButton = modalSection.querySelector('.modal_section_button');
 
       console.log(`DATA is: ${data}`);
@@ -738,8 +758,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
       modalSection.innerHTML = youLoseHTML;
       modalSection.classList.add('reveal');
-      const youLoseInformation = modalSection.querySelector('.lose_text');
-      const youLoseInformation2 = modalSection.querySelector('.lose_text2');
+      const youLoseInformation = document.getElementById('lose_text');
+      const youLoseInformation2 = document.getElementById('lose_text2');
       const loseOkButton = modalSection.querySelector('.modal_section_button');
 
       youLoseInformation.textContent = `${data[1]} has won the game${data[0]}`;

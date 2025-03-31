@@ -48,42 +48,42 @@ export const buttonClickSound = document.getElementById('button_click_sound');
 
 // Ad section variables
 const ad1 = {
-  source: '../images/cash4gold.jpg',
+  source: 'images/cash4gold.jpg',
   altText: 'Cash 4 Gold Advertisement',
   href: 'https://www.cash4goldonline.co.uk/',
   title: 'Cash 4 Gold Online',
 };
 
 const ad2 = {
-  source: '../images/kier.avif',
+  source: 'images/kier.avif',
   altText: 'Kier Starmer Advertismeent',
   href: 'https://en.wikipedia.org/wiki/Keir_Starmer',
   title: 'Kier Starmer Action Figures',
 };
 
 const ad3 = {
-  source: '../images/chocowhopper.webp',
+  source: 'images/chocowhopper.webp',
   altText: 'Burger King Advertisment',
   href: 'https://youtube.com/watch?v=2JaCzLZTYAE',
   title: 'The NEW Chocolate Whopper',
 };
 
 const ad4 = {
-  source: '../images/vizswan.jpg',
+  source: 'images/vizswan.jpg',
   altText: 'Viz Swan Advertisment',
   href: 'https://www.amazon.co.uk/Brainbox-Candy-Official-Advert-Birthday/dp/B0BMGXMB61',
   title: 'Retrain as a Swan Today',
 };
 
 const ad5 = {
-  source: '../images/hokusaiNuke.jpeg',
+  source: 'images/hokusaiNuke.jpeg',
   altText: 'Japanese Nuclear Waste Advertisment',
   href: 'https://www.globaltimes.cn/page/202104/1221726.shtml',
   title: 'Japanese Nuclear Waste Near You!',
 };
 
 const ad6 = {
-  source: '../images/gizmo.jpg',
+  source: 'images/gizmo.jpg',
   altText: 'Baby Gizmo Advertismement',
   href: 'https://fastshow.fandom.com/wiki/Chanel_9_Neus',
   title: 'Baby Gizmo Action Pumpo',
