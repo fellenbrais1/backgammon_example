@@ -629,7 +629,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         'challenge_accepted_message_text'
       );
       const challengerNameField3 = document.getElementById(
-        'challenge_accepted_opponent_name'
+        'challenge_rejected_opponent_name'
       );
       const rejectedOkButton = modalSection.querySelector(
         '.modal_section_button'
