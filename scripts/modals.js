@@ -586,7 +586,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           chatSection.classList.add('reveal');
           removeModal();
           startGameMessages(activeOpponentHere.displayName);
-          startGame(false);
+          const isChallenger = false;
+          console.log(`Player is challenger for startGame: no`);
+          startGame(isChallenger);
         }, 3000);
       });
 
@@ -621,7 +623,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         chatSection.classList.add('reveal');
         removeModal();
         startGameMessages(gamePlayers.opponent.displayName);
-        startGame(true);
+        const isChallenger = true;
+        console.log(`Player is challenger for startGame: yes`);
+        startGame(isChallenger);
       }, 2000);
       break;
 
