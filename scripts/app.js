@@ -444,7 +444,8 @@ const board = {
   },
 };
 
-export async function startGame() {
+export async function startGame(isChallenger) {
+  game.myPlayer = isChallenger ? 'r' : 'w';
   pieces.forEach((current) => {
     board.resetPiecesPosition(current);
   });
@@ -453,8 +454,6 @@ export async function startGame() {
   await drawBoardWithAnimation();
   game.applyControls();
 }
-
-startGame();
 
 let isPieceDragging = false; // Global flag to track if a piece is being dragged
 

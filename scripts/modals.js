@@ -33,6 +33,7 @@ import {
   checkForName,
 } from './chat.js';
 import { startGameMessages, forfeitMessage } from './messages.js';
+import { startGame } from './app.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -585,6 +586,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           chatSection.classList.add('reveal');
           removeModal();
           startGameMessages(activeOpponentHere.displayName);
+          startGame(false);
         }, 3000);
       });
 
@@ -619,6 +621,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         chatSection.classList.add('reveal');
         removeModal();
         startGameMessages(gamePlayers.opponent.displayName);
+        startGame(true);
       }, 2000);
       break;
 
