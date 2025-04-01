@@ -82,14 +82,24 @@ export async function playbackDiceRoll(param) {
   console.log('In playbackDiceRoll, param = ' + JSON.stringify(param));
 
   if (param.player == 'w') {
-    rollWhiteDice(param);
+    await rollWhiteDice(param);
   } else {
-    rollRedDice(param);
+    await rollRedDice(param);
   }
 }
 
 export async function playbackMove(params) {
   console.log('In playbackMove, params = ' + JSON.stringify(params));
+
+  // animate the opponent's move
+  let posToOccupy = board.contents[params.to].occupied.length + 1;
+  let [x, y] = getPieceCoords(params.to, posToOccupy);
+
+  board.movePiece(params.player, params.from, params.to);
+
+  board.updatePointOccupation(params.to);
+  await animateMovePiece(params.piece, x, y, 0.5);
+  // end of animate oppononent's move
 }
 
 // animate rolling white dice - call with predetermined dice numbers, or via event listener for a real 'throw'
@@ -98,10 +108,16 @@ export async function playbackMove(params) {
 async function rollWhiteDice(param) {
   let finalIndex1, finalIndex2;
 
-  if (game.currentTurn != 'w') return; // can be operated by white player only
+  if (game.myPlayer != 'w') return; // can be operated by white player only
 
   // Check if first parameter is an event (from event listener)
   const isEvent = param && param.target !== undefined;
+
+  // if it is a real throw, set the latch to indicate dice already thrown
+  if (isEvent) {
+    if (game.diceThrown == true) return;
+    game.diceThrown = true;
+  }
 
   // Set default values accordingly
   const dice1Result = isEvent ? 0 : param.dice1 ?? 0;
@@ -174,10 +190,16 @@ async function rollWhiteDice(param) {
 async function rollRedDice(param) {
   let finalIndex1, finalIndex2;
 
-  if (game.currentTurn != 'r') return; // can be operated by red player only
+  if (game.myPlayer != 'r') return; // can be operated by red player only
 
   // Check if first parameter is an event (from event listener)
   const isEvent = param && param.target !== undefined;
+
+  // if it is a real throw, set the latch to indicate dice already thrown
+  if (isEvent) {
+    if (game.diceThrown == true) return;
+    game.diceThrown = true;
+  }
 
   // Set default values accordingly
   const dice1Result = isEvent ? 0 : param.dice1 ?? 0;
@@ -290,6 +312,7 @@ const game = {
   myPlayer: 'w',
   currentTurn: 'w',
   currentMove: {},
+  diceThrown: false,
 
   eventTurnFinished() {
     // make it the other player's turn
@@ -299,38 +322,41 @@ const game = {
       this.currentTurn = 'w';
     }
 
+    this.diceThrown = false;
+
     this.applyControls();
   },
 
   applyControls() {
     // dice
     const dice_red1 = document.getElementById('dice_red1');
-    console.log(JSON.stringify(dice_red1));
     const dice_red2 = document.getElementById('dice_red2');
     const dice_white1 = document.getElementById('dice_white1');
     const dice_white2 = document.getElementById('dice_white2');
 
-    if (this.currentTurn == 'r') {
-      // enable red dice
-      dice_red1.style.opacity = '1.0';
-      dice_red2.style.opacity = '1.0';
-      dice_white1.style.opacity = '0.5';
-      dice_white2.style.opacity = '0.5';
-    } else {
+    if (game.myPlayer == 'w') {
       dice_red1.style.opacity = '0.5';
       dice_red2.style.opacity = '0.5';
-      dice_white1.style.opacity = '1.0';
-      dice_white2.style.opacity = '1.0';
+
+      if (this.currentTurn == 'w') {
+        dice_white1.style.opacity = '1.0';
+        dice_white2.style.opacity = '1.0';
+      } else {
+        dice_white1.style.opacity = '0.5';
+        dice_white2.style.opacity = '0.5';
+      }
+    } else {
+      dice_white1.style.opacity = '0.5';
+      dice_white2.style.opacity = '0.5';
+
+      if (this.currentTurn == 'r') {
+        dice_red1.style.opacity = '1.0';
+        dice_red2.style.opacity = '1.0';
+      } else {
+        dice_red1.style.opacity = '0.5';
+        dice_red2.style.opacity = '0.5';
+      }
     }
-
-    // enable and disable dice
-    // const dice_red1 = document.getElementById('dice_red1');
-    // console.log('Applying opacity to red dice 1');
-    // dice_red1.style.opacity = '0.5';
-
-    // const dice_white1 = document.getElementById('dice_white1');
-    // console.log('Applying opacity to white dice 1');
-    // dice_white1.style.opacity = '0.5';
   },
 };
 
@@ -444,7 +470,9 @@ const board = {
   },
 };
 
-export async function startGame() {
+export async function startGame(isChallenger) {
+  game.myPlayer = isChallenger ? 'r' : 'w';
+
   pieces.forEach((current) => {
     board.resetPiecesPosition(current);
   });
@@ -454,7 +482,7 @@ export async function startGame() {
   game.applyControls();
 }
 
-startGame();
+startGame(false);
 
 let isPieceDragging = false; // Global flag to track if a piece is being dragged
 
@@ -487,6 +515,7 @@ function setupMouseEvents() {
       // Record the starting point of the move
       let point = identifyPoint(e.pageX, e.pageY);
       console.log('Grabbed piece on point ' + point);
+      game.currentMove.piece = piece;
       game.currentMove.player = game.currentTurn;
       game.currentMove.from = point;
       game.currentMove.to = 0;
@@ -538,7 +567,7 @@ function setupMouseEvents() {
         );
 
         // Apply the move to the board
-        applyMove(piece, game.currentMove);
+        applyMove(game.currentMove);
 
         // Reset the global flag to indicate the piece is no longer being dragged
         isPieceDragging = false;
@@ -583,7 +612,7 @@ function consumeDiceMove(move) {
   if (totalDice == 0) game.eventTurnFinished();
 }
 
-async function applyMove(piece, move) {
+async function applyMove(move) {
   // either snap or return depending on move legality
 
   // const toColor = board.contents[move.to].color;
@@ -609,7 +638,7 @@ async function applyMove(piece, move) {
     board.onTheMove = '';
     let posToOccupy = board.contents[move.from].occupied.length;
     let [x, y] = getPieceCoords(move.from, posToOccupy);
-    await animateMovePiece(piece, x, y, 0.5);
+    await animateMovePiece(move.piece, x, y, 0.5);
     board.updatePointOccupation(move.from);
     return;
   }
@@ -642,6 +671,15 @@ async function applyMove(piece, move) {
   }
 
   // ORDINARY MOVE
+  // let the opponent know the move
+  // send the move to the opponent
+  sendRPC('move', {
+    piece: move.piece,
+    player: game.currentTurn,
+    from: move.from,
+    to: move.to,
+  });
+
   let posToOccupy = board.contents[move.to].occupied.length + 1;
   let [x, y] = getPieceCoords(move.to, posToOccupy);
 
@@ -663,7 +701,7 @@ async function applyMove(piece, move) {
 
   board.updatePointOccupation(move.to);
   consumeDiceMove(move);
-  await animateMovePiece(piece, x, y, 0.5);
+  await animateMovePiece(move.piece, x, y, 0.5);
 }
 
 function applyHighlight(point, state) {
@@ -1038,7 +1076,7 @@ function isPieceMovable(piece, pt, pos) {
   }
 
   // check is piece is my colour
-  if (game.currentTurn != piece.dataset.type) {
+  if (game.myPlayer != piece.dataset.type) {
     console.log('isPieceMovable: wrong colour');
     return false;
   }
