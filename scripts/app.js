@@ -271,7 +271,7 @@ async function rollRedDice(param) {
 }
 
 document.querySelector('.test_button2').addEventListener('click', function () {
-  demoRegisterForChat();
+  // demoRegisterForChat();
 
   // if (game.currentTurn == 'w') {
   //   game.currentTurn = 'r';
@@ -282,6 +282,14 @@ document.querySelector('.test_button2').addEventListener('click', function () {
   // drawBoardNoAnimation();
 
   // console.log('CurrentTurn is now ' + game.currentTurn);
+
+  console.log(
+    'Status: ' +
+      'game.myPlayer = ' +
+      game.myPlayer +
+      'game.currentTurn = ' +
+      game.currentTurn
+  );
 });
 
 class CoordinateMapper {
