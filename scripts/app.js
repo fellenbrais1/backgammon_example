@@ -98,7 +98,9 @@ export async function playbackMove(params) {
   board.movePiece(params.player, params.from, params.to);
 
   board.updatePointOccupation(params.to);
-  await animateMovePiece(params.piece, x, y, 0.5);
+
+  let piece = document.getElementById(params.pieceId);
+  await animateMovePiece(piece, x, y, 0.5);
   // end of animate oppononent's move
 }
 
@@ -673,8 +675,10 @@ async function applyMove(move) {
   // ORDINARY MOVE
   // let the opponent know the move
   // send the move to the opponent
+  console.log('sending rpc for move, piece = ' + move.piece);
+
   sendRPC('move', {
-    piece: move.piece,
+    pieceId: move.piece.id,
     player: game.currentTurn,
     from: move.from,
     to: move.to,
