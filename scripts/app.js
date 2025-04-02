@@ -492,7 +492,7 @@ export async function startGame(isChallenger) {
   game.applyControls();
 }
 
-startGame(false);
+// startGame(false);
 
 let isPieceDragging = false; // Global flag to track if a piece is being dragged
 
