@@ -325,6 +325,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       returnYesButton.addEventListener('click', () => {
         playClickSound();
         playersSection.classList.remove('reveal');
+        returnSection.classList.remove('reveal');
         welcomeSection.classList.add('reveal');
         clearLocalStorage();
         playersLanguageText.textContent = `Select`;
