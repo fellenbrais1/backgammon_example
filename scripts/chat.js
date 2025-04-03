@@ -333,7 +333,8 @@ export async function sendRPC(method, params) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  await delay(1000);
+  // BUG - EDIT IN PROGRESS
+  // await delay(1000);
 
   if (connOpen === true) {
     attemptNo = 1;
@@ -344,7 +345,7 @@ export async function sendRPC(method, params) {
     console.log(JSON.stringify(rpcMessage));
     setTimeout(() => {
       conn.send(JSON.stringify(rpcMessage));
-    }, 1000);
+    }, 500);
     return;
   } else {
     if (attemptNo < 11) {
