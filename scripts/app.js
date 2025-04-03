@@ -447,6 +447,8 @@ const board = {
 export async function startGame(playerAssign, isChallenger) {
   if (playerAssign) {
     game.myPlayer = isChallenger ? 'r' : 'w';
+  } else {
+    game.myPlayer = 'w';
   }
   pieces.forEach((current) => {
     board.resetPiecesPosition(current);
