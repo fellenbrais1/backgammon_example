@@ -316,71 +316,71 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       });
       break;
 
-    case 'confirmName':
-      sessionDisplayName = data.displayName;
-      modalSection.innerHTML = confirmNameHTML;
-      modalSection.classList.add('reveal');
+      // case 'confirmName':
+      // sessionDisplayName = data.displayName;
+      // modalSection.innerHTML = confirmNameHTML;
+      // modalSection.classList.add('reveal');
 
-      const modalName = document.getElementById('confirm_name_player_name');
-      const confirmNameYesButton = modalSection.querySelector(
-        '.modal_section_button'
-      );
-      const confirmNameNoButton = modalSection.querySelector('.button_red');
+      // const modalName = document.getElementById('confirm_name_player_name');
+      // const confirmNameYesButton = modalSection.querySelector(
+      //   '.modal_section_button'
+      // );
+      // const confirmNameNoButton = modalSection.querySelector('.button_red');
 
-      modalName.textContent = sessionDisplayName;
+      // modalName.textContent = sessionDisplayName;
 
-      confirmNameYesButton.addEventListener('click', async () => {
-        console.log(`LANGAUGES = ${data.languages}`);
-        console.log(`PEERID = ${data.peerID}`);
-        playClickSound();
-        setLocalStorage({
-          displayName: data.displayName,
-          skillLevel: data.skillLevel,
-          languages: data.languages,
-          peerID: data.peerID,
-        });
+      // confirmNameYesButton.addEventListener('click', async () => {
+      //   console.log(`LANGAUGES = ${data.languages}`);
+      //   console.log(`PEERID = ${data.peerID}`);
+      //   playClickSound();
+      //   setLocalStorage({
+      //     displayName: data.displayName,
+      //     skillLevel: data.skillLevel,
+      //     languages: data.languages,
+      //     peerID: data.peerID,
+      //   });
 
-        let storageObject = loadLocalStorage();
-        console.log(storageObject);
-        console.log(storageObject.peerID);
+      //   let storageObject = loadLocalStorage();
+      //   console.log(storageObject);
+      //   console.log(storageObject.peerID);
 
-        const result = await checkForName(storageObject.displayName);
-        console.log(`RESULT IS: ${result}`);
-        if (result === 0) {
-          changeModalContent('nameExists', storageObject.displayName);
-          return;
-        } else {
-          try {
-            const userKey = await registerForChat(null, data);
-            console.log(userKey);
+      //   const result = await checkForName(storageObject.displayName);
+      //   console.log(`RESULT IS: ${result}`);
+      //   if (result === 0) {
+      //     changeModalContent('nameExists', storageObject.displayName);
+      //     return;
+      //   } else {
+      //     try {
+      //       const userKey = await registerForChat(null, data);
+      //       console.log(userKey);
 
-            storageObject.userKey = userKey;
-            console.log(JSON.stringify(storageObject));
+      //       storageObject.userKey = userKey;
+      //       console.log(JSON.stringify(storageObject));
 
-            setLocalStorage({
-              displayName: storageObject.displayName,
-              skillLevel: storageObject.skillLevel,
-              languages: storageObject.languages,
-              peerID: storageObject.peerID,
-              userKey: storageObject.userKey,
-            });
+      //       setLocalStorage({
+      //         displayName: storageObject.displayName,
+      //         skillLevel: storageObject.skillLevel,
+      //         languages: storageObject.languages,
+      //         peerID: storageObject.peerID,
+      //         userKey: storageObject.userKey,
+      //       });
 
-            populatePlayersSectionData();
-            populatePlayerSectionLanguages(data.languages);
+      //       populatePlayersSectionData();
+      //       populatePlayerSectionLanguages(data.languages);
 
-            fetchRecentPlayers();
-            setTimeout(() => {
-              welcomeSection.classList.remove('reveal');
-              playersSection.classList.add('reveal');
-              removeModal();
-            }, 1000);
-            return;
-          } catch (error) {
-            console.error(`Error registering for chat:`, error);
-            return;
-          }
-        }
-      });
+      //       fetchRecentPlayers();
+      //       setTimeout(() => {
+      //         welcomeSection.classList.remove('reveal');
+      //         playersSection.classList.add('reveal');
+      //         removeModal();
+      //       }, 1000);
+      //       return;
+      //     } catch (error) {
+      //       console.error(`Error registering for chat:`, error);
+      //       return;
+      //     }
+      //   }
+      // });
 
       confirmNameNoButton.addEventListener('click', () => {
         playClickSound();
@@ -390,51 +390,71 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       });
       break;
 
-    case 'returnConfirmName':
-      sessionDisplayName = data.displayName;
-      modalSection.innerHTML = confirmNameHTML;
-      modalSection.classList.add('reveal');
+    // case 'returnConfirmName':
+    // sessionDisplayName = data.displayName;
+    // modalSection.innerHTML = confirmNameHTML;
+    // modalSection.classList.add('reveal');
 
-      const returnModalName = document.getElementById(
-        'confirm_name_player_name'
-      );
-      const returnConfirmNameYesButton = modalSection.querySelector(
-        '.modal_section_button'
-      );
-      const returnConfirmNameNoButton =
-        modalSection.querySelector('.button_red');
+    // const returnModalName = document.getElementById(
+    //   'confirm_name_player_name'
+    // );
+    // const returnConfirmNameYesButton = modalSection.querySelector(
+    //   '.modal_section_button'
+    // );
+    // const returnConfirmNameNoButton =
+    //   modalSection.querySelector('.button_red');
 
-      returnModalName.textContent = sessionDisplayName;
+    // returnModalName.textContent = sessionDisplayName;
 
-      returnConfirmNameYesButton.addEventListener('click', async () => {
-        playClickSound();
-        populatePlayersSectionData();
-        populatePlayerSectionLanguages(data.languages);
-        console.log(JSON.stringify(data));
+    // returnConfirmNameYesButton.addEventListener('click', async () => {
+    //   playClickSound();
+    //   populatePlayersSectionData();
+    //   populatePlayerSectionLanguages(data.languages);
+    //   console.log(JSON.stringify(data));
 
-        try {
-          await registerForChat(data.userKey, data);
+    //   try {
+    //     await registerForChat(data.userKey, data);
 
-          fetchRecentPlayers();
-          setTimeout(() => {
-            welcomeSection.classList.remove('reveal');
-            playersSection.classList.add('reveal');
-            removeModal();
-          }, 1000);
-          return;
-        } catch (error) {
-          console.error(`Error registering for chat:`, error);
-          return;
-        }
-      });
+    //     fetchRecentPlayers();
+    //     setTimeout(() => {
+    //       welcomeSection.classList.remove('reveal');
+    //       playersSection.classList.add('reveal');
+    //       removeModal();
+    //     }, 1000);
+    //     return;
+    //   } catch (error) {
+    //     console.error(`Error registering for chat:`, error);
+    //     return;
+    //   }
+    // });
 
-      returnConfirmNameNoButton.addEventListener('click', () => {
-        playClickSound();
-        setTimeout(() => {
-          removeModal();
-        }, 1000);
-      });
-      break;
+    // playClickSound();
+    // populatePlayersSectionData();
+    // populatePlayerSectionLanguages(data.languages);
+    // console.log(JSON.stringify(data));
+
+    // try {
+    //   await registerForChat(data.userKey, data);
+
+    //   fetchRecentPlayers();
+    //   setTimeout(() => {
+    //     welcomeSection.classList.remove('reveal');
+    //     playersSection.classList.add('reveal');
+    //     removeModal();
+    //   }, 1000);
+    //   return;
+    // } catch (error) {
+    //   console.error(`Error registering for chat:`, error);
+    //   return;
+    // }
+
+    // returnConfirmNameNoButton.addEventListener('click', () => {
+    //   playClickSound();
+    //   setTimeout(() => {
+    //     removeModal();
+    //   }, 1000);
+    // });
+    // break;
 
     case 'return':
       modalSection.innerHTML = goBackFromPlayersSectionHTML;

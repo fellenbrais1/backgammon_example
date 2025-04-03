@@ -311,7 +311,7 @@ continueButton.addEventListener('click', () => {
   continueButton.classList.remove('focus_element');
 });
 
-continueButtonReturn.addEventListener('click', () => {
+continueButtonReturn.addEventListener('click', async () => {
   playClickSound();
   const storedObjectProto = loadLocalStorage();
   console.log(storedObjectProto);
@@ -333,7 +333,27 @@ continueButtonReturn.addEventListener('click', () => {
     userKey: storedObject.userKey,
     peerID: storedObject.peerID,
   };
-  changeModalContent('returnConfirmName', data);
+
+  populatePlayersSectionData();
+  populatePlayerSectionLanguages(data.languages);
+  console.log(JSON.stringify(data));
+
+  try {
+    await registerForChat(data.userKey, data);
+
+    fetchRecentPlayers();
+    setTimeout(() => {
+      welcomeSection.classList.remove('reveal');
+      playersSection.classList.add('reveal');
+      // removeModal();
+    }, 1000);
+    return;
+  } catch (error) {
+    console.error(`Error registering for chat:`, error);
+    return;
+  }
+
+  // changeModalContent('returnConfirmName', data);
 });
 
 // Welcome back return section event listeners
@@ -545,7 +565,7 @@ function retrieveLanguageName(languageData) {
 
 // If the data provided by the user is valid, it writes data to the local storage object by calling changeModalContent()
 // Called by an event listener on continueButton
-function createUserData() {
+async function createUserData() {
   if (
     sessionDisplayName !== '' &&
     sessionDisplayName.length >= 3 &&
@@ -562,7 +582,60 @@ function createUserData() {
       peerID: peer.id,
     };
     console.log(JSON.stringify(data));
-    changeModalContent('confirmName', data);
+
+    // BUG - EDIT IN PROGRESS
+    // changeModalContent('confirmName', data);
+
+    console.log(`LANGAUGES = ${data.languages}`);
+    console.log(`PEERID = ${data.peerID}`);
+    // playClickSound();
+    setLocalStorage({
+      displayName: data.displayName,
+      skillLevel: data.skillLevel,
+      languages: data.languages,
+      peerID: data.peerID,
+    });
+
+    let storageObject = loadLocalStorage();
+    console.log(storageObject);
+    console.log(storageObject.peerID);
+
+    const result = await checkForName(storageObject.displayName);
+    console.log(`RESULT IS: ${result}`);
+    if (result === 0) {
+      changeModalContent('nameExists', storageObject.displayName);
+      return;
+    } else {
+      try {
+        const userKey = await registerForChat(null, data);
+        console.log(userKey);
+
+        storageObject.userKey = userKey;
+        console.log(JSON.stringify(storageObject));
+
+        setLocalStorage({
+          displayName: storageObject.displayName,
+          skillLevel: storageObject.skillLevel,
+          languages: storageObject.languages,
+          peerID: storageObject.peerID,
+          userKey: storageObject.userKey,
+        });
+
+        populatePlayersSectionData();
+        populatePlayerSectionLanguages(data.languages);
+
+        fetchRecentPlayers();
+        setTimeout(() => {
+          welcomeSection.classList.remove('reveal');
+          playersSection.classList.add('reveal');
+          // removeModal();
+        }, 1000);
+        return;
+      } catch (error) {
+        console.error(`Error registering for chat:`, error);
+        return;
+      }
+    }
   } else {
     changeModalContent('incompleteData');
     return;
