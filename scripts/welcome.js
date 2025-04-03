@@ -351,10 +351,10 @@ continueButtonReturn.addEventListener('click', async () => {
     await registerForChat(data.userKey, data);
 
     fetchRecentPlayers();
-    // setTimeout(() => {
-    welcomeSection.classList.remove('reveal');
-    playersSection.classList.add('reveal');
-    // }, 1000);
+    setTimeout(() => {
+      welcomeSection.classList.remove('reveal');
+      playersSection.classList.add('reveal');
+    }, 1000);
     return;
   } catch (error) {
     console.error(`Error registering for chat:`, error);
@@ -590,11 +590,10 @@ async function createUserData() {
     console.log(JSON.stringify(data));
 
     // BUG - EDIT IN PROGRESS
-    // changeModalContent('confirmName', data);
 
     console.log(`LANGAUGES = ${data.languages}`);
     console.log(`PEERID = ${data.peerID}`);
-    // playClickSound();
+
     setLocalStorage({
       displayName: data.displayName,
       skillLevel: data.skillLevel,
@@ -631,11 +630,10 @@ async function createUserData() {
         populatePlayerSectionLanguages(data.languages);
 
         fetchRecentPlayers();
-        // setTimeout(() => {
-        welcomeSection.classList.remove('reveal');
-        playersSection.classList.add('reveal');
-        // removeModal();
-        // }, 1000);
+        setTimeout(() => {
+          welcomeSection.classList.remove('reveal');
+          playersSection.classList.add('reveal');
+        }, 1000);
         return;
       } catch (error) {
         console.error(`Error registering for chat:`, error);
