@@ -243,13 +243,9 @@ export async function fetchRecentPlayers(languageFilter = 'none') {
       .once('value');
     const playersObject = snapshot.val();
 
-    // TODO - This isn't useful in its current form as it will never display, it needs to display if the length of playersObject is less than 2, as there will always be at least 1 record in there when called.
-    // if (!playersObject) {
-    console.log(playersObject, playersObject.length);
-
     const numberOfPlayers = Object.keys(playersObject).length;
     console.log(numberOfPlayers);
-    if (numberOfPlayers < 10) {
+    if (numberOfPlayers < 2) {
       console.log('No players online in the last hour.');
       changeModalContent('noPlayersOnline');
       return [];

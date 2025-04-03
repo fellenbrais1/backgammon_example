@@ -354,15 +354,12 @@ continueButtonReturn.addEventListener('click', async () => {
     setTimeout(() => {
       welcomeSection.classList.remove('reveal');
       playersSection.classList.add('reveal');
-      // removeModal();
     }, 1000);
     return;
   } catch (error) {
     console.error(`Error registering for chat:`, error);
     return;
   }
-
-  // changeModalContent('returnConfirmName', data);
 });
 
 // Welcome back return section event listeners
