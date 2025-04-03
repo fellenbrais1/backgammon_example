@@ -589,41 +589,25 @@ async function createUserData() {
     };
     console.log(JSON.stringify(data));
 
-    // BUG - EDIT IN PROGRESS
-
-    console.log(`LANGAUGES = ${data.languages}`);
+    console.log(`LANGUAGES = ${data.languages}`);
     console.log(`PEERID = ${data.peerID}`);
 
-    setLocalStorage({
-      displayName: data.displayName,
-      skillLevel: data.skillLevel,
-      languages: data.languages,
-      peerID: data.peerID,
-    });
-
-    let storageObject = loadLocalStorage();
-    console.log(storageObject);
-    console.log(storageObject.peerID);
-
-    const result = await checkForName(storageObject.displayName);
+    const result = await checkForName(data.displayName);
     console.log(`RESULT IS: ${result}`);
     if (result === 0) {
-      changeModalContent('nameExists', storageObject.displayName);
+      changeModalContent('nameExists', data.displayName);
       return;
     } else {
       try {
         const userKey = await registerForChat(null, data);
         console.log(userKey);
 
-        storageObject.userKey = userKey;
-        console.log(JSON.stringify(storageObject));
-
         setLocalStorage({
-          displayName: storageObject.displayName,
-          skillLevel: storageObject.skillLevel,
-          languages: storageObject.languages,
-          peerID: storageObject.peerID,
-          userKey: storageObject.userKey,
+          displayName: data.displayName,
+          skillLevel: data.skillLevel,
+          languages: data.languages,
+          peerID: data.peerID,
+          userKey: userKey,
         });
 
         populatePlayersSectionData();
