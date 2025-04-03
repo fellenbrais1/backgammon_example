@@ -588,7 +588,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           startGameMessages(activeOpponentHere.displayName);
           const isChallenger = false;
           console.log(`Player is challenger for startGame: no`);
-          startGame(isChallenger);
+          startGame(true, isChallenger);
         }, 3000);
       });
 
@@ -625,7 +625,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         startGameMessages(gamePlayers.opponent.displayName);
         const isChallenger = true;
         console.log(`Player is challenger for startGame: yes`);
-        startGame(isChallenger);
+        startGame(true, isChallenger);
       }, 2000);
       break;
 
