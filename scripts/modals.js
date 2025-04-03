@@ -33,6 +33,7 @@ import {
   checkForName,
 } from './chat.js';
 import { startGameMessages, forfeitMessage } from './messages.js';
+import { startGame } from './app.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -585,6 +586,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           chatSection.classList.add('reveal');
           removeModal();
           startGameMessages(activeOpponentHere.displayName);
+          const isChallenger = false;
+          console.log(`Player is challenger for startGame: no`);
+          startGame(true, isChallenger);
         }, 3000);
       });
 
@@ -619,6 +623,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         chatSection.classList.add('reveal');
         removeModal();
         startGameMessages(gamePlayers.opponent.displayName);
+        const isChallenger = true;
+        console.log(`Player is challenger for startGame: yes`);
+        startGame(true, isChallenger);
       }, 2000);
       break;
 

@@ -12,6 +12,7 @@ console.log(`script.js running`);
 
 import { welcomeNameForm, checkForLocalStorageObject } from './welcome.js';
 import { clearLocalStorage, testForLocalStorageData } from './localStorage.js';
+import { startGame } from './app.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -101,6 +102,7 @@ let currentAdNumber = 0;
 // Displays the main elements and checks to see if there has been a player object set to local storage previously, also cycles site ads
 // Runs on window load event
 window.addEventListener('load', () => {
+  startGame(false, false);
   showMain();
   testForLocalStorageData();
   imbedGame.classList.add('show');
