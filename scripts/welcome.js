@@ -13,7 +13,13 @@ console.log(`welcome.js running`);
 import { playClickSound } from './script.js';
 import { loadLocalStorage, setLocalStorage } from './localStorage.js';
 import { changeModalContent } from './modals.js';
-import { fetchRecentPlayers, getOpponentUserKey, peer } from './chat.js';
+import {
+  fetchRecentPlayers,
+  getOpponentUserKey,
+  peer,
+  registerForChat,
+  checkForName,
+} from './chat.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -84,6 +90,9 @@ const playersLanguageSvg = document.getElementById('players_language_svg');
 const testButton3 = document.querySelector('.test_button3');
 const testButton4 = document.querySelector('.test_button4');
 const testButton5 = document.querySelector('.test_button5');
+
+const welcomeSection = document.querySelector('.welcome_section');
+const playersSection = document.querySelector('.players_section');
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
