@@ -335,8 +335,8 @@ export async function sendRPC(method, params) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  // BUG - EDIT IN PROGRESS
-  // await delay(1000);
+  // TODO - TESTING IN PROGRESS
+  // setTimeout before sending messages with conn.send currently set at 100ms, might need to raise if we encounter issues
 
   if (connOpen === true) {
     attemptNo = 1;

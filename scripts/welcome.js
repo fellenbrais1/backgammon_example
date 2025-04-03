@@ -351,10 +351,10 @@ continueButtonReturn.addEventListener('click', async () => {
     await registerForChat(data.userKey, data);
 
     fetchRecentPlayers();
-    setTimeout(() => {
-      welcomeSection.classList.remove('reveal');
-      playersSection.classList.add('reveal');
-    }, 1000);
+    // setTimeout(() => {
+    welcomeSection.classList.remove('reveal');
+    playersSection.classList.add('reveal');
+    // }, 1000);
     return;
   } catch (error) {
     console.error(`Error registering for chat:`, error);
@@ -631,11 +631,11 @@ async function createUserData() {
         populatePlayerSectionLanguages(data.languages);
 
         fetchRecentPlayers();
-        setTimeout(() => {
-          welcomeSection.classList.remove('reveal');
-          playersSection.classList.add('reveal');
-          // removeModal();
-        }, 1000);
+        // setTimeout(() => {
+        welcomeSection.classList.remove('reveal');
+        playersSection.classList.add('reveal');
+        // removeModal();
+        // }, 1000);
         return;
       } catch (error) {
         console.error(`Error registering for chat:`, error);
