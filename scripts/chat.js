@@ -347,7 +347,7 @@ export async function sendRPC(method, params) {
     console.log(JSON.stringify(rpcMessage));
     setTimeout(() => {
       conn.send(JSON.stringify(rpcMessage));
-    }, 500);
+    }, 100);
     return;
   } else {
     if (attemptNo < 11) {
