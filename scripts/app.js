@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
   dice_red2.id = 'dice_red2';
 
   // Set the source of the images
-  dice_white1.src = 'images/dice-six.png';
-  dice_white2.src = 'images/dice-six.png';
+  dice_white1.src = 'images/dice-click.png';
+  dice_white2.src = 'images/dice-click.png';
   dice_red1.src = 'images/dice-red-six.png';
   dice_red2.src = 'images/dice-red-six.png';
 
