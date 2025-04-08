@@ -734,9 +734,13 @@ function addChatButtons() {
       chatSection.classList.remove('reveal');
     }, 500);
   });
+
   endTurnButton.addEventListener('click', () => {
     console.log(`End turn flow`);
+    // TODO - Call this with a variable containing moves remaining if we want this functionality
+    changeModalContent('movesRemaining');
   });
+
   settingsButton.addEventListener('click', () => {
     console.log(`Settings flow`);
     playClickSound();
@@ -745,6 +749,7 @@ function addChatButtons() {
       chatSection.classList.remove('reveal');
     }, 500);
   });
+
   gamesButton.addEventListener('click', () => {
     console.log(`Games flow`);
     playClickSound();
@@ -756,6 +761,7 @@ function addChatButtons() {
       otherGamesPopulatedFlag = true;
     }, 500);
   });
+
   forfeitGameButton.addEventListener('click', async () => {
     console.log(`Forfeit game flow`);
     console.log(activeOpponentHere.displayName);
