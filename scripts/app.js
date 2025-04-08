@@ -612,15 +612,16 @@ function consumeDiceMove(move) {
   const moveDistance =
     game.currentTurn == 'w' ? move.from - move.to : move.to - move.from;
 
-  let totalDice = 0;
-
   for (let i = 0; i < board.diceThrows.length; i++) {
-    if (board.diceThrows[i] == moveDistance) board.diceThrows[i] = 0;
-    totalDice += board.diceThrows[i];
+    if (board.diceThrows[i] == moveDistance) {
+      board.diceThrows[i] = 0;
+      break;
+    }
   }
 
   // is the player's turn over?
-  if (totalDice == 0) game.eventTurnFinished();
+  if (board.diceThrows.every((element) => element === 0))
+    game.eventTurnFinished();
 }
 
 async function applyMove(move) {
