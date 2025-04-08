@@ -165,7 +165,7 @@ testButton3.addEventListener('click', () => {
 
 testButton4.addEventListener('click', () => {
   playClickSound();
-  changeModalContent('eventGameOverLose', 'backgammon');
+  changeModalContent('movesRemaining', [4, 2]);
 });
 
 testButton5.addEventListener('click', () => {

@@ -77,6 +77,11 @@ const noPlayersOnlineHTML = `<section class='modal_message_section'><p class="mo
               <p class="modal_section_button button center_modal_button smaller_margin_top no_select" title='Ok'>Ok</p>
                             </section>`;
 
+const movesRemainingHTML = `<section class='modal_message_section'><p class="modal_section_text medium_margin_top no_select" id='moves_remaining_text'>You still have unused moves, are you sure you would like to end your turn?</p>
+<p class="modal_section_button button center_modal_button smaller_margin_top no_select" title='Yes'>Yes</p>
+<p class="modal_section_button button center_modal_button button_red smaller_margin_top no_select" title='No'>No</p>
+</section>`;
+
 const noNameHTML = `<section class='modal_message_section'><p class="modal_section_text big_margin_top no_select">Please enter a display name to use in the game</p>
               <p class="modal_section_button button center_modal_button no_select" title='Ok'>Ok</p>
                             </section>`;
@@ -256,6 +261,42 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           removeModal();
         }, 1000);
         return;
+      });
+      break;
+
+    case 'movesRemaining':
+      modalSection.innerHTML = movesRemainingHTML;
+      modalSection.classList.add('reveal');
+
+      const movesRemainingText = document.getElementById(
+        'moves_remaining_text'
+      );
+
+      const movesRemainingYesButton = modalSection.querySelector(
+        '.modal_section_button'
+      );
+      const movesRemainingNoButton = modalSection.querySelector('.button_red');
+
+      movesRemainingText.textContent = `You still have unused moves remaining (${data}), are you sure you would like to end your turn?`;
+
+      movesRemainingYesButton.addEventListener('click', () => {
+        playClickSound();
+        setTimeout(() => {
+          removeModal();
+          console.log(
+            'You have chosen to end your turn - call turn change logic'
+          );
+        }, 1000);
+      });
+
+      movesRemainingNoButton.addEventListener('click', () => {
+        playClickSound();
+        setTimeout(() => {
+          removeModal();
+          console.log(
+            'You have chosen NOT to end your turn - returning to normal flow'
+          );
+        }, 1000);
       });
       break;
 
