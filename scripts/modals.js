@@ -277,7 +277,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       );
       const movesRemainingNoButton = modalSection.querySelector('.button_red');
 
-      movesRemainingText.textContent = `You still have unused moves remaining (${data}), are you sure you would like to end your turn?`;
+      if (data !== '') {
+        movesRemainingText.textContent = `You still have unused moves remaining (${data}), are you sure you would like to end your turn?`;
+      }
 
       movesRemainingYesButton.addEventListener('click', () => {
         playClickSound();
