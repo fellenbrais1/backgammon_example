@@ -102,7 +102,7 @@ let currentAdNumber = 0;
 // Displays the main elements and checks to see if there has been a player object set to local storage previously, also cycles site ads
 // Runs on window load event
 window.addEventListener('load', () => {
-  startGame(false, false);
+  startGame(true, true); // ??? should be false, false
   showMain();
   testForLocalStorageData();
   imbedGame.classList.add('show');

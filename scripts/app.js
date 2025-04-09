@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', function () {
   // Set the source of the images
   dice_white1.src = 'images/dice-click.png';
   dice_white2.src = 'images/dice-click.png';
-  dice_red1.src = 'images/dice-red-six.png';
-  dice_red2.src = 'images/dice-red-six.png';
+  dice_red1.src = 'images/dice-red-click.png';
+  dice_red2.src = 'images/dice-red-click.png';
 
   // Set the size of the images (40px wide and 40px tall)
   dice_white1.width = 40;
@@ -483,6 +483,7 @@ const board = {
 export async function startGame(playerAssign, isChallenger) {
   if (playerAssign) {
     game.myPlayer = isChallenger ? 'r' : 'w';
+    game.currentTurn = isChallenger ? 'r' : 'w';
   } else {
     game.myPlayer = 'w';
   }
@@ -492,7 +493,14 @@ export async function startGame(playerAssign, isChallenger) {
   board.resetBoard();
   setupMouseEvents();
   await drawBoardWithAnimation();
+  console.log(
+    'About to apply game controls with myPlayer = ' +
+      game.myPlayer +
+      ' and currentTurn = ' +
+      game.currentTurn
+  );
   game.applyControls();
+  console.log('After applying game controls');
 }
 
 let isPieceDragging = false; // Global flag to track if a piece is being dragged
@@ -657,20 +665,23 @@ async function applyMove(move) {
 
   // TAKING A BLOT
   if (toColor != game.currentTurn && toOccupied == 1) {
-    console.log('Taking a blot');
+    console.log('Taking blot ' + move.piece.id);
     board.movePiece(game.currentTurn, move.from, move.to);
 
-    // snap into place
-    let posToOccupy = 1;
-    let [x, y] = getPieceCoords(move.to, posToOccupy);
-    await animateMovePiece(piece, x, y, 0.5);
-
-    // animate the blot to the bar. Red bar = 25, White bar = 26
     let barPoint = game.myPlayer == 'r' ? 26 : 25;
     let pieceId = board.contents[move.to].occupied[0];
+
+    // snap into place
+    let posToOccupy = 1; // by definition
+    let [x, y] = getPieceCoords(move.to, posToOccupy);
+    await animateMovePiece(move.piece, x, y, 0.5);
+
+    // animate the blot to the bar. Red bar = 25, White bar = 26
+    // let barPoint = game.myPlayer == 'r' ? 26 : 25;
+    // let pieceId = board.contents[move.to].occupied[0];
     board.onTheMove = pieceId;
     board.movePiece(game.currentTurn, move.to, barPoint);
-    board.contents[move.to].occupied = [piece.id];
+    board.contents[move.to].occupied = [pieceId]; // ??? was piece.id
 
     [x, y] = getPieceCoords(barPoint, 1);
     let blotPiece = document.getElementById(pieceId);
@@ -1086,6 +1097,12 @@ function isPieceMovable(piece, pt, pos) {
   // if piece is not being moved from a valid position
   if (piece == 0 && pos == 0) {
     console.log('Not moving from a valid position');
+    return false;
+  }
+
+  // if there are no dice moves left
+  if (board.diceThrows.every((element) => element === 0)) {
+    console.log('isPieceMovable: no dice moves remaining');
     return false;
   }
 
