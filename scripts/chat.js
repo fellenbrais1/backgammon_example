@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let conn;
 
-export async function checkForName(playerName) {
+export async function checkForName(playerName, allowedName = '') {
   const playersRef = database.ref('players');
 
   try {
@@ -106,8 +106,12 @@ export async function checkForName(playerName) {
     const nameExists = querySnapshot.exists();
 
     if (nameExists) {
-      console.error('Error: display name already exists');
-      return 0;
+      if (playerName === allowedName) {
+        return 1;
+      } else {
+        console.error('Error: display name already exists');
+        return 0;
+      }
     } else {
       return 1;
     }
@@ -117,7 +121,7 @@ export async function checkForName(playerName) {
   }
 }
 
-export async function registerForChat(key, player) {
+export async function registerForChat(key, player, allowedName = '') {
   const playersRef = database.ref('players');
 
   try {
@@ -129,10 +133,17 @@ export async function registerForChat(key, player) {
     const nameExists = querySnapshot.exists();
 
     if (key === null) {
-      if (nameExists) {
-        console.error('Error: display name already exists');
-        changeModalContent('nameExists', player.displayName);
-        return null;
+      console.log(`HERE!!!!! : ${allowedName}`);
+      if (player.displayName === allowedName) {
+        console.log(
+          `Skipping process as name is the same one as currently saved to player record`
+        );
+      } else {
+        if (nameExists) {
+          console.error('Error: display name already exists');
+          changeModalContent('nameExists', player.displayName);
+          return null;
+        }
       }
 
       // Create a new player record

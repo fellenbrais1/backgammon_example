@@ -16,8 +16,10 @@ import {
   playerPairingUserChallenge,
   playerPairingChallengee,
   activeOpponent,
+  addLanguageFlags,
+  changeDetailsFlagStatus,
 } from './welcome.js';
-import { clearLocalStorage } from './localStorage.js';
+import { clearLocalStorage, loadLocalStorage } from './localStorage.js';
 import { sendRPC, assignConn, defineOpponent } from './chat.js';
 import { startGameMessages, forfeitMessage } from './messages.js';
 import { startGame } from './app.js';
@@ -38,6 +40,19 @@ const rulesXButton = document.querySelector('.rules_x_button');
 const otherGamesSection = document.querySelector('.other_games_section');
 const otherGamesXButton = document.querySelector('.other_games_x_button');
 const otherGamesDisplay = document.querySelector('.other_games_display');
+
+const welcomeName = document.getElementById('welcome_name_input');
+const welcomeSkillLevel = document.getElementById('skill_level_text');
+const welcomeLanguages = document.getElementById('language_text');
+
+// Step elements
+const step2Div = document.querySelector('.step2');
+const step3Div = document.querySelector('.step3');
+const step4Div = document.querySelector('.step4');
+
+const youName = document.querySelector('.you_name');
+const youSkill = document.querySelector('.you_skill');
+const youFlags = document.querySelector('.you_flags');
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
@@ -371,6 +386,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         returnSection.classList.remove('reveal');
         welcomeSection.classList.add('reveal');
         playersLanguageText.textContent = `Select`;
+        // TODO - EDIT IN PROGRESS
+        // Repopulate the welcome section
+        changeDetailsPopulateFields();
         setTimeout(() => {
           removeModal();
         }, 1000);
@@ -823,6 +841,39 @@ function addCurrentGameClass(currentGameFlag) {
         break;
     }
   }
+}
+
+export function changeDetailsPopulateFields() {
+  step2Div.classList.add('reveal');
+  step3Div.classList.add('reveal');
+  step4Div.classList.add('reveal');
+  const storedObject = loadLocalStorage();
+  welcomeName.value = storedObject.displayName;
+
+  let skillData = '';
+  switch (storedObject.skillLevel) {
+    case '🏆':
+      skillData = '🏆 Beginner';
+      break;
+    case '🏆🏆':
+      skillData = '🏆🏆 Advanced';
+      break;
+    case '🏆🏆🏆':
+      skillData = '🏆🏆🏆 Master';
+      break;
+  }
+  welcomeSkillLevel.textContent = skillData;
+  // welcomeLanguages = storedObject.languages;
+  console.log(storedObject.languages);
+  welcomeLanguages.value = storedObject.languages;
+  // console.log(languagesChosenReturn);
+  addLanguageFlags(0, true);
+
+  youName.textContent = storedObject.displayName;
+  youSkill.textContent = storedObject.skillLevel;
+  // youFlags.textContent = storedObject.languages;
+  // const allowedName = storedObject.displayName;
+  changeDetailsFlagStatus();
 }
 
 addChatButtons();

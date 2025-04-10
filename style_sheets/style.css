@@ -146,6 +146,7 @@ html {
 
 /* BOARD ANNOTATIONS SECTION ELEMENTS */
 .board_annotations_section {
+  opacity: 0;
   position: absolute;
   top: 234px;
   left: 146px;
@@ -156,7 +157,7 @@ html {
   z-index: 8;
   border: solid 2px grey;
   border-radius: 9999px;
-  opacity: 0.5;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .board_message {
@@ -1085,6 +1086,10 @@ html {
   pointer-events: all;
 }
 
+.reveal_translucent {
+  opacity: 0.5;
+}
+
 .no_select {
   -webkit-user-select: none; /* Safari */
   -khtml-user-select: none; /* Konqueror HTML */
@@ -1139,6 +1144,11 @@ html {
 
 .light_green_background {
   background-color: lightgreen;
+}
+
+.greyout {
+  filter: brightness(0.2);
+  filter: invert(1);
 }
 
 /* CODE END */
