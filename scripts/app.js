@@ -327,7 +327,7 @@ document.querySelector('.test_button2').addEventListener('click', function () {
     'Status: ' +
       'game.myPlayer = ' +
       game.myPlayer +
-      'game.currentTurn = ' +
+      ', game.currentTurn = ' +
       game.currentTurn
   );
 });
