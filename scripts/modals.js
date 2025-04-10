@@ -18,6 +18,7 @@ import {
   activeOpponent,
   addLanguageFlags,
   changeDetailsFlagStatus,
+  pauseRefreshPopulatePlayers,
 } from './welcome.js';
 import { clearLocalStorage, loadLocalStorage } from './localStorage.js';
 import { sendRPC, assignConn, defineOpponent } from './chat.js';
@@ -527,6 +528,10 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           startGameMessages(activeOpponentHere.displayName);
           const isChallenger = false;
           console.log(`Player is challenger for startGame: no`);
+
+          // TODO - Test to see if pauseRefreshPopulatePLayers() actually runs
+          pauseRefreshPopulatePlayers();
+
           startGame(true, isChallenger);
         }, 3000);
       });
@@ -564,6 +569,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         startGameMessages(gamePlayers.opponent.displayName);
         const isChallenger = true;
         console.log(`Player is challenger for startGame: yes`);
+        // TODO - Test to see if pauseRefreshPopulatePLayers() actually runs
+        pauseRefreshPopulatePlayers();
+
         startGame(true, isChallenger);
       }, 2000);
       break;

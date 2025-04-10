@@ -326,7 +326,7 @@ continueButton.addEventListener('click', () => {
   createUserData();
   continueButton.classList.remove('focus_element');
   boardAnnotationsSection.classList.remove('reveal_translucent');
-  setInterval(refreshPopulatePlayers, 10000);
+  const continueInterval = setInterval(refreshPopulatePlayers, 10000);
 });
 
 continueButtonReturn.addEventListener('click', async () => {
@@ -365,7 +365,7 @@ continueButtonReturn.addEventListener('click', async () => {
       welcomeSection.classList.remove('reveal');
       playersSection.classList.add('reveal');
     }, 1000);
-    setInterval(refreshPopulatePlayers, 10000);
+    const returnContinueInterval = setInterval(refreshPopulatePlayers, 10000);
     return;
   } catch (error) {
     console.error(`Error registering for chat:`, error);
@@ -1004,6 +1004,15 @@ export function changeDetailsFlagStatus() {
 function refreshPopulatePlayers() {
   console.log('refreshPopulatePlayers() is running');
   fetchRecentPlayers();
+}
+
+// TODO - TEST TO SEE IF THIS WORKS
+export function pauseRefreshPopulatePlayers() {
+  console.log(
+    `pauseRefreshPopulatePlayers() is running, auto update of players should be paused`
+  );
+  clearInterval(continueInterval);
+  clearInterval(returnContinueInterval);
 }
 
 // CODE END
