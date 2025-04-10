@@ -387,9 +387,10 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         returnSection.classList.remove('reveal');
         welcomeSection.classList.add('reveal');
         playersLanguageText.textContent = `Select`;
-        // TODO - EDIT IN PROGRESS
+
         // Repopulate the welcome section
         changeDetailsPopulateFields();
+
         setTimeout(() => {
           removeModal();
         }, 1000);
@@ -569,6 +570,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         startGameMessages(gamePlayers.opponent.displayName);
         const isChallenger = true;
         console.log(`Player is challenger for startGame: yes`);
+
         // TODO - Test to see if pauseRefreshPopulatePLayers() actually runs
         pauseRefreshPopulatePlayers();
 
