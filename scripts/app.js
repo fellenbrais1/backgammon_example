@@ -18,7 +18,17 @@ const db = database;
 console.log(db);
 
 // add dice
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', drawDice);
+
+function drawDice() {
+  let dice_white1_top, dice_white2_top, dice_red1_top, dice_red2_top;
+
+  // delete existing dice elements
+  removeHtmlElement('dice_white1');
+  removeHtmlElement('dice_white2');
+  removeHtmlElement('dice_red1');
+  removeHtmlElement('dice_red2');
+
   // Create new image elements
   let dice_white1 = document.createElement('img');
   dice_white1.id = 'dice_white1';
@@ -30,10 +40,17 @@ document.addEventListener('DOMContentLoaded', function () {
   dice_red2.id = 'dice_red2';
 
   // Set the source of the images
-  dice_white1.src = 'images/dice-click.png';
-  dice_white2.src = 'images/dice-click.png';
-  dice_red1.src = 'images/dice-red-click.png';
-  dice_red2.src = 'images/dice-red-click.png';
+  if (game.myPlayer == 'r') {
+    dice_white1.src = 'images/dice-six.png';
+    dice_white2.src = 'images/dice-six.png';
+    dice_red1.src = 'images/dice-red-click.png';
+    dice_red2.src = 'images/dice-red-click.png';
+  } else {
+    dice_white1.src = 'images/dice-click.png';
+    dice_white2.src = 'images/dice-click.png';
+    dice_red1.src = 'images/dice-red-six.png';
+    dice_red2.src = 'images/dice-red-six.png';
+  }
 
   // Set the size of the images (40px wide and 40px tall)
   dice_white1.width = 40;
@@ -45,19 +62,32 @@ document.addEventListener('DOMContentLoaded', function () {
   dice_red2.width = 40;
   dice_red2.height = 40;
 
-  // Set the style to position the images
+  // Set the style to position the images - player's own dice are at the top
+  console.log('In DOMContentLoaded');
+  if (game.myPlayer == 'r') {
+    dice_white1_top = '310px';
+    dice_white2_top = '360px';
+    dice_red1_top = '110px';
+    dice_red2_top = '160px';
+  } else {
+    dice_white1_top = '110px';
+    dice_white2_top = '160px';
+    dice_red1_top = '310px';
+    dice_red2_top = '360px';
+  }
+
   dice_white1.style.position = 'absolute';
-  dice_white1.style.top = '110px';
+  dice_white1.style.top = dice_white1_top;
   dice_white1.style.left = '10px';
   dice_white2.style.position = 'absolute';
-  dice_white2.style.top = '160px';
+  dice_white2.style.top = dice_white2_top;
   dice_white2.style.left = '10px';
 
   dice_red1.style.position = 'absolute';
-  dice_red1.style.top = '310px';
+  dice_red1.style.top = dice_red1_top;
   dice_red1.style.left = '10px';
   dice_red2.style.position = 'absolute';
-  dice_red2.style.top = '360px';
+  dice_red2.style.top = dice_red2_top;
   dice_red2.style.left = '10px';
 
   // Append the images to the 'board' div
@@ -70,7 +100,17 @@ document.addEventListener('DOMContentLoaded', function () {
   dice_white2.addEventListener('click', rollWhiteDice);
   dice_red1.addEventListener('click', rollRedDice);
   dice_red2.addEventListener('click', rollRedDice);
-});
+}
+
+// remove html element
+function removeHtmlElement(id) {
+  const element = document.getElementById(id);
+
+  if (element) {
+    const parent = element.parentNode;
+    parent.removeChild(element);
+  }
+}
 
 // Helper function to create a delay
 function sleep(ms) {
@@ -328,8 +368,20 @@ const game = {
     // make it the other player's turn
     if (this.currentTurn == 'w') {
       this.currentTurn = 'r';
+
+      // display dice-click image on red dice
+      let dice_red1 = document.getElementById('dice_red1');
+      let dice_red2 = document.getElementById('dice_red2');
+      dice_red1.src = 'images/dice-red-click.png';
+      dice_red2.src = 'images/dice-red-click.png';
     } else {
       this.currentTurn = 'w';
+
+      // display dice-click image on white dice
+      let dice_white1 = document.getElementById('dice_white1');
+      let dice_white2 = document.getElementById('dice_white2');
+      dice_white1.src = 'images/dice-click.png';
+      dice_white2.src = 'images/dice-click.png';
     }
 
     this.diceThrown = false;
@@ -759,6 +811,8 @@ async function drawBoardWithAnimation() {
       await animateMovePiece(piece, x, y, 5);
     }
   }
+
+  drawDice();
 }
 
 function drawBoardNoAnimation() {
