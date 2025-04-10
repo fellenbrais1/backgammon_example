@@ -733,7 +733,7 @@ async function applyMove(move) {
     // let pieceId = board.contents[move.to].occupied[0];
     board.onTheMove = pieceId;
     board.movePiece(game.currentTurn, move.to, barPoint);
-    board.contents[move.to].occupied = [pieceId]; // ??? was piece.id
+    board.contents[move.to].occupied = [pieceId];
 
     [x, y] = getPieceCoords(barPoint, 1);
     let blotPiece = document.getElementById(pieceId);
