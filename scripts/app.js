@@ -234,10 +234,10 @@ async function rollWhiteDice(param) {
 async function rollRedDice(param) {
   let finalIndex1, finalIndex2;
 
-  if (game.myPlayer != 'r') return; // can be operated by red player only
-
-  // Check if first parameter is an event (from event listener)
+  // Check if first parameter is an event (indicates dice clicked rather than playback)
   const isEvent = param && param.target !== undefined;
+
+  if (isEvent && game.myPlayer != 'r') return; // can be clicked by red player only, but playback still works
 
   // if it is a real throw, set the latch to indicate dice already thrown
   if (isEvent) {
