@@ -23,6 +23,13 @@ document.addEventListener('DOMContentLoaded', drawDice);
 function drawDice() {
   let dice_white1_top, dice_white2_top, dice_red1_top, dice_red2_top;
 
+  console.log(
+    'in drawDice(), game.myPlayer = ' +
+      game.myPlayer +
+      ', game.currentTurn = ' +
+      game.currentTurn
+  );
+
   // delete existing dice elements
   removeHtmlElement('dice_white1');
   removeHtmlElement('dice_white2');
