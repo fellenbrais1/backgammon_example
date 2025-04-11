@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', drawDice);
 
 function drawDice() {
   let dice_white1_top, dice_white2_top, dice_red1_top, dice_red2_top;
+  let red_face, white_face;
 
   console.log(
     'in drawDice(), game.myPlayer = ' +
@@ -48,16 +49,21 @@ function drawDice() {
 
   // Set the source of the images
   if (game.myPlayer == 'r') {
-    dice_white1.src = 'images/dice-six.png';
-    dice_white2.src = 'images/dice-six.png';
-    dice_red1.src = 'images/dice-red-click.png';
-    dice_red2.src = 'images/dice-red-click.png';
+    red_face =
+      game.currentTurn == 'r'
+        ? 'images/dice-red-click.png'
+        : 'images/dice-red-six.png';
+    white_face = 'images/dice-six.png';
   } else {
-    dice_white1.src = 'images/dice-click.png';
-    dice_white2.src = 'images/dice-click.png';
-    dice_red1.src = 'images/dice-red-six.png';
-    dice_red2.src = 'images/dice-red-six.png';
+    white_face =
+      game.currentTurn == 'w' ? 'images/dice-click.png' : 'images/dice-six.png';
+    red_face = 'images/dice-red-six.png';
   }
+  // apply the above
+  dice_white1.src = white_face;
+  dice_white2.src = white_face;
+  dice_red1.src = red_face;
+  dice_red2.src = red_face;
 
   // Set the size of the images (40px wide and 40px tall)
   dice_white1.width = 40;
