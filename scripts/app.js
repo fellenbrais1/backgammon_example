@@ -122,8 +122,10 @@ export async function playbackDiceRoll(param) {
   console.log('In playbackDiceRoll, param = ' + JSON.stringify(param));
 
   if (param.player == 'w') {
+    console.log('About to playback the roll of white dice');
     await rollWhiteDice(param);
   } else {
+    console.log('About to playback the roll of red dice');
     await rollRedDice(param);
   }
 }
