@@ -152,10 +152,10 @@ export async function playbackMove(params) {
 async function rollWhiteDice(param) {
   let finalIndex1, finalIndex2;
 
-  if (game.myPlayer != 'w') return; // can be operated by white player only
-
-  // Check if first parameter is an event (from event listener)
+  // Check if first parameter is an event (indicates dice clicked rather than playback)
   const isEvent = param && param.target !== undefined;
+
+  if (isEvent && game.myPlayer != 'w') return; // can be clicked by white player only, but playback still works
 
   // if it is a real throw, set the latch to indicate dice already thrown
   if (isEvent) {
