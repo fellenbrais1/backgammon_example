@@ -535,13 +535,16 @@ const board = {
 export async function startGame(playerAssign, isChallenger) {
   if (playerAssign) {
     game.myPlayer = isChallenger ? 'r' : 'w';
-    game.currentTurn = isChallenger ? 'r' : 'w';
+    game.currentTurn = 'r';
   } else {
     game.myPlayer = 'w';
+    game.currentTurn = 'w';
   }
+
   pieces.forEach((current) => {
     board.resetPiecesPosition(current);
   });
+
   board.resetBoard();
   setupMouseEvents();
   await drawBoardWithAnimation();
