@@ -70,6 +70,9 @@ let otherGamesBackgammonButton;
 let otherGamesMurderMansionButton;
 const currentGameFlag = 'Backgammon';
 
+let counterInterval;
+let counterValue = 0;
+
 const otherGamesBackgammonButtonHTML = `<div class="game_button_backgammon" title="Backgammon">
     <img src="images/MOMABackgammon.png" alt="Backgammon game picture" />
     <p>Backgammon</p>
@@ -138,6 +141,7 @@ const challengeModalHTML = `<section class="modal_message_section purple_backgro
                 Cancel
               </p>
             </div>
+            <p class='challenge_counter'>0 s</p>
           </section>`;
 
 const challengeModalAcceptedHTML = `<section class="modal_message_section light_green_background">
@@ -452,12 +456,16 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
       challengerNameField.textContent = `Challenging ${data}`;
 
+      // TODO - Starts the counter to see how long the challenge has been active for
+      startCounter();
+
       buttonChallengeCancel.addEventListener('click', () => {
         playClickSound();
         cancelFlag = true;
         challengeInformation.textContent = 'Cancelling challenge...';
         setTimeout(() => {
           restartRefreshPopulatePlayers();
+          stopCounter();
           shutDownRPC();
           removeModal();
         }, 1000);
@@ -888,6 +896,24 @@ export function changeDetailsPopulateFields() {
   // youFlags.textContent = storedObject.languages;
   // const allowedName = storedObject.displayName;
   changeDetailsFlagStatus();
+}
+
+function counterIncrement() {
+  counterValue++;
+  const challengeCounter = modalSection.querySelector('.challenge_counter');
+  challengeCounter.textContent = `${counterValue} s`;
+  console.log(`Counter is at: ${counterValue}`);
+  return counterValue;
+}
+
+function startCounter() {
+  counterInterval = setInterval(counterIncrement, 1000);
+}
+
+function stopCounter() {
+  counterValue = 0;
+  clearInterval(counterInterval);
+  console.log(`Counter has been reset, value now at: ${counterValue}`);
 }
 
 addChatButtons();
