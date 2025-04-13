@@ -120,6 +120,9 @@ export let challengerName = '';
 // Variable to enable going back to change your details
 let changeDetailsFlag = false;
 
+let continueInterval;
+let returnContinueInterval;
+
 // Language HTML variables
 const englishHTML = `<p
 class="players_language_choice no_select"
@@ -326,7 +329,7 @@ continueButton.addEventListener('click', () => {
   createUserData();
   continueButton.classList.remove('focus_element');
   boardAnnotationsSection.classList.remove('reveal_translucent');
-  const continueInterval = setInterval(refreshPopulatePlayers, 10000);
+  continueInterval = setInterval(refreshPopulatePlayers, 10000);
 });
 
 continueButtonReturn.addEventListener('click', async () => {
@@ -365,7 +368,7 @@ continueButtonReturn.addEventListener('click', async () => {
       welcomeSection.classList.remove('reveal');
       playersSection.classList.add('reveal');
     }, 1000);
-    const returnContinueInterval = setInterval(refreshPopulatePlayers, 10000);
+    returnContinueInterval = setInterval(refreshPopulatePlayers, 10000);
     return;
   } catch (error) {
     console.error(`Error registering for chat:`, error);
@@ -936,6 +939,7 @@ function addPlayerEventListeners(playerList) {
             current2.classList.remove('accordion_selected');
           });
           current.classList.toggle('accordion_selected');
+          pauseRefreshPopulatePlayers();
         });
       }
     });
@@ -1006,7 +1010,7 @@ function refreshPopulatePlayers() {
   fetchRecentPlayers();
 }
 
-export function restartRefreshPopulatePLayers() {
+export function restartRefreshPopulatePlayers() {
   if (returnContinueInterval) {
     returnContinueInterval = setInterval(refreshPopulatePlayers, 10000);
   }

@@ -22,7 +22,7 @@ import {
   restartRefreshPopulatePlayers,
 } from './welcome.js';
 import { clearLocalStorage, loadLocalStorage } from './localStorage.js';
-import { sendRPC, assignConn, defineOpponent } from './chat.js';
+import { sendRPC, assignConn, defineOpponent, shutDownRPC } from './chat.js';
 import { startGameMessages, forfeitMessage } from './messages.js';
 import { startGame } from './app.js';
 
@@ -458,6 +458,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         challengeInformation.textContent = 'Cancelling challenge...';
         setTimeout(() => {
           restartRefreshPopulatePlayers();
+          shutDownRPC();
           removeModal();
         }, 1000);
       });

@@ -36,6 +36,8 @@ let activeOpponent = '';
 let connOpen = false;
 let attemptNo = 1;
 
+let shutdownFlag = false;
+
 /////////////////////////////////////////////////////////////////////////////////////////
 // EVENT LISTENERS
 
@@ -340,12 +342,14 @@ export async function connectToPlayer(opponent) {
   }
 }
 
+export function shutDownRPC() {
+  shutdownFlag = true;
+  console.log(`shutdownFlag = ${shutdownFlag}`);
+}
+
 // Added a looping delay that will retry sending the message until the connOpen variable is true, this is controlled by the conn.on(open) event
 export async function sendRPC(method, params) {
-  function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
+  // shutdownFlag = false;
   // TODO - TESTING IN PROGRESS
   // setTimeout before sending messages with conn.send currently set at 100ms, might need to raise if we encounter issues
 
@@ -362,6 +366,12 @@ export async function sendRPC(method, params) {
     return;
   } else {
     if (attemptNo < 11) {
+      console.log(`shutdownFlag = ${shutdownFlag}`);
+      if (shutdownFlag === true) {
+        console.log(`Shutting down RPC message process.`);
+        shutdownFlag = false;
+        return;
+      }
       setTimeout(() => {
         console.log(
           `Waiting for open connection (5 seconds) Attempt ${attemptNo}`
@@ -375,6 +385,7 @@ export async function sendRPC(method, params) {
       alert(
         `Error: Connection cannot be made with the other player. Please refresh your session and try again.`
       );
+      shutdownFlag = false;
       return;
     }
   }
