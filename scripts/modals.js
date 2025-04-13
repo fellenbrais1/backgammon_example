@@ -19,6 +19,7 @@ import {
   addLanguageFlags,
   changeDetailsFlagStatus,
   pauseRefreshPopulatePlayers,
+  restartRefreshPopulatePlayers,
 } from './welcome.js';
 import { clearLocalStorage, loadLocalStorage } from './localStorage.js';
 import { sendRPC, assignConn, defineOpponent } from './chat.js';
@@ -456,6 +457,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         cancelFlag = true;
         challengeInformation.textContent = 'Cancelling challenge...';
         setTimeout(() => {
+          restartRefreshPopulatePlayers();
           removeModal();
         }, 1000);
       });
@@ -599,6 +601,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         playClickSound();
         console.log(`Challenge has been rejected.`);
         setTimeout(() => {
+          restartRefreshPopulatePlayers();
           removeModal();
         }, 1000);
       });

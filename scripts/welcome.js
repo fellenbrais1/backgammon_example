@@ -1006,6 +1006,15 @@ function refreshPopulatePlayers() {
   fetchRecentPlayers();
 }
 
+export function restartRefreshPopulatePLayers() {
+  if (returnContinueInterval) {
+    returnContinueInterval = setInterval(refreshPopulatePlayers, 10000);
+  }
+  if (continueInterval) {
+    continueInterval = setInterval(refreshPopulatePlayers, 10000);
+  }
+}
+
 // TODO - TEST TO SEE IF THIS WORKS
 export function pauseRefreshPopulatePlayers() {
   console.log(
