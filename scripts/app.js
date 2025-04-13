@@ -156,6 +156,7 @@ export async function playbackMove(params) {
 
   let piece = document.getElementById(params.pieceId);
   consumeDiceMove(params);
+
   await animateMovePiece(piece, x, y, 0.5);
   // end of animate oppononent's move
 }
@@ -381,6 +382,8 @@ const game = {
   diceThrown: false,
 
   eventTurnFinished() {
+    console.log('EVENT TURN FINISHED');
+
     // make it the other player's turn
     if (this.currentTurn == 'w') {
       this.currentTurn = 'r';
