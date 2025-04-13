@@ -158,6 +158,7 @@ export async function playbackMove(params) {
   consumeDiceMove(params);
 
   await animateMovePiece(piece, x, y, 0.5);
+  game.applyControls();
   // end of animate oppononent's move
 }
 
