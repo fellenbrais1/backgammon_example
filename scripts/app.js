@@ -155,6 +155,7 @@ export async function playbackMove(params) {
   board.updatePointOccupation(params.to);
 
   let piece = document.getElementById(params.pieceId);
+  consumeDiceMove(params);
   await animateMovePiece(piece, x, y, 0.5);
   // end of animate oppononent's move
 }
@@ -387,16 +388,22 @@ const game = {
       // display dice-click image on red dice
       let dice_red1 = document.getElementById('dice_red1');
       let dice_red2 = document.getElementById('dice_red2');
-      dice_red1.src = 'images/dice-red-click.png';
-      dice_red2.src = 'images/dice-red-click.png';
+
+      if (this.myPlayer == 'r') {
+        dice_red1.src = 'images/dice-red-click.png';
+        dice_red2.src = 'images/dice-red-click.png';
+      }
     } else {
       this.currentTurn = 'w';
 
       // display dice-click image on white dice
       let dice_white1 = document.getElementById('dice_white1');
       let dice_white2 = document.getElementById('dice_white2');
-      dice_white1.src = 'images/dice-click.png';
-      dice_white2.src = 'images/dice-click.png';
+
+      if (this.myPlayer == 'w') {
+        dice_white1.src = 'images/dice-click.png';
+        dice_white2.src = 'images/dice-click.png';
+      }
     }
 
     this.diceThrown = false;
@@ -415,24 +422,14 @@ const game = {
       dice_red1.style.opacity = '0.5';
       dice_red2.style.opacity = '0.5';
 
-      if (this.currentTurn == 'w') {
-        dice_white1.style.opacity = '1.0';
-        dice_white2.style.opacity = '1.0';
-      } else {
-        dice_white1.style.opacity = '0.5';
-        dice_white2.style.opacity = '0.5';
-      }
+      dice_white1.style.opacity = '1.0';
+      dice_white2.style.opacity = '1.0';
     } else {
       dice_white1.style.opacity = '0.5';
       dice_white2.style.opacity = '0.5';
 
-      if (this.currentTurn == 'r') {
-        dice_red1.style.opacity = '1.0';
-        dice_red2.style.opacity = '1.0';
-      } else {
-        dice_red1.style.opacity = '0.5';
-        dice_red2.style.opacity = '0.5';
-      }
+      dice_red1.style.opacity = '1.0';
+      dice_red2.style.opacity = '1.0';
     }
   },
 };
