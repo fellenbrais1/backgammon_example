@@ -24,6 +24,7 @@ const testButton2 = document.querySelector('.test_button2');
 // Game board elements
 const imbedGame = document.getElementById('content_container');
 const boardMessage = document.querySelector('.board_message');
+const boardAnnotations = document.querySelector('.board_annotations_section');
 
 // Welcome section elements
 const welcomeSection = document.querySelector('.welcome_section');
@@ -134,6 +135,7 @@ testButton2.addEventListener('click', () => {
 // Shows the pages main elements on load or a site reset event
 // Called by 'load' event handler on the window object
 function showMain() {
+  boardAnnotations.classList.add('reveal_translucent');
   const doesUserAlreadyExist = checkForLocalStorageObject();
   console.log(doesUserAlreadyExist);
   setTimeout(() => {

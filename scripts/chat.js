@@ -36,6 +36,8 @@ let activeOpponent = '';
 let connOpen = false;
 let attemptNo = 1;
 
+let shutdownFlag = false;
+
 /////////////////////////////////////////////////////////////////////////////////////////
 // EVENT LISTENERS
 
@@ -94,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let conn;
 
-export async function checkForName(playerName) {
+export async function checkForName(playerName, allowedName = '') {
   const playersRef = database.ref('players');
 
   try {
@@ -106,8 +108,12 @@ export async function checkForName(playerName) {
     const nameExists = querySnapshot.exists();
 
     if (nameExists) {
-      console.error('Error: display name already exists');
-      return 0;
+      if (playerName === allowedName) {
+        return 1;
+      } else {
+        console.error('Error: display name already exists');
+        return 0;
+      }
     } else {
       return 1;
     }
@@ -117,7 +123,7 @@ export async function checkForName(playerName) {
   }
 }
 
-export async function registerForChat(key, player) {
+export async function registerForChat(key, player, allowedName = '') {
   const playersRef = database.ref('players');
 
   try {
@@ -129,10 +135,17 @@ export async function registerForChat(key, player) {
     const nameExists = querySnapshot.exists();
 
     if (key === null) {
-      if (nameExists) {
-        console.error('Error: display name already exists');
-        changeModalContent('nameExists', player.displayName);
-        return null;
+      console.log(`HERE!!!!! : ${allowedName}`);
+      if (player.displayName === allowedName) {
+        console.log(
+          `Skipping process as name is the same one as currently saved to player record`
+        );
+      } else {
+        if (nameExists) {
+          console.error('Error: display name already exists');
+          changeModalContent('nameExists', player.displayName);
+          return null;
+        }
       }
 
       // Create a new player record
@@ -329,12 +342,14 @@ export async function connectToPlayer(opponent) {
   }
 }
 
+export function shutDownRPC() {
+  shutdownFlag = true;
+  console.log(`shutdownFlag = ${shutdownFlag}`);
+}
+
 // Added a looping delay that will retry sending the message until the connOpen variable is true, this is controlled by the conn.on(open) event
 export async function sendRPC(method, params) {
-  function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
+  // shutdownFlag = false;
   // TODO - TESTING IN PROGRESS
   // setTimeout before sending messages with conn.send currently set at 100ms, might need to raise if we encounter issues
 
@@ -351,6 +366,12 @@ export async function sendRPC(method, params) {
     return;
   } else {
     if (attemptNo < 11) {
+      console.log(`shutdownFlag = ${shutdownFlag}`);
+      if (shutdownFlag === true) {
+        console.log(`Shutting down RPC message process.`);
+        shutdownFlag = false;
+        return;
+      }
       setTimeout(() => {
         console.log(
           `Waiting for open connection (5 seconds) Attempt ${attemptNo}`
@@ -364,6 +385,7 @@ export async function sendRPC(method, params) {
       alert(
         `Error: Connection cannot be made with the other player. Please refresh your session and try again.`
       );
+      shutdownFlag = false;
       return;
     }
   }

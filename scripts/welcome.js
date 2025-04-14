@@ -76,6 +76,13 @@ const playersXButton = document.querySelector('.players_x_button');
 const playersDisplay = document.querySelector('.players_active');
 const playersChallengeButton = document.querySelector('.challenge_button');
 
+const welcomeSection = document.querySelector('.welcome_section');
+const playersSection = document.querySelector('.players_section');
+
+const boardAnnotationsSection = document.querySelector(
+  '.board_annotations_section'
+);
+
 // Language section elements
 const playersLanguageAccordion = document.getElementById(
   'players_language_accordion'
@@ -90,9 +97,6 @@ const playersLanguageSvg = document.getElementById('players_language_svg');
 const testButton3 = document.querySelector('.test_button3');
 const testButton4 = document.querySelector('.test_button4');
 const testButton5 = document.querySelector('.test_button5');
-
-const welcomeSection = document.querySelector('.welcome_section');
-const playersSection = document.querySelector('.players_section');
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
@@ -113,6 +117,12 @@ let sessionLanguages = [];
 export let activeOpponent = '';
 export let challengerName = '';
 
+// Variable to enable going back to change your details
+let changeDetailsFlag = false;
+
+let continueInterval;
+let returnContinueInterval;
+
 // Language HTML variables
 const englishHTML = `<p
 class="players_language_choice no_select"
@@ -123,7 +133,7 @@ English
 </p>`;
 
 const spanishHTML = `<p
-                      class="players_language_choice no_select"
+class="players_language_choice no_select"
                       data-language="es"
                       title="Spanish"
                     >
@@ -165,7 +175,7 @@ testButton3.addEventListener('click', () => {
 
 testButton4.addEventListener('click', () => {
   playClickSound();
-  changeModalContent('eventGameOverLose', 'backgammon');
+  changeModalContent('movesRemaining', [4, 2]);
 });
 
 testButton5.addEventListener('click', () => {
@@ -318,6 +328,8 @@ continueButton.addEventListener('click', () => {
   playClickSound();
   createUserData();
   continueButton.classList.remove('focus_element');
+  boardAnnotationsSection.classList.remove('reveal_translucent');
+  continueInterval = setInterval(refreshPopulatePlayers, 10000);
 });
 
 continueButtonReturn.addEventListener('click', async () => {
@@ -348,13 +360,15 @@ continueButtonReturn.addEventListener('click', async () => {
   console.log(JSON.stringify(data));
 
   try {
-    await registerForChat(data.userKey, data);
+    await registerForChat(data.userKey, data, changeDetailsFlag);
 
     fetchRecentPlayers();
     setTimeout(() => {
+      boardAnnotationsSection.classList.remove('reveal_translucent');
       welcomeSection.classList.remove('reveal');
       playersSection.classList.add('reveal');
     }, 1000);
+    returnContinueInterval = setInterval(refreshPopulatePlayers, 10000);
     return;
   } catch (error) {
     console.error(`Error registering for chat:`, error);
@@ -405,7 +419,7 @@ function closeAccordion(accordionPanel, accordionSvg) {
 // Adds language flag images to the relevant section of the you section
 // Called by an event listener on languageChoices
 // Called by welcomeBackPopulateFields(), populatePlayersSectionData()
-function addLanguageFlags(flag = 0) {
+export function addLanguageFlags(flag = 0, changeDetails = false) {
   let flag1,
     flag2,
     flag3 = '<p></p>';
@@ -414,12 +428,19 @@ function addLanguageFlags(flag = 0) {
   let flagsYou = [flagYou1, flagYou2, flagYou3];
   let workingLanguages;
 
-  sessionLanguages = languagesChosen;
-  if (flag === 0) {
-    workingLanguages = languagesChosen;
+  if (changeDetails) {
+    let storedObject = loadLocalStorage();
+    workingLanguages = storedObject.languages;
+    console.log(workingLanguages);
   } else {
-    workingLanguages = languagesChosenReturn;
+    sessionLanguages = languagesChosen;
+    if (flag === 0) {
+      workingLanguages = languagesChosen;
+    } else {
+      workingLanguages = languagesChosenReturn;
+    }
   }
+
   for (let i = 0; i < workingLanguages.length; i++) {
     if (workingLanguages[i].includes('en')) {
       flags[i] = `<img
@@ -518,19 +539,25 @@ function addLanguageFlags(flag = 0) {
       }
     });
   }
-  if (flag === 0) {
+
+  if (changeDetails) {
     youFlags.innerHTML = flagsYou.join('');
-    if (languagesChosen.length === 0) {
-      languageText.textContent = `Select Language`;
-      return;
-    } else {
-      step4Div.classList.add('reveal');
-      languageText.innerHTML = flags.join('');
-      return;
-    }
+    languageText.innerHTML = flags.join('');
   } else {
-    returnYouFlags.innerHTML = flagsYou.join('');
-    nextYouFlags.innerHTML = flagsYou.join('');
+    if (flag === 0) {
+      youFlags.innerHTML = flagsYou.join('');
+      if (languagesChosen.length === 0) {
+        languageText.textContent = `Select Language`;
+        return;
+      } else {
+        step4Div.classList.add('reveal');
+        languageText.innerHTML = flags.join('');
+        return;
+      }
+    } else {
+      returnYouFlags.innerHTML = flagsYou.join('');
+      nextYouFlags.innerHTML = flagsYou.join('');
+    }
   }
 }
 
@@ -572,6 +599,13 @@ function retrieveLanguageName(languageData) {
 // If the data provided by the user is valid, it writes data to the local storage object by calling changeModalContent()
 // Called by an event listener on continueButton
 async function createUserData() {
+  let allowedName = '';
+
+  if (changeDetailsFlag) {
+    const storedObject = loadLocalStorage();
+    allowedName = storedObject.displayName;
+  }
+
   if (
     sessionDisplayName !== '' &&
     sessionDisplayName.length >= 3 &&
@@ -592,14 +626,29 @@ async function createUserData() {
     console.log(`LANGUAGES = ${data.languages}`);
     console.log(`PEERID = ${data.peerID}`);
 
-    const result = await checkForName(data.displayName);
+    const result = await checkForName(data.displayName, allowedName);
     console.log(`RESULT IS: ${result}`);
     if (result === 0) {
-      changeModalContent('nameExists', data.displayName);
-      return;
+      if (changeDetailsFlag) {
+        console.log(`Allowed name is: ${storedObject.displayName}`);
+      } else {
+        changeModalContent('nameExists', data.displayName);
+        return;
+      }
     } else {
       try {
-        const userKey = await registerForChat(null, data);
+        let userKey;
+        if (changeDetailsFlag) {
+          const storedObject = loadLocalStorage();
+          userKey = await registerForChat(
+            storedObject.userKey,
+            data,
+            allowedName
+          );
+        } else {
+          userKey = await registerForChat(null, data, allowedName);
+        }
+        changeDetailsFlag = false;
         console.log(userKey);
 
         setLocalStorage({
@@ -621,10 +670,14 @@ async function createUserData() {
         return;
       } catch (error) {
         console.error(`Error registering for chat:`, error);
+        changeDetailsFlag = false;
         return;
       }
     }
   } else {
+    console.log(sessionDisplayName);
+    console.log(sessionSkillLevel);
+    console.log(sessionLanguages);
     changeModalContent('incompleteData');
     return;
   }
@@ -650,7 +703,7 @@ export function checkForLocalStorageObject() {
 
 // Populates page field's with user data if local storage has already been written to
 // Called by checkForLocalStroageObject()
-function welcomeBackPopulateFields() {
+export function welcomeBackPopulateFields() {
   const storedObject = loadLocalStorage();
   returnYouName.textContent = storedObject.displayName;
   returnYouSkill.textContent = storedObject.skillLevel;
@@ -886,6 +939,7 @@ function addPlayerEventListeners(playerList) {
             current2.classList.remove('accordion_selected');
           });
           current.classList.toggle('accordion_selected');
+          pauseRefreshPopulatePlayers();
         });
       }
     });
@@ -938,6 +992,40 @@ export async function playerPairingChallengee(activeOpponentHere) {
     you: playerRed,
     opponent: playerWhite,
   };
+}
+
+export function changeDetailsFlagStatus() {
+  changeDetailsFlag = true;
+  const storedObject = loadLocalStorage();
+  sessionDisplayName = storedObject.displayName;
+  sessionSkillLevel = storedObject.skillLevel;
+  sessionLanguages = storedObject.languages;
+  welcomeNameInput.classList.add('no_pointer_events');
+  welcomeNameForm.classList.remove('focus_element');
+  welcomeNameForm.classList.add('greyout');
+}
+
+function refreshPopulatePlayers() {
+  console.log('refreshPopulatePlayers() is running');
+  fetchRecentPlayers();
+}
+
+export function restartRefreshPopulatePlayers() {
+  if (returnContinueInterval) {
+    returnContinueInterval = setInterval(refreshPopulatePlayers, 10000);
+  }
+  if (continueInterval) {
+    continueInterval = setInterval(refreshPopulatePlayers, 10000);
+  }
+}
+
+// TODO - TEST TO SEE IF THIS WORKS
+export function pauseRefreshPopulatePlayers() {
+  console.log(
+    `pauseRefreshPopulatePlayers() is running, auto update of players should be paused`
+  );
+  clearInterval(continueInterval);
+  clearInterval(returnContinueInterval);
 }
 
 // CODE END

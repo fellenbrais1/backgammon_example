@@ -16,9 +16,13 @@ import {
   playerPairingUserChallenge,
   playerPairingChallengee,
   activeOpponent,
+  addLanguageFlags,
+  changeDetailsFlagStatus,
+  pauseRefreshPopulatePlayers,
+  restartRefreshPopulatePlayers,
 } from './welcome.js';
-import { clearLocalStorage } from './localStorage.js';
-import { sendRPC, assignConn, defineOpponent } from './chat.js';
+import { clearLocalStorage, loadLocalStorage } from './localStorage.js';
+import { sendRPC, assignConn, defineOpponent, shutDownRPC } from './chat.js';
 import { startGameMessages, forfeitMessage } from './messages.js';
 import { startGame } from './app.js';
 
@@ -39,6 +43,19 @@ const otherGamesSection = document.querySelector('.other_games_section');
 const otherGamesXButton = document.querySelector('.other_games_x_button');
 const otherGamesDisplay = document.querySelector('.other_games_display');
 
+const welcomeName = document.getElementById('welcome_name_input');
+const welcomeSkillLevel = document.getElementById('skill_level_text');
+const welcomeLanguages = document.getElementById('language_text');
+
+// Step elements
+const step2Div = document.querySelector('.step2');
+const step3Div = document.querySelector('.step3');
+const step4Div = document.querySelector('.step4');
+
+const youName = document.querySelector('.you_name');
+const youSkill = document.querySelector('.you_skill');
+const youFlags = document.querySelector('.you_flags');
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
 
@@ -52,6 +69,9 @@ let otherGamesPopulatedFlag = false;
 let otherGamesBackgammonButton;
 let otherGamesMurderMansionButton;
 const currentGameFlag = 'Backgammon';
+
+let counterInterval;
+let counterValue = 0;
 
 const otherGamesBackgammonButtonHTML = `<div class="game_button_backgammon" title="Backgammon">
     <img src="images/MOMABackgammon.png" alt="Backgammon game picture" />
@@ -76,6 +96,11 @@ const nameLengthProblemHTML = `<section class='modal_message_section'><p class="
 const noPlayersOnlineHTML = `<section class='modal_message_section'><p class="modal_section_text medium_margin_top no_select">There are currently no other players online, please wait for another player to join before sending a challenge (Player list will periodically update)</p>
               <p class="modal_section_button button center_modal_button smaller_margin_top no_select" title='Ok'>Ok</p>
                             </section>`;
+
+const movesRemainingHTML = `<section class='modal_message_section'><p class="modal_section_text medium_margin_top no_select" id='moves_remaining_text'>You still have unused moves, are you sure you would like to end your turn?</p>
+<p class="modal_section_button button center_modal_button smaller_margin_top no_select" title='Yes'>Yes</p>
+<p class="modal_section_button button center_modal_button button_red smaller_margin_top no_select" title='No'>No</p>
+</section>`;
 
 const noNameHTML = `<section class='modal_message_section'><p class="modal_section_text big_margin_top no_select">Please enter a display name to use in the game</p>
               <p class="modal_section_button button center_modal_button no_select" title='Ok'>Ok</p>
@@ -116,6 +141,7 @@ const challengeModalHTML = `<section class="modal_message_section purple_backgro
                 Cancel
               </p>
             </div>
+            <p class='challenge_counter'>0 s</p>
           </section>`;
 
 const challengeModalAcceptedHTML = `<section class="modal_message_section light_green_background">
@@ -259,6 +285,44 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       });
       break;
 
+    case 'movesRemaining':
+      modalSection.innerHTML = movesRemainingHTML;
+      modalSection.classList.add('reveal');
+
+      const movesRemainingText = document.getElementById(
+        'moves_remaining_text'
+      );
+
+      const movesRemainingYesButton = modalSection.querySelector(
+        '.modal_section_button'
+      );
+      const movesRemainingNoButton = modalSection.querySelector('.button_red');
+
+      if (data !== '') {
+        movesRemainingText.textContent = `You still have unused moves remaining (${data}), are you sure you would like to end your turn?`;
+      }
+
+      movesRemainingYesButton.addEventListener('click', () => {
+        playClickSound();
+        setTimeout(() => {
+          removeModal();
+          console.log(
+            'You have chosen to end your turn - call turn change logic'
+          );
+        }, 1000);
+      });
+
+      movesRemainingNoButton.addEventListener('click', () => {
+        playClickSound();
+        setTimeout(() => {
+          removeModal();
+          console.log(
+            'You have chosen NOT to end your turn - returning to normal flow'
+          );
+        }, 1000);
+      });
+      break;
+
     case 'noName':
       modalSection.innerHTML = noNameHTML;
       modalSection.classList.add('reveal');
@@ -328,6 +392,10 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         returnSection.classList.remove('reveal');
         welcomeSection.classList.add('reveal');
         playersLanguageText.textContent = `Select`;
+
+        // Repopulate the welcome section
+        changeDetailsPopulateFields();
+
         setTimeout(() => {
           removeModal();
         }, 1000);
@@ -388,11 +456,17 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
       challengerNameField.textContent = `Challenging ${data}`;
 
+      // TODO - Starts the counter to see how long the challenge has been active for
+      startCounter();
+
       buttonChallengeCancel.addEventListener('click', () => {
         playClickSound();
         cancelFlag = true;
         challengeInformation.textContent = 'Cancelling challenge...';
         setTimeout(() => {
+          restartRefreshPopulatePlayers();
+          stopCounter();
+          shutDownRPC();
           removeModal();
         }, 1000);
       });
@@ -466,6 +540,10 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           startGameMessages(activeOpponentHere.displayName);
           const isChallenger = false;
           console.log(`Player is challenger for startGame: no`);
+
+          // TODO - Test to see if pauseRefreshPopulatePLayers() actually runs
+          pauseRefreshPopulatePlayers();
+
           startGame(true, isChallenger);
         }, 3000);
       });
@@ -503,6 +581,10 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         startGameMessages(gamePlayers.opponent.displayName);
         const isChallenger = true;
         console.log(`Player is challenger for startGame: yes`);
+
+        // TODO - Test to see if pauseRefreshPopulatePLayers() actually runs
+        pauseRefreshPopulatePlayers();
+
         startGame(true, isChallenger);
       }, 2000);
       break;
@@ -528,6 +610,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         playClickSound();
         console.log(`Challenge has been rejected.`);
         setTimeout(() => {
+          restartRefreshPopulatePlayers();
           removeModal();
         }, 1000);
       });
@@ -693,9 +776,13 @@ function addChatButtons() {
       chatSection.classList.remove('reveal');
     }, 500);
   });
+
   endTurnButton.addEventListener('click', () => {
     console.log(`End turn flow`);
+    // TODO - Call this with a variable containing moves remaining if we want this functionality
+    changeModalContent('movesRemaining');
   });
+
   settingsButton.addEventListener('click', () => {
     console.log(`Settings flow`);
     playClickSound();
@@ -704,6 +791,7 @@ function addChatButtons() {
       chatSection.classList.remove('reveal');
     }, 500);
   });
+
   gamesButton.addEventListener('click', () => {
     console.log(`Games flow`);
     playClickSound();
@@ -715,6 +803,7 @@ function addChatButtons() {
       otherGamesPopulatedFlag = true;
     }, 500);
   });
+
   forfeitGameButton.addEventListener('click', async () => {
     console.log(`Forfeit game flow`);
     console.log(activeOpponentHere.displayName);
@@ -774,6 +863,57 @@ function addCurrentGameClass(currentGameFlag) {
         break;
     }
   }
+}
+
+export function changeDetailsPopulateFields() {
+  step2Div.classList.add('reveal');
+  step3Div.classList.add('reveal');
+  step4Div.classList.add('reveal');
+  const storedObject = loadLocalStorage();
+  welcomeName.value = storedObject.displayName;
+
+  let skillData = '';
+  switch (storedObject.skillLevel) {
+    case '🏆':
+      skillData = '🏆 Beginner';
+      break;
+    case '🏆🏆':
+      skillData = '🏆🏆 Advanced';
+      break;
+    case '🏆🏆🏆':
+      skillData = '🏆🏆🏆 Master';
+      break;
+  }
+  welcomeSkillLevel.textContent = skillData;
+  // welcomeLanguages = storedObject.languages;
+  console.log(storedObject.languages);
+  welcomeLanguages.value = storedObject.languages;
+  // console.log(languagesChosenReturn);
+  addLanguageFlags(0, true);
+
+  youName.textContent = storedObject.displayName;
+  youSkill.textContent = storedObject.skillLevel;
+  // youFlags.textContent = storedObject.languages;
+  // const allowedName = storedObject.displayName;
+  changeDetailsFlagStatus();
+}
+
+function counterIncrement() {
+  counterValue++;
+  const challengeCounter = modalSection.querySelector('.challenge_counter');
+  challengeCounter.textContent = `${counterValue} s`;
+  console.log(`Counter is at: ${counterValue}`);
+  return counterValue;
+}
+
+function startCounter() {
+  counterInterval = setInterval(counterIncrement, 1000);
+}
+
+function stopCounter() {
+  counterValue = 0;
+  clearInterval(counterInterval);
+  console.log(`Counter has been reset, value now at: ${counterValue}`);
 }
 
 addChatButtons();

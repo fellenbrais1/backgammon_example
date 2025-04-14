@@ -146,6 +146,7 @@ html {
 
 /* BOARD ANNOTATIONS SECTION ELEMENTS */
 .board_annotations_section {
+  opacity: 0;
   position: absolute;
   top: 234px;
   left: 146px;
@@ -156,7 +157,7 @@ html {
   z-index: 8;
   border: solid 2px grey;
   border-radius: 9999px;
-  opacity: 0.5;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .board_message {
@@ -339,6 +340,14 @@ html {
   text-align: center;
   text-justify: center;
   transform: translateY(-6px);
+}
+
+.challenge_counter {
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .welcome_name_form {
@@ -684,6 +693,7 @@ html {
 
 /* CHALLENGE SECTION ELEMENTS */
 .challenge_block {
+  position: relative;
   display: grid;
   grid-template-rows: 50px 40px 60px;
   row-gap: 10px;
@@ -1085,6 +1095,10 @@ html {
   pointer-events: all;
 }
 
+.reveal_translucent {
+  opacity: 0.5;
+}
+
 .no_select {
   -webkit-user-select: none; /* Safari */
   -khtml-user-select: none; /* Konqueror HTML */
@@ -1139,6 +1153,11 @@ html {
 
 .light_green_background {
   background-color: lightgreen;
+}
+
+.greyout {
+  filter: brightness(0.2);
+  filter: invert(1);
 }
 
 /* CODE END */
