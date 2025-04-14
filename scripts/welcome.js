@@ -13,7 +13,13 @@ console.log(`welcome.js running`);
 import { playClickSound } from './script.js';
 import { loadLocalStorage, setLocalStorage } from './localStorage.js';
 import { changeModalContent } from './modals.js';
-import { fetchRecentPlayers, getOpponentUserKey, peer } from './chat.js';
+import {
+  fetchRecentPlayers,
+  getOpponentUserKey,
+  peer,
+  registerForChat,
+  checkForName,
+} from './chat.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -84,6 +90,9 @@ const playersLanguageSvg = document.getElementById('players_language_svg');
 const testButton3 = document.querySelector('.test_button3');
 const testButton4 = document.querySelector('.test_button4');
 const testButton5 = document.querySelector('.test_button5');
+
+const welcomeSection = document.querySelector('.welcome_section');
+const playersSection = document.querySelector('.players_section');
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
@@ -311,7 +320,7 @@ continueButton.addEventListener('click', () => {
   continueButton.classList.remove('focus_element');
 });
 
-continueButtonReturn.addEventListener('click', () => {
+continueButtonReturn.addEventListener('click', async () => {
   playClickSound();
   const storedObjectProto = loadLocalStorage();
   console.log(storedObjectProto);
@@ -333,7 +342,24 @@ continueButtonReturn.addEventListener('click', () => {
     userKey: storedObject.userKey,
     peerID: storedObject.peerID,
   };
-  changeModalContent('returnConfirmName', data);
+
+  populatePlayersSectionData();
+  populatePlayerSectionLanguages(data.languages);
+  console.log(JSON.stringify(data));
+
+  try {
+    await registerForChat(data.userKey, data);
+
+    fetchRecentPlayers();
+    setTimeout(() => {
+      welcomeSection.classList.remove('reveal');
+      playersSection.classList.add('reveal');
+    }, 1000);
+    return;
+  } catch (error) {
+    console.error(`Error registering for chat:`, error);
+    return;
+  }
 });
 
 // Welcome back return section event listeners
@@ -545,7 +571,7 @@ function retrieveLanguageName(languageData) {
 
 // If the data provided by the user is valid, it writes data to the local storage object by calling changeModalContent()
 // Called by an event listener on continueButton
-function createUserData() {
+async function createUserData() {
   if (
     sessionDisplayName !== '' &&
     sessionDisplayName.length >= 3 &&
@@ -562,7 +588,42 @@ function createUserData() {
       peerID: peer.id,
     };
     console.log(JSON.stringify(data));
-    changeModalContent('confirmName', data);
+
+    console.log(`LANGUAGES = ${data.languages}`);
+    console.log(`PEERID = ${data.peerID}`);
+
+    const result = await checkForName(data.displayName);
+    console.log(`RESULT IS: ${result}`);
+    if (result === 0) {
+      changeModalContent('nameExists', data.displayName);
+      return;
+    } else {
+      try {
+        const userKey = await registerForChat(null, data);
+        console.log(userKey);
+
+        setLocalStorage({
+          displayName: data.displayName,
+          skillLevel: data.skillLevel,
+          languages: data.languages,
+          peerID: data.peerID,
+          userKey: userKey,
+        });
+
+        populatePlayersSectionData();
+        populatePlayerSectionLanguages(data.languages);
+
+        fetchRecentPlayers();
+        setTimeout(() => {
+          welcomeSection.classList.remove('reveal');
+          playersSection.classList.add('reveal');
+        }, 1000);
+        return;
+      } catch (error) {
+        console.error(`Error registering for chat:`, error);
+        return;
+      }
+    }
   } else {
     changeModalContent('incompleteData');
     return;

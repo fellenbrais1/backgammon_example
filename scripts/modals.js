@@ -12,26 +12,13 @@ console.log(`modals.js running`);
 
 import { playClickSound, adNotification } from './script.js';
 import {
-  populatePlayersSectionData,
-  populatePlayerSectionLanguages,
   playersLanguageText,
   playerPairingUserChallenge,
   playerPairingChallengee,
   activeOpponent,
 } from './welcome.js';
-import {
-  setLocalStorage,
-  loadLocalStorage,
-  clearLocalStorage,
-} from './localStorage.js';
-import {
-  registerForChat,
-  fetchRecentPlayers,
-  sendRPC,
-  assignConn,
-  defineOpponent,
-  checkForName,
-} from './chat.js';
+import { clearLocalStorage } from './localStorage.js';
+import { sendRPC, assignConn, defineOpponent } from './chat.js';
 import { startGameMessages, forfeitMessage } from './messages.js';
 import { startGame } from './app.js';
 
@@ -86,21 +73,16 @@ const nameLengthProblemHTML = `<section class='modal_message_section'><p class="
 <p class="modal_section_button button center_modal_button no_select" title='Ok'>Ok</p>
               </section>`;
 
+const noPlayersOnlineHTML = `<section class='modal_message_section'><p class="modal_section_text medium_margin_top no_select">There are currently no other players online, please wait for another player to join before sending a challenge (Player list will periodically update)</p>
+              <p class="modal_section_button button center_modal_button smaller_margin_top no_select" title='Ok'>Ok</p>
+                            </section>`;
+
 const noNameHTML = `<section class='modal_message_section'><p class="modal_section_text big_margin_top no_select">Please enter a display name to use in the game</p>
               <p class="modal_section_button button center_modal_button no_select" title='Ok'>Ok</p>
                             </section>`;
 
 const incompleteDataHTML = `<section class='modal_message_section'><p class="modal_section_text no_select">Please make sure you have entered a name, chosen a skill level, and chosen at least one language</p>
 <p class="modal_section_button button center_modal_button no_select" title='Ok'>Ok</p>
-              </section>`;
-
-const confirmNameHTML = `<section class='modal_message_section'><p class="modal_section_text big_margin_top no_select">Are you sure you want to be known as <u id='confirm_name_player_name'>${sessionDisplayName}</u>?</p>
-              <div class='modal_section_buttons'>
-              <p class="modal_section_button button no_select" title='Yes'>Yes</p>
-              <p class="modal_section_button button_red button no_select" title="No">
-                No
-              </p>
-              </div>
               </section>`;
 
 const nameExistsHTML = `<section class='modal_message_section'><p class="modal_section_text big_margin_top no_select" id='name_exists_text'>Please choose a different name as NAME has already been taken</p>
@@ -176,7 +158,7 @@ const challengeReceivedModalHTML = `<section class="modal_message_section purple
             </div>
           </section>`;
 
-const noChallengerHTML = `<section class='modal_message_section'><p class="modal_section_text no_select">Please select a player to challenge, then press the challenge button, or, wait to be challenged!</p>
+const noChallengerHTML = `<section class='modal_message_section'><p class="modal_section_text medium_margin_top no_select">Please select a player to challenge, then press the challenge button, or, wait to be challenged!</p>
 <p class="modal_section_button button center_modal_button no_select" title='Ok'>Ok</p>
               </section>`;
 
@@ -207,8 +189,6 @@ const forfeitNotificationModalHTML = `<section class="modal_message_section ligh
           </div>
         </section>`;
 
-// TODO
-// These might be better off using the modal_section tags as seen in the elements above, experiment
 const youWinHTML = `<section class="modal_message_section light_green_background">
         <div class="win_block">
           <p class="modal_section_text_big no_select">VICTORY!</p>
@@ -249,11 +229,28 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       modalSection.innerHTML = nameLengthProblemHTML;
       modalSection.classList.add('reveal');
 
-      const nameProblemYesButton = modalSection.querySelector(
+      const nameProblemOkButton = modalSection.querySelector(
         '.modal_section_button'
       );
 
-      nameProblemYesButton.addEventListener('click', () => {
+      nameProblemOkButton.addEventListener('click', () => {
+        playClickSound();
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
+        return;
+      });
+      break;
+
+    case 'noPlayersOnline':
+      modalSection.innerHTML = noPlayersOnlineHTML;
+      modalSection.classList.add('reveal');
+
+      const noPlayersOkButton = modalSection.querySelector(
+        '.modal_section_button'
+      );
+
+      noPlayersOkButton.addEventListener('click', () => {
         playClickSound();
         setTimeout(() => {
           removeModal();
@@ -316,126 +313,6 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       });
       break;
 
-    case 'confirmName':
-      sessionDisplayName = data.displayName;
-      modalSection.innerHTML = confirmNameHTML;
-      modalSection.classList.add('reveal');
-
-      const modalName = document.getElementById('confirm_name_player_name');
-      const confirmNameYesButton = modalSection.querySelector(
-        '.modal_section_button'
-      );
-      const confirmNameNoButton = modalSection.querySelector('.button_red');
-
-      modalName.textContent = sessionDisplayName;
-
-      confirmNameYesButton.addEventListener('click', async () => {
-        console.log(`LANGAUGES = ${data.languages}`);
-        console.log(`PEERID = ${data.peerID}`);
-        playClickSound();
-        setLocalStorage({
-          displayName: data.displayName,
-          skillLevel: data.skillLevel,
-          languages: data.languages,
-          peerID: data.peerID,
-        });
-
-        let storageObject = loadLocalStorage();
-        console.log(storageObject);
-        console.log(storageObject.peerID);
-
-        const result = await checkForName(storageObject.displayName);
-        console.log(`RESULT IS: ${result}`);
-        if (result === 0) {
-          changeModalContent('nameExists', storageObject.displayName);
-          return;
-        } else {
-          try {
-            const userKey = await registerForChat(null, data);
-            console.log(userKey);
-
-            storageObject.userKey = userKey;
-            console.log(JSON.stringify(storageObject));
-
-            setLocalStorage({
-              displayName: storageObject.displayName,
-              skillLevel: storageObject.skillLevel,
-              languages: storageObject.languages,
-              peerID: storageObject.peerID,
-              userKey: storageObject.userKey,
-            });
-
-            populatePlayersSectionData();
-            populatePlayerSectionLanguages(data.languages);
-
-            fetchRecentPlayers();
-            setTimeout(() => {
-              welcomeSection.classList.remove('reveal');
-              playersSection.classList.add('reveal');
-              removeModal();
-            }, 1000);
-            return;
-          } catch (error) {
-            console.error(`Error registering for chat:`, error);
-            return;
-          }
-        }
-      });
-
-      confirmNameNoButton.addEventListener('click', () => {
-        playClickSound();
-        setTimeout(() => {
-          removeModal();
-        }, 1000);
-      });
-      break;
-
-    case 'returnConfirmName':
-      sessionDisplayName = data.displayName;
-      modalSection.innerHTML = confirmNameHTML;
-      modalSection.classList.add('reveal');
-
-      const returnModalName = document.getElementById(
-        'confirm_name_player_name'
-      );
-      const returnConfirmNameYesButton = modalSection.querySelector(
-        '.modal_section_button'
-      );
-      const returnConfirmNameNoButton =
-        modalSection.querySelector('.button_red');
-
-      returnModalName.textContent = sessionDisplayName;
-
-      returnConfirmNameYesButton.addEventListener('click', async () => {
-        playClickSound();
-        populatePlayersSectionData();
-        populatePlayerSectionLanguages(data.languages);
-        console.log(JSON.stringify(data));
-
-        try {
-          await registerForChat(data.userKey, data);
-
-          fetchRecentPlayers();
-          setTimeout(() => {
-            welcomeSection.classList.remove('reveal');
-            playersSection.classList.add('reveal');
-            removeModal();
-          }, 1000);
-          return;
-        } catch (error) {
-          console.error(`Error registering for chat:`, error);
-          return;
-        }
-      });
-
-      returnConfirmNameNoButton.addEventListener('click', () => {
-        playClickSound();
-        setTimeout(() => {
-          removeModal();
-        }, 1000);
-      });
-      break;
-
     case 'return':
       modalSection.innerHTML = goBackFromPlayersSectionHTML;
       modalSection.classList.add('reveal');
@@ -448,8 +325,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       returnYesButton.addEventListener('click', () => {
         playClickSound();
         playersSection.classList.remove('reveal');
+        returnSection.classList.remove('reveal');
         welcomeSection.classList.add('reveal');
-        clearLocalStorage();
         playersLanguageText.textContent = `Select`;
         setTimeout(() => {
           removeModal();
@@ -549,6 +426,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         }, 20000);
         break;
       }
+      break;
 
     case 'challengeReceived':
       modalSection.innerHTML = challengeReceivedModalHTML;

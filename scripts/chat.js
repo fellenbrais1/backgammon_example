@@ -243,9 +243,11 @@ export async function fetchRecentPlayers(languageFilter = 'none') {
       .once('value');
     const playersObject = snapshot.val();
 
-    // TODO - This isn't useful in its current form as it will never display, it needs to display if the length of playersObject is less than 2, as there will always be at least 1 record in there when called.
-    if (!playersObject) {
+    const numberOfPlayers = Object.keys(playersObject).length;
+    console.log(numberOfPlayers);
+    if (numberOfPlayers < 2) {
       console.log('No players online in the last hour.');
+      changeModalContent('noPlayersOnline');
       return [];
     }
 
@@ -333,7 +335,8 @@ export async function sendRPC(method, params) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  await delay(1000);
+  // TODO - TESTING IN PROGRESS
+  // setTimeout before sending messages with conn.send currently set at 100ms, might need to raise if we encounter issues
 
   if (connOpen === true) {
     attemptNo = 1;
@@ -344,7 +347,7 @@ export async function sendRPC(method, params) {
     console.log(JSON.stringify(rpcMessage));
     setTimeout(() => {
       conn.send(JSON.stringify(rpcMessage));
-    }, 1000);
+    }, 100);
     return;
   } else {
     if (attemptNo < 11) {

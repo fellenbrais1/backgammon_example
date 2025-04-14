@@ -1,4 +1,3 @@
-// import { demoRegisterForChat } from './chat.js';
 import { firebaseApp, analytics, database } from '../scripts/firebaseConfig.js';
 import { sendRPC } from './chat.js';
 
@@ -15,6 +14,7 @@ const boardTopOffset = boardElement.getBoundingClientRect().top;
 
 console.log('Using Firebase in app.js:', firebaseApp);
 const db = database;
+console.log(analytics);
 console.log(db);
 
 // add dice
