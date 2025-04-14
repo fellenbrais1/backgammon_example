@@ -143,19 +143,19 @@ export async function playbackDiceRoll(param) {
   }
 }
 
-export async function playbackMove(params) {
-  console.log('In playbackMove, params = ' + JSON.stringify(params));
+export async function playbackMove(move) {
+  console.log('In playbackMove, move = ' + JSON.stringify(move));
 
   // animate the opponent's move
-  let posToOccupy = board.contents[params.to].occupied.length + 1;
-  let [x, y] = getPieceCoords(params.to, posToOccupy);
+  let posToOccupy = board.contents[move.to].occupied.length + 1;
+  let [x, y] = getPieceCoords(move.player, move.to, posToOccupy);
 
-  board.movePiece(params.player, params.from, params.to);
+  board.movePiece(move.player, move.from, move.to);
 
-  board.updatePointOccupation(params.to);
+  board.updatePointOccupation(move.to);
 
-  let piece = document.getElementById(params.pieceId);
-  consumeDiceMove(params);
+  let piece = document.getElementById(move.pieceId);
+  consumeDiceMove(move);
 
   await animateMovePiece(piece, x, y, 0.5);
   game.applyControls();
@@ -563,7 +563,7 @@ export async function startGame(playerAssign, isChallenger) {
 
   board.resetBoard();
   setupMouseEvents();
-  await drawBoardWithAnimation();
+  await drawBoardWithAnimation(game.myPlayer);
   console.log(
     'About to apply game controls with myPlayer = ' +
       game.myPlayer +
@@ -728,7 +728,7 @@ async function applyMove(move) {
     board.contents[move.from].occupied.push(board.onTheMove);
     board.onTheMove = '';
     let posToOccupy = board.contents[move.from].occupied.length;
-    let [x, y] = getPieceCoords(move.from, posToOccupy);
+    let [x, y] = getPieceCoords(move.player, move.from, posToOccupy);
     await animateMovePiece(move.piece, x, y, 0.5);
     board.updatePointOccupation(move.from);
     return;
@@ -744,7 +744,7 @@ async function applyMove(move) {
 
     // snap into place
     let posToOccupy = 1; // by definition
-    let [x, y] = getPieceCoords(move.to, posToOccupy);
+    let [x, y] = getPieceCoords(move.player, move.to, posToOccupy);
     await animateMovePiece(move.piece, x, y, 0.5);
 
     // animate the blot to the bar. Red bar = 25, White bar = 26
@@ -754,7 +754,7 @@ async function applyMove(move) {
     board.movePiece(game.currentTurn, move.to, barPoint);
     board.contents[move.to].occupied = [pieceId];
 
-    [x, y] = getPieceCoords(barPoint, 1);
+    [x, y] = getPieceCoords(move.player, barPoint, 1);
     let blotPiece = document.getElementById(pieceId);
     await animateMovePiece(blotPiece, x, y, 0.5);
     board.updatePointOccupation(barPoint);
@@ -777,7 +777,7 @@ async function applyMove(move) {
   });
 
   let posToOccupy = board.contents[move.to].occupied.length + 1;
-  let [x, y] = getPieceCoords(move.to, posToOccupy);
+  let [x, y] = getPieceCoords(move.player, move.to, posToOccupy);
 
   // console.log(
   //   'Before',
@@ -817,7 +817,7 @@ function applyHighlight(point, state) {
   }
 }
 
-async function drawBoardWithAnimation() {
+async function drawBoardWithAnimation(player) {
   console.log('In drawBoardWithAnimation');
 
   for (let pt = 1; pt <= 26; pt++) {
@@ -826,7 +826,7 @@ async function drawBoardWithAnimation() {
     for (let pos = 1; pos <= occupiedList.length; pos++) {
       const id = occupiedList[pos - 1];
       const piece = document.getElementById(id);
-      let [x, y] = getPieceCoords(pt, pos);
+      let [x, y] = getPieceCoords(player, pt, pos);
       await animateMovePiece(piece, x, y, 5);
     }
   }
@@ -834,7 +834,7 @@ async function drawBoardWithAnimation() {
   drawDice();
 }
 
-function drawBoardNoAnimation() {
+function drawBoardNoAnimation(player) {
   console.log('In drawBoardNoAnimation');
 
   for (let pt = 1; pt <= 26; pt++) {
@@ -844,11 +844,21 @@ function drawBoardNoAnimation() {
       const id = occupiedList[pos - 1];
       const piece = document.getElementById(id);
       console.log(
-        'About to call getPieceCoords with pt=' + pt + ', pos=' + pos
+        'About to call getPieceCoords with player=' +
+          player +
+          ', pt=' +
+          pt +
+          ', pos=' +
+          pos
       );
-      let [x, y] = getPieceCoords(pt, pos);
+      let [x, y] = getPieceCoords(player, pt, pos);
       console.log(
-        'After calling getPieceCoords with pt=' + pt + ', pos=' + pos
+        'After calling getPieceCoords with player=' +
+          player +
+          ', pt=' +
+          pt +
+          ', pos=' +
+          pos
       );
       // await animateMovePiece(piece, x, y, 5);
       // Set the new position based on progress
@@ -985,7 +995,7 @@ function identifyPoint(x, y) {
   return point;
 }
 
-function getPieceCoords(reqPoint, reqPosition) {
+function getPieceCoords(player, reqPoint, reqPosition) {
   let x = 0,
     y = 0;
 
@@ -996,7 +1006,7 @@ function getPieceCoords(reqPoint, reqPosition) {
   let point = reqPoint;
 
   // convert the coords when playing as red
-  if (game.currentTurn == 'r' && reqPoint <= 24) {
+  if (player == 'r' && reqPoint <= 24) {
     point = 25 - reqPoint;
   }
 
