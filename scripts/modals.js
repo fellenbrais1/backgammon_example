@@ -10,7 +10,8 @@ console.log(`modals.js running`);
 //////////////////////////////////////////////////////////////////////////////////////////
 // IMPORTS
 
-import { playClickSound, adNotification } from './script.js';
+import { adNotification } from './script.js';
+import { playClickSound, playOpeningJingleSound } from './sounds.js';
 import {
   playersLanguageText,
   playerPairingUserChallenge,
@@ -544,6 +545,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           // TODO - Test to see if pauseRefreshPopulatePLayers() actually runs
           pauseRefreshPopulatePlayers();
 
+          playOpeningJingleSound();
           startGame(true, isChallenger);
         }, 3000);
       });
@@ -585,6 +587,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         // TODO - Test to see if pauseRefreshPopulatePLayers() actually runs
         pauseRefreshPopulatePlayers();
 
+        playOpeningJingleSound();
         startGame(true, isChallenger);
       }, 2000);
       break;

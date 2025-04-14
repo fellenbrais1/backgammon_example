@@ -11,6 +11,7 @@ console.log(`messages.js running`);
 // IMPORTS
 
 import { gamePlayers } from './modals.js';
+import { playChatNotificationSound } from './sounds.js';
 import { loadLocalStorage } from './localStorage.js';
 import { sendRPC } from './chat.js';
 
@@ -20,12 +21,6 @@ import { sendRPC } from './chat.js';
 // Chat section elements
 const chatDisplay = document.querySelector('.chat_display');
 const chatInput = document.getElementById('chat_input');
-
-/////////////////////////////////////////////////////////////////////////////////////////
-// SOUNDS
-
-// Chat sounds
-const chatPop = document.getElementById('chat_sound');
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
@@ -78,7 +73,7 @@ function createChatMessage(message) {
 // Called by addChatMessage()
 function postChatMessage(messageHTML, position = 'beforeend') {
   chatDisplay.insertAdjacentHTML(position, messageHTML);
-  chatPop.play();
+  playChatNotificationSound();
 }
 
 // Scrolls the chat box display down to the lcoation of the latest message
@@ -150,7 +145,7 @@ export function startGameMessages(opponentName) {
 // Called by startGameMessages()
 function addGameNotification(HTML) {
   chatDisplay.insertAdjacentHTML('beforeend', HTML);
-  chatPop.play();
+  playChatNotificationSound();
 }
 
 // CODE END
