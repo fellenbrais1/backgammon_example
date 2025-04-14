@@ -148,7 +148,7 @@ export async function playbackMove(move) {
 
   // animate the opponent's move
   let posToOccupy = board.contents[move.to].occupied.length + 1;
-  let [x, y] = getPieceCoords(move.player, move.to, posToOccupy);
+  let [x, y] = getPieceCoords(game.myPlayer, move.to, posToOccupy); // ??? specify our coordinate system, rather than player who made move
 
   board.movePiece(move.player, move.from, move.to);
 
