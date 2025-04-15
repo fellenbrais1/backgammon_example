@@ -152,6 +152,7 @@ export async function playbackMove(move) {
 
   board.movePiece(move.from, move.to);
 
+  board.updatePointOccupation(move.from);
   board.updatePointOccupation(move.to);
 
   let piece = document.getElementById(move.pieceId);
