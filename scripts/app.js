@@ -319,9 +319,6 @@ async function rollRedDice(param) {
   dice_red1.src = diceFaces[finalIndex1];
   dice_red2.src = diceFaces[finalIndex2];
 
-  finalIndex1 = 4;
-  finalIndex2 = 0; // ???
-
   board.diceThrows[0] = finalIndex1 + 1;
   board.diceThrows[1] = finalIndex2 + 1;
   if (board.diceThrows[0] == board.diceThrows[1]) {
