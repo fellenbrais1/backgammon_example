@@ -580,9 +580,13 @@ export async function startGame(playerAssign, isChallenger) {
   if (playerAssign) {
     game.myPlayer = isChallenger ? 'r' : 'w';
     game.currentTurn = 'r';
+    game.redDiceActive = true;
+    game.whiteDiceActive = false;
   } else {
     game.myPlayer = 'w';
     game.currentTurn = 'w';
+    game.redDiceActive = false;
+    game.whiteDiceActive = true;
   }
 
   pieces.forEach((current) => {
