@@ -12,7 +12,7 @@ console.log(`script.js running`);
 
 import { welcomeNameForm, checkForLocalStorageObject } from './welcome.js';
 import { clearLocalStorage, testForLocalStorageData } from './localStorage.js';
-import { playOpeningJingleSound, playProgramsMatrixSound } from './sounds.js';
+import { playOpeningJingleSound } from './sounds.js';
 import { startGame } from './app.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -127,7 +127,6 @@ testButton1.addEventListener('click', () => {
 // On the 'TEST 2' button
 testButton2.addEventListener('click', () => {
   console.log(`Dad button activated`);
-  playProgramsMatrixSound();
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////
