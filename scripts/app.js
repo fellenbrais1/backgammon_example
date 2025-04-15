@@ -482,8 +482,8 @@ const board = {
     }));
 
     // Starting positions
-    this.contents[1].occupied = ['r1'];
-    this.contents[2].occupied = ['r2'];
+    this.contents[1].occupied = ['r1', 'r2'];
+    this.contents[2].occupied = [];
     this.contents[3].occupied = [];
     this.contents[4].occupied = [];
     this.contents[5].occupied = [];
@@ -503,9 +503,9 @@ const board = {
     this.contents[19].occupied = ['r11', 'r12', 'r13', 'r14', 'r15'];
     this.contents[20].occupied = [];
     this.contents[21].occupied = [];
-    this.contents[22].occupied = ['w14'];
+    this.contents[22].occupied = [];
     this.contents[23].occupied = [];
-    this.contents[24].occupied = ['w15'];
+    this.contents[24].occupied = ['w14', 'w15'];
   },
 
   completeMovePiece(toPoint) {
