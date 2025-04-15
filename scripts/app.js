@@ -150,7 +150,7 @@ export async function playbackMove(move) {
   let posToOccupy = board.contents[move.to].occupied.length + 1;
   let [x, y] = getPieceCoords(game.myPlayer, move.to, posToOccupy); // ??? specify our coordinate system, rather than player who made move
 
-  board.movePiece(game.myPlayer, move.from, move.to); // ??? param 1 was move.player
+  board.movePiece(move.player, move.from, move.to);
 
   board.updatePointOccupation(move.to);
 
@@ -507,6 +507,14 @@ const board = {
   },
 
   movePiece(player, fromPoint, toPoint) {
+    console.log(
+      'in board.movePiece, player=' +
+        player +
+        ', fromPoint=' +
+        fromPoint +
+        ', toPoint=' +
+        toPoint
+    );
     this.contents[toPoint].occupied.push(board.onTheMove);
     board.onTheMove = ''; // finished moving
   },
