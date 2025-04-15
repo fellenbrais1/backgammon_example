@@ -174,12 +174,6 @@ async function rollWhiteDice(param) {
 
   if (isEvent && game.myPlayer != 'w') return; // can be clicked by white player only, but playback still works
 
-  // if it is a real throw, set the latch to indicate dice already thrown
-  // if (isEvent) {
-  //   if (game.diceThrown == true) return;
-  //   game.diceThrown = true;
-  // }
-
   if (isEvent) {
     if (game.whiteDiceActive == false) return;
     game.whiteDiceActive = false;
@@ -260,12 +254,6 @@ async function rollRedDice(param) {
   const isEvent = param && param.target !== undefined;
 
   if (isEvent && game.myPlayer != 'r') return; // can be clicked by red player only, but playback still works
-
-  // if it is a real throw, set the latch to indicate dice already thrown
-  // if (isEvent) {
-  //   if (game.diceThrown == true) return;
-  //   game.diceThrown = true;
-  // }
 
   if (isEvent) {
     if (game.redDiceActive == false) return;
@@ -395,7 +383,6 @@ const game = {
   myPlayer: 'w',
   currentTurn: 'w',
   currentMove: {},
-  // diceThrown: false,
   redDiceActive: true,
   whiteDiceActive: true,
 
@@ -430,8 +417,6 @@ const game = {
         this.redDiceActive = false;
       }
     }
-
-    // this.diceThrown = false;
 
     this.applyControls();
   },
