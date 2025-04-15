@@ -5,6 +5,14 @@ const PIECE_RADIUS = 18;
 const PIECE_DIAMETER = PIECE_RADIUS + PIECE_RADIUS;
 const VERTICAL_TOLERANCE = 4;
 
+const Stage = {
+  DEMO: 'demo',
+  CHOOSING: 'choosing',
+  PLAYING: 'playing',
+  BEARING: 'bearing',
+  FINISHED: 'finished',
+};
+
 const pieces = document.querySelectorAll('.piece');
 
 const boardElement = document.getElementById('board');
@@ -113,6 +121,61 @@ function drawDice() {
   dice_white2.addEventListener('click', rollWhiteDice);
   dice_red1.addEventListener('click', rollRedDice);
   dice_red2.addEventListener('click', rollRedDice);
+}
+
+function canBearOff() {
+  const playerColor = game.myPlayer;
+  const homeStart = playerColor === 'r' ? 19 : 1;
+  const homeEnd = playerColor === 'r' ? 26 : 6;
+
+  // Check all positions outside the home board
+  for (let i = 1; i <= 26; i++) {
+    // Skip the home board positions
+    if (i >= homeStart && i <= homeEnd) {
+      continue;
+    }
+
+    // Check if this position contains any pieces of the player's color
+    const position = board.contents[i];
+    if (position && position.some((piece) => piece.startsWith(playerColor))) {
+      return false; // Found a piece outside home board
+    }
+  }
+
+  // No pieces found outside home board
+  return true;
+}
+
+function isHomeEmpty() {
+  const playerColor = game.myPlayer;
+  const homeStart = playerColor === 'r' ? 19 : 1;
+  const homeEnd = playerColor === 'r' ? 26 : 6;
+
+  for (let i = homeStart; i <= homeEnd; i++) {
+    // Check if this position contains any pieces of the player's color
+    const position = board.contents[i];
+
+    if (position && position.some((piece) => piece.startsWith(playerColor))) {
+      return false; // Found a piece outside home board
+    }
+  }
+
+  // no pieces found in home board
+  return true;
+}
+
+function updateGameStage() {
+  if (game.stage == Stage.DEMO) return;
+
+  if (canBearOff()) {
+    if (isHomeEmpty()) {
+      game.stage = Stage.FINISHED;
+    } else {
+      game.stage = Stage.BEARING;
+    }
+  } else {
+    game.stage = Stage.PLAYING;
+  }
 }
 
 // remove html element
@@ -385,6 +448,7 @@ const game = {
   currentMove: {},
   redDiceActive: true,
   whiteDiceActive: true,
+  stage: Stage.DEMO,
 
   eventTurnFinished() {
     console.log('EVENT TURN FINISHED');
@@ -563,11 +627,13 @@ const board = {
 
 export async function startGame(playerAssign, isChallenger) {
   if (playerAssign) {
+    game.stage = Stage.PLAYING;
     game.myPlayer = isChallenger ? 'r' : 'w';
     game.currentTurn = 'r';
     game.redDiceActive = true;
     game.whiteDiceActive = false;
   } else {
+    game.stage = Stage.DEMO;
     game.myPlayer = 'w';
     game.currentTurn = 'w';
     game.redDiceActive = false;
@@ -748,6 +814,9 @@ async function applyMove(move) {
     let [x, y] = getPieceCoords(move.player, move.from, posToOccupy);
     await animateMovePiece(move.piece, x, y, 0.5);
     board.updatePointOccupation(move.from);
+
+    updateGameStage();
+
     return;
   }
 
