@@ -150,7 +150,7 @@ export async function playbackMove(move) {
   let posToOccupy = board.contents[move.to].occupied.length + 1;
   let [x, y] = getPieceCoords(game.myPlayer, move.to, posToOccupy); // ??? specify our coordinate system, rather than player who made move
 
-  board.movePiece(move.player, move.from, move.to);
+  board.movePiece(move.from, move.to);
 
   board.updatePointOccupation(move.to);
 
@@ -506,17 +506,16 @@ const board = {
     this.contents[24].occupied = ['w15'];
   },
 
-  movePiece(player, fromPoint, toPoint) {
-    console.log(
-      'in board.movePiece, player=' +
-        player +
-        ', fromPoint=' +
-        fromPoint +
-        ', toPoint=' +
-        toPoint
-    );
+  completeMovePiece(toPoint) {
+    console.log('in board.completeMovePiece, toPoint=' + toPoint);
     this.contents[toPoint].occupied.push(board.onTheMove);
     board.onTheMove = ''; // finished moving
+  },
+
+  movePiece(fromPoint, toPoint) {
+    let pieceId = this.contents[fromPoint].occupied.at(-1);
+    this.contents[fromPoint].occupied.pop();
+    this.contents[toPoint].occupied.push(pieceId);
   },
 
   updatePointOccupation(reqPointNumber) {
@@ -748,7 +747,7 @@ async function applyMove(move) {
   // TAKING A BLOT
   if (toColor != game.currentTurn && toOccupied == 1) {
     console.log('Taking blot ' + move.piece.id);
-    board.movePiece(game.currentTurn, move.from, move.to);
+    board.completeMovePiece(move.to);
 
     let barPoint = game.myPlayer == 'r' ? 26 : 25;
     let pieceId = board.contents[move.to].occupied[0];
@@ -762,7 +761,7 @@ async function applyMove(move) {
     // let barPoint = game.myPlayer == 'r' ? 26 : 25;
     // let pieceId = board.contents[move.to].occupied[0];
     board.onTheMove = pieceId;
-    board.movePiece(game.currentTurn, move.to, barPoint);
+    board.completeMovePiece(barPoint);
     board.contents[move.to].occupied = [pieceId];
 
     [x, y] = getPieceCoords(move.player, barPoint, 1);
@@ -797,7 +796,7 @@ async function applyMove(move) {
   //   '\tAt ' + move.to + ': ' + board.contents[move.to].occupied
   // );
 
-  board.movePiece(game.currentTurn, move.from, move.to);
+  board.completeMovePiece(move.to);
 
   // console.log(
   //   'After',
