@@ -150,7 +150,7 @@ export async function playbackMove(move) {
   let posToOccupy = board.contents[move.to].occupied.length + 1;
   let [x, y] = getPieceCoords(game.myPlayer, move.to, posToOccupy); // ??? specify our coordinate system, rather than player who made move
 
-  board.movePiece(move.player, move.from, move.to);
+  board.movePiece(game.myPlayer, move.from, move.to); // ??? param 1 was move.player
 
   board.updatePointOccupation(move.to);
 
@@ -318,6 +318,9 @@ async function rollRedDice(param) {
   // Final roll
   dice_red1.src = diceFaces[finalIndex1];
   dice_red2.src = diceFaces[finalIndex2];
+
+  finalIndex1 = 4;
+  finalIndex2 = 0; // ???
 
   board.diceThrows[0] = finalIndex1 + 1;
   board.diceThrows[1] = finalIndex2 + 1;
