@@ -315,6 +315,10 @@ async function rollRedDice(param) {
   // Wait for some time before the final roll
   await sleep(100);
 
+  // ??? simulating a 5 and 6 rolled
+  finalIndex1 = 4;
+  finalIndex2 = 5;
+
   // Final roll
   dice_red1.src = diceFaces[finalIndex1];
   dice_red2.src = diceFaces[finalIndex2];
