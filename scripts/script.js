@@ -24,7 +24,9 @@ const testButton2 = document.querySelector('.test_button2');
 // Game board elements
 const imbedGame = document.getElementById('content_container');
 const boardMessage = document.querySelector('.board_message');
-const boardAnnotations = document.querySelector('.board_annotations_section');
+const boardAnnotationsSection = document.querySelector(
+  '.board_annotations_section'
+);
 
 // Welcome section elements
 const welcomeSection = document.querySelector('.welcome_section');
@@ -125,6 +127,7 @@ testButton1.addEventListener('click', () => {
 // On the 'TEST 2' button
 testButton2.addEventListener('click', () => {
   console.log(`Dad button activated`);
+  displayTurnMessage('JonathanCreek');
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -135,7 +138,7 @@ testButton2.addEventListener('click', () => {
 // Shows the pages main elements on load or a site reset event
 // Called by 'load' event handler on the window object
 function showMain() {
-  boardAnnotations.classList.add('reveal_translucent');
+  boardAnnotationsSection.classList.add('reveal_translucent');
   const doesUserAlreadyExist = checkForLocalStorageObject();
   console.log(doesUserAlreadyExist);
   setTimeout(() => {
@@ -182,6 +185,16 @@ function imgAdCycler() {
     currentAdPicture.alt = adList[currentAdNumber].altText;
     currentAdLink.href = adList[currentAdNumber].href;
   }, 500);
+}
+
+export function displayTurnMessage(player, duration = '2000') {
+  boardMessage.textContent = `${player}'s turn!`;
+  setTimeout(() => {
+    boardAnnotationsSection.classList.add('reveal_translucent');
+  }, 500);
+  setTimeout(() => {
+    boardAnnotationsSection.classList.remove('reveal_translucent');
+  }, duration);
 }
 
 // CODE END

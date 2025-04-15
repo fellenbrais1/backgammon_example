@@ -260,7 +260,8 @@ export async function fetchRecentPlayers(languageFilter = 'none') {
     console.log(numberOfPlayers);
     if (numberOfPlayers < 2) {
       console.log('No players online in the last hour.');
-      changeModalContent('noPlayersOnline');
+      // TODO - DISABLED FOR NOW/ UNNEEDED?
+      // changeModalContent('noPlayersOnline');
       return [];
     }
 
