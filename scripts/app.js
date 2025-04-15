@@ -175,9 +175,14 @@ async function rollWhiteDice(param) {
   if (isEvent && game.myPlayer != 'w') return; // can be clicked by white player only, but playback still works
 
   // if it is a real throw, set the latch to indicate dice already thrown
+  // if (isEvent) {
+  //   if (game.diceThrown == true) return;
+  //   game.diceThrown = true;
+  // }
+
   if (isEvent) {
-    if (game.diceThrown == true) return;
-    game.diceThrown = true;
+    if (game.whiteDiceActive == false) return;
+    game.whiteDiceActive = false;
   }
 
   // Set default values accordingly
@@ -257,9 +262,14 @@ async function rollRedDice(param) {
   if (isEvent && game.myPlayer != 'r') return; // can be clicked by red player only, but playback still works
 
   // if it is a real throw, set the latch to indicate dice already thrown
+  // if (isEvent) {
+  //   if (game.diceThrown == true) return;
+  //   game.diceThrown = true;
+  // }
+
   if (isEvent) {
-    if (game.diceThrown == true) return;
-    game.diceThrown = true;
+    if (game.redDiceActive == false) return;
+    game.redDiceActive = false;
   }
 
   // Set default values accordingly
@@ -385,7 +395,9 @@ const game = {
   myPlayer: 'w',
   currentTurn: 'w',
   currentMove: {},
-  diceThrown: false,
+  // diceThrown: false,
+  redDiceActive: true,
+  whiteDiceActive: true,
 
   eventTurnFinished() {
     console.log('EVENT TURN FINISHED');
@@ -401,6 +413,8 @@ const game = {
       if (this.myPlayer == 'r') {
         dice_red1.src = 'images/dice-red-click.png';
         dice_red2.src = 'images/dice-red-click.png';
+        this.whiteDiceActive = false;
+        this.redDiceActive = true;
       }
     } else {
       this.currentTurn = 'w';
@@ -412,10 +426,12 @@ const game = {
       if (this.myPlayer == 'w') {
         dice_white1.src = 'images/dice-click.png';
         dice_white2.src = 'images/dice-click.png';
+        this.whiteDiceActive = true;
+        this.redDiceActive = false;
       }
     }
 
-    this.diceThrown = false;
+    // this.diceThrown = false;
 
     this.applyControls();
   },
@@ -814,7 +830,7 @@ async function applyMove(move) {
 
 function applyHighlight(point, state) {
   // translate point coordinates when playing as red
-  if (game.currentTurn == 'r') point = 25 - point;
+  if (game.myPlayer == 'r') point = 25 - point;
 
   for (let pt = 1; pt <= 24; pt++) {
     const id = `highlight${pt}`; // Construct the element ID
