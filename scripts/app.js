@@ -522,7 +522,7 @@ const board = {
   updatePointOccupation(reqPointNumber) {
     // reverse point numbers for points 1 - 24 when player is red
     const pointNumber =
-      game.currentTurn == 'r' && reqPointNumber <= 24
+      game.myPlayer == 'r' && reqPointNumber <= 24
         ? 25 - reqPointNumber
         : reqPointNumber;
 
