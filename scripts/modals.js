@@ -572,6 +572,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       challengerNameField2.textContent = `Challenging ${data}`;
       challengeInformation2.textContent = `Challenge has been accepted!`;
 
+      stopCounter();
+
       setTimeout(() => {
         playersSection.classList.remove('reveal');
         welcomeSection.classList.remove('reveal');
@@ -644,7 +646,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         playClickSound();
         console.log(`You have forfeited the game!`);
         forfeitMessage();
-        sendRPC('forfeitGame', sessionDisplayName);
+        const storedObject = loadLocalStorage();
+        const displayName = storedObject.displayName;
+        sendRPC('forfeitGame', displayName);
         removeModal();
         setTimeout(() => {
           window.location.reload();
