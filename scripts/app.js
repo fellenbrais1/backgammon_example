@@ -137,7 +137,12 @@ function canBearOff() {
 
     // Check if this position contains any pieces of the player's color
     const position = board.contents[i];
-    if (position && position.some((piece) => piece.startsWith(playerColor))) {
+    if (
+      Array.isArray(position) &&
+      position.some(
+        (piece) => typeof piece === 'string' && piece.startsWith(playerColor)
+      )
+    ) {
       return false; // Found a piece outside home board
     }
   }
@@ -155,7 +160,12 @@ function isHomeEmpty() {
     // Check if this position contains any pieces of the player's color
     const position = board.contents[i];
 
-    if (position && position.some((piece) => piece.startsWith(playerColor))) {
+    if (
+      Array.isArray(position) &&
+      position.some(
+        (piece) => typeof piece === 'string' && piece.startsWith(playerColor)
+      )
+    ) {
       return false; // Found a piece outside home board
     }
   }
