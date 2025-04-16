@@ -12,6 +12,7 @@ console.log(`script.js running`);
 
 import { welcomeNameForm, checkForLocalStorageObject } from './welcome.js';
 import { clearLocalStorage, testForLocalStorageData } from './localStorage.js';
+import { playOpeningJingleSound } from './sounds.js';
 import { startGame } from './app.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -104,6 +105,7 @@ let currentAdNumber = 0;
 // Runs on window load event
 window.addEventListener('load', () => {
   startGame(false, false); // ??? should be false, false
+  playOpeningJingleSound();
   showMain();
   testForLocalStorageData();
   imbedGame.classList.add('show');
@@ -158,13 +160,6 @@ function showMain() {
   setTimeout(() => {
     welcomeNameForm.classList.add('focus_element');
   }, 500);
-}
-
-// Sound functions
-
-// Plays the button click sound
-export function playClickSound() {
-  buttonClickSound.play();
 }
 
 // Ad section functions

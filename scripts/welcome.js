@@ -10,7 +10,7 @@ console.log(`welcome.js running`);
 //////////////////////////////////////////////////////////////////////////////////////////
 // IMPORTS
 
-import { playClickSound } from './script.js';
+import { playClickSound } from './sounds.js';
 import { loadLocalStorage, setLocalStorage } from './localStorage.js';
 import { changeModalContent } from './modals.js';
 import {
