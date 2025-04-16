@@ -832,6 +832,13 @@ async function applyMove(move) {
 
   // TAKING A BLOT
   if (toColor != game.currentTurn && toOccupied == 1) {
+    sendRPC('move', {
+      pieceId: move.piece.id,
+      player: game.currentTurn,
+      from: move.from,
+      to: move.to,
+    });
+
     console.log('Taking blot ' + move.piece.id);
     board.completeMovePiece(move.to);
 
@@ -874,13 +881,6 @@ async function applyMove(move) {
 
   let posToOccupy = board.contents[move.to].occupied.length + 1;
   let [x, y] = getPieceCoords(move.player, move.to, posToOccupy);
-
-  // console.log(
-  //   'Before',
-  //   '\tOnTheMove: ' + board.onTheMove,
-  //   '\tAt ' + move.from + ': ' + board.contents[move.from].occupied,
-  //   '\tAt ' + move.to + ': ' + board.contents[move.to].occupied
-  // );
 
   board.completeMovePiece(move.to);
 
