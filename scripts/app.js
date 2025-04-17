@@ -874,7 +874,7 @@ async function applyMove(move) {
   // TAKING A BLOT
   if (toColor != game.currentTurn && toOccupied == 1) {
     sendRPC('move', {
-      pieceId: move.piece.id,
+      pieceId: move.pieceId,
       player: game.currentTurn,
       from: move.from,
       to: move.to,
