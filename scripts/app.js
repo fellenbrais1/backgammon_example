@@ -739,7 +739,7 @@ function setupMouseEvents() {
       // Record the starting point of the move
       let point = identifyPoint(e.pageX, e.pageY);
       console.log('Grabbed piece on point ' + point);
-      game.currentMove.piece = piece;
+      game.currentMove.pieceId = piece.id;
       game.currentMove.player = game.currentTurn;
       game.currentMove.from = point;
       game.currentMove.to = 0;
@@ -863,7 +863,7 @@ async function applyMove(move) {
     board.onTheMove = '';
     let posToOccupy = board.contents[move.from].occupied.length;
     let [x, y] = getPieceCoords(move.player, move.from, posToOccupy);
-    await animateMovePiece(move.piece, x, y, 0.5);
+    await animateMovePiece(move.pieceId, x, y, 0.5);
     board.updatePointOccupation(move.from);
 
     updateGameStage();
@@ -880,31 +880,32 @@ async function applyMove(move) {
       to: move.to,
     });
 
-    console.log('Taking blot ' + move.piece.id);
+    console.log('Taking blot ' + move.pieceId);
     board.completeMovePiece(move.to);
 
     let barPoint = game.myPlayer == 'r' ? 26 : 25;
-    let pieceId = board.contents[move.to].occupied[0];
+    let blotPieceId = board.contents[move.to].occupied[0];
 
-    // snap into place
+    // snap active piece into place
     let posToOccupy = 1; // by definition
     let [x, y] = getPieceCoords(move.player, move.to, posToOccupy);
-    await animateMovePiece(move.piece, x, y, 0.5);
+    await animateMovePiece(move.pieceId, x, y, 0.5);
 
     // animate the blot to the bar. Red bar = 25, White bar = 26
     // let barPoint = game.myPlayer == 'r' ? 26 : 25;
     // let pieceId = board.contents[move.to].occupied[0];
-    board.onTheMove = pieceId;
+    board.onTheMove = blotPieceId;
     board.completeMovePiece(barPoint);
-    board.contents[move.to].occupied = [pieceId];
+    board.contents[move.to].occupied = [blotPieceId];
 
     [x, y] = getPieceCoords(move.player, barPoint, 1);
-    let blotPiece = document.getElementById(pieceId);
-    await animateMovePiece(blotPiece, x, y, 0.5);
+    //let blotPiece = document.getElementById(pieceId);
+    await animateMovePiece(blotPieceId, x, y, 0.5);
     board.updatePointOccupation(barPoint);
 
     consumeDiceMove(move);
 
+    updateGameStage();
     return;
   }
 
@@ -914,7 +915,7 @@ async function applyMove(move) {
   console.log('sending rpc for move, piece = ' + move.piece);
 
   sendRPC('move', {
-    pieceId: move.piece.id,
+    pieceId: move.pieceId,
     player: game.currentTurn,
     from: move.from,
     to: move.to,
@@ -934,7 +935,7 @@ async function applyMove(move) {
 
   board.updatePointOccupation(move.to);
   consumeDiceMove(move);
-  await animateMovePiece(move.piece, x, y, 0.5);
+  await animateMovePiece(move.pieceId, x, y, 0.5);
 }
 
 function applyHighlight(point, state) {
@@ -961,10 +962,10 @@ async function drawBoardWithAnimation(player) {
     const occupiedList = board.contents[pt].occupied;
 
     for (let pos = 1; pos <= occupiedList.length; pos++) {
-      const id = occupiedList[pos - 1];
-      const piece = document.getElementById(id);
+      const pieceId = occupiedList[pos - 1];
+      // const piece = document.getElementById(id);
       let [x, y] = getPieceCoords(player, pt, pos);
-      await animateMovePiece(piece, x, y, 5);
+      await animateMovePiece(pieceId, x, y, 5);
     }
   }
 
@@ -1008,8 +1009,9 @@ function drawBoardNoAnimation(player) {
 }
 
 // Function to move the piece back to its original position over a given duration
-function animateMovePiece(piece, targetX, targetY, speed) {
+function animateMovePiece(pieceId, targetX, targetY, speed) {
   return new Promise((resolve) => {
+    let piece = document.getElementById(pieceId);
     const initialX = parseFloat(piece.style.left) || 0;
     const initialY = parseFloat(piece.style.top) || 0;
     const deltaX = parseFloat(targetX) - PIECE_RADIUS - initialX;
