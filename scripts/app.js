@@ -233,13 +233,13 @@ export async function playbackMove(move) {
     );
     // board.completeMovePiece(move.to); // NOT REQUIRED, MOVE IS FULLY FORMED
 
-    let barPoint = game.myPlayer == 'r' ? 26 : 25;
+    let barPoint = toColor == 'r' ? 25 : 26;
     let blotPieceId = board.contents[move.to].occupied[0];
 
     // snap into place
     let posToOccupy = 1; // by definition
     let [x, y] = getPieceCoords(move.player, move.to, posToOccupy);
-    await animateMovePiece(move.piece, x, y, 0.5);
+    await animateMovePiece(move.pieceId, x, y, 0.5);
 
     // animate the blot to the bar. Red bar = 25, White bar = 26
     // let barPoint = game.myPlayer == 'r' ? 26 : 25;
