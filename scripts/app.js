@@ -218,6 +218,42 @@ export async function playbackDiceRoll(param) {
 
 export async function playbackMove(move) {
   console.log('In playbackMove, move = ' + JSON.stringify(move));
+  const toColor = board.colorOfPoint(move.to);
+  const toOccupied = board.contents[move.to].occupied.length;
+
+  // TRANSPLANTED CODE FROM APPLYMOVE
+
+  // TAKING A BLOT
+  if (toColor != game.currentTurn && toOccupied == 1) {
+    console.log('Taking blot ' + move.pieceId);
+    // board.completeMovePiece(move.to); // NOT REQUIRED, MOVE IS FULLY FORMED
+
+    let barPoint = game.myPlayer == 'r' ? 26 : 25;
+    let pieceId = board.contents[move.to].occupied[0];
+
+    // snap into place
+    let posToOccupy = 1; // by definition
+    let [x, y] = getPieceCoords(move.player, move.to, posToOccupy);
+    await animateMovePiece(move.piece, x, y, 0.5);
+
+    // animate the blot to the bar. Red bar = 25, White bar = 26
+    // let barPoint = game.myPlayer == 'r' ? 26 : 25;
+    // let pieceId = board.contents[move.to].occupied[0];
+    board.onTheMove = pieceId;
+    board.completeMovePiece(barPoint);
+    board.contents[move.to].occupied = [pieceId];
+
+    [x, y] = getPieceCoords(move.player, barPoint, 1);
+    let blotPiece = document.getElementById(pieceId);
+    await animateMovePiece(blotPiece, x, y, 0.5);
+    board.updatePointOccupation(barPoint);
+
+    consumeDiceMove(move);
+
+    return;
+  }
+
+  // END OF TRANSPLANTED CODE FROM APPLYMOVE
 
   // animate the opponent's move
   let posToOccupy = board.contents[move.to].occupied.length + 1;
