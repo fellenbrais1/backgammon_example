@@ -238,7 +238,7 @@ export async function playbackMove(move) {
 
     // snap into place
     let posToOccupy = 1; // by definition
-    let [x, y] = getPieceCoords(move.player, move.to, posToOccupy);
+    let [x, y] = getPieceCoords(game.myPlayer, move.to, posToOccupy); // first param was move.player
     await animateMovePiece(move.pieceId, x, y, 0.5);
 
     // animate the blot to the bar. Red bar = 25, White bar = 26
