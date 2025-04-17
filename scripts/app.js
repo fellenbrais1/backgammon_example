@@ -225,11 +225,16 @@ export async function playbackMove(move) {
 
   // TAKING A BLOT
   if (toColor != game.currentTurn && toOccupied == 1) {
-    console.log('Taking blot ' + move.pieceId);
+    console.log(
+      'In playbackMove, taking blot ' +
+        board.contents[move.to][0] +
+        ' with ' +
+        move.pieceId
+    );
     // board.completeMovePiece(move.to); // NOT REQUIRED, MOVE IS FULLY FORMED
 
     let barPoint = game.myPlayer == 'r' ? 26 : 25;
-    let pieceId = board.contents[move.to].occupied[0];
+    let blotPieceId = board.contents[move.to].occupied[0];
 
     // snap into place
     let posToOccupy = 1; // by definition
@@ -239,12 +244,12 @@ export async function playbackMove(move) {
     // animate the blot to the bar. Red bar = 25, White bar = 26
     // let barPoint = game.myPlayer == 'r' ? 26 : 25;
     // let pieceId = board.contents[move.to].occupied[0];
-    board.onTheMove = pieceId;
+    board.onTheMove = blotPieceId;
     board.completeMovePiece(barPoint);
-    board.contents[move.to].occupied = [pieceId];
+    board.contents[move.to].occupied = [blotPieceId];
 
     [x, y] = getPieceCoords(move.player, barPoint, 1);
-    let blotPiece = document.getElementById(pieceId);
+    let blotPiece = document.getElementById(blotPieceId);
     await animateMovePiece(blotPiece, x, y, 0.5);
     board.updatePointOccupation(barPoint);
 
