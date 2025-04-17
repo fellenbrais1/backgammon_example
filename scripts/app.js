@@ -248,7 +248,7 @@ export async function playbackMove(move) {
     board.completeMovePiece(barPoint);
     board.contents[move.to].occupied = [blotPieceId];
 
-    [x, y] = getPieceCoords(move.player, barPoint, 1);
+    [x, y] = getPieceCoords(game.myPlayer, barPoint, 1); // was move.player
     let blotPiece = document.getElementById(blotPieceId);
     await animateMovePiece(blotPiece, x, y, 0.5);
     board.updatePointOccupation(barPoint);
