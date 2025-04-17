@@ -227,7 +227,7 @@ export async function playbackMove(move) {
   if (toColor != game.currentTurn && toOccupied == 1) {
     console.log(
       'In playbackMove, taking blot ' +
-        board.contents[move.to][0] +
+        board.contents[move.to].occupied[0] +
         ' with ' +
         move.pieceId
     );
