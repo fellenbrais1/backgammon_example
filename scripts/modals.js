@@ -60,7 +60,6 @@ const youFlags = document.querySelector('.you_flags');
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
 
-let sessionDisplayName = '';
 let cancelFlag = false;
 
 export let gamePlayers;
@@ -73,6 +72,8 @@ const currentGameFlag = 'Backgammon';
 
 let counterInterval;
 let counterValue = 0;
+
+let challengeBlocker = false;
 
 const otherGamesBackgammonButtonHTML = `<div class="game_button_backgammon" title="Backgammon">
     <img src="images/MOMABackgammon.png" alt="Backgammon game picture" />
@@ -443,6 +444,16 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       break;
 
     case 'challengeSent':
+      // TODO - Blocks a player from sending another challenge request while within a challenge event
+      if (challengeBlocker === true) {
+        console.log(
+          `Outgoing challenge request blocked as player is currently within a challenge`
+        );
+        return;
+      }
+
+      blockChallenges();
+
       cancelFlag = false;
       modalSection.innerHTML = challengeModalHTML;
       modalSection.classList.add('reveal');
@@ -468,6 +479,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           restartRefreshPopulatePlayers();
           stopCounter();
           shutDownRPC();
+
+          enableChallenges();
+
           removeModal();
         }, 1000);
       });
@@ -477,6 +491,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       activeOpponentHere = gamePlayers.opponent;
       const conn = await assignConn(gamePlayers.opponent);
       console.log(JSON.stringify(gamePlayers.opponent));
+
       if (conn !== null) {
         console.log(conn);
         cancelFlag = true;
@@ -496,6 +511,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           playClickSound();
           challengeInformation.textContent = 'Cancelling challenge...';
           setTimeout(() => {
+            enableChallenges();
+
             removeModal();
           }, 1000);
         }, 20000);
@@ -504,6 +521,16 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       break;
 
     case 'challengeReceived':
+      // TODO - Blocks a player from processing an incoming challenge request if they are currently within a challenge event
+      if (challengeBlocker === true) {
+        console.log(
+          `Incoming challenge request blocked as player is currently within a challenge`
+        );
+        return;
+      }
+
+      blockChallenges();
+
       modalSection.innerHTML = challengeReceivedModalHTML;
       modalSection.classList.add('reveal');
 
@@ -554,6 +581,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         playClickSound();
         challengeReceivedText.textContent = `You have rejected this challenge!`;
         sendRPC('challengeRejected', '');
+
+        enableChallenges();
+
         setTimeout(() => {
           removeModal();
         }, 1000);
@@ -615,6 +645,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         playClickSound();
         console.log(`Challenge has been rejected.`);
         setTimeout(() => {
+          enableChallenges();
+
           restartRefreshPopulatePlayers();
           removeModal();
         }, 1000);
@@ -653,6 +685,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         const displayName = storedObject.displayName;
         sendRPC('forfeitGame', displayName);
         removeModal();
+
+        enableChallenges();
+
         setTimeout(() => {
           window.location.reload();
         }, 5000);
@@ -680,6 +715,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       okButton.addEventListener('click', () => {
         playClickSound();
         console.log(`${data} has forfeited the game! You win!`);
+
+        enableChallenges();
+
         setTimeout(() => {
           removeModal();
           window.location.reload();
@@ -721,6 +759,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       winOkButton.addEventListener('click', () => {
         playClickSound();
         console.log(`You win!`);
+
+        enableChallenges();
+
         setTimeout(() => {
           removeModal();
           window.location.reload();
@@ -743,6 +784,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       loseOkButton.addEventListener('click', () => {
         playClickSound();
         console.log(`You lose!`);
+
+        enableChallenges();
+
         setTimeout(() => {
           removeModal();
           window.location.reload();
@@ -921,6 +965,14 @@ function stopCounter() {
   counterValue = 0;
   clearInterval(counterInterval);
   console.log(`Counter has been reset, value now at: ${counterValue}`);
+}
+
+function blockChallenges() {
+  challengeBlocker = true;
+}
+
+function enableChallenges() {
+  challengeBlocker = false;
 }
 
 addChatButtons();
