@@ -269,10 +269,10 @@ export async function playbackMove(move) {
   board.updatePointOccupation(move.from);
   board.updatePointOccupation(move.to);
 
-  let piece = document.getElementById(move.pieceId);
+  // let piece = document.getElementById(move.pieceId);
   consumeDiceMove(move);
 
-  await animateMovePiece(piece, x, y, 0.5);
+  await animateMovePiece(move.pieceId, x, y, 0.5);
   game.applyControls();
   // end of animate oppononent's move
 }
