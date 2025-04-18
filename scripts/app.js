@@ -485,7 +485,8 @@ class CoordinateMapper {
     if (result === undefined) return { pt: 0, pos: 0 };
 
     // reverse point when playing as red
-    if (game.currentTurn == 'r') {
+    if (game.myPlayer == 'r') {
+      // was game.currentTurn
       result.pt = 25 - result.pt;
     }
 
