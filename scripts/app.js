@@ -1122,7 +1122,7 @@ function identifyPoint(x, y) {
     point = 0;
   }
 
-  if (game.currentTurn == 'r') {
+  if (game.myPlayer == 'r') {
     // reverse board
     if (point >= 1 && point <= 24) {
       point = 25 - point;
