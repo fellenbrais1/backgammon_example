@@ -863,7 +863,7 @@ async function applyMove(move) {
     board.contents[move.from].occupied.push(board.onTheMove);
     board.onTheMove = '';
     let posToOccupy = board.contents[move.from].occupied.length;
-    let [x, y] = getPieceCoords(move.player, move.from, posToOccupy);
+    let [x, y] = getPieceCoords(game.myPlayer, move.from, posToOccupy);
     await animateMovePiece(move.pieceId, x, y, 0.5);
     board.updatePointOccupation(move.from);
 
@@ -889,7 +889,7 @@ async function applyMove(move) {
 
     // snap active piece into place
     let posToOccupy = 1; // by definition
-    let [x, y] = getPieceCoords(move.player, move.to, posToOccupy);
+    let [x, y] = getPieceCoords(game.myPlayer, move.to, posToOccupy);
     await animateMovePiece(move.pieceId, x, y, 0.5);
 
     // animate the blot to the bar. Red bar = 25, White bar = 26
@@ -899,7 +899,7 @@ async function applyMove(move) {
     board.completeMovePiece(barPoint);
     board.contents[move.to].occupied = [blotPieceId];
 
-    [x, y] = getPieceCoords(move.player, barPoint, 1);
+    [x, y] = getPieceCoords(game.myPlayer, barPoint, 1);
     //let blotPiece = document.getElementById(pieceId);
     await animateMovePiece(blotPieceId, x, y, 0.5);
     board.updatePointOccupation(barPoint);
@@ -923,7 +923,7 @@ async function applyMove(move) {
   });
 
   let posToOccupy = board.contents[move.to].occupied.length + 1;
-  let [x, y] = getPieceCoords(move.player, move.to, posToOccupy);
+  let [x, y] = getPieceCoords(game.myPlayer, move.to, posToOccupy);
 
   board.completeMovePiece(move.to);
 
