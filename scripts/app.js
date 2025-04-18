@@ -719,7 +719,7 @@ function setupMouseEvents() {
         return;
       }
 
-      const type = piece.dataset.type;
+      // const type = piece.dataset.type;
 
       // Determine the piece's position
       const x = piece.offsetLeft + PIECE_RADIUS;
@@ -737,21 +737,21 @@ function setupMouseEvents() {
       piece.style.zIndex = '1000'; // Set a high z-index value
 
       // Record the starting point of the move
-      let point = identifyPoint(e.pageX, e.pageY);
-      console.log('Grabbed piece on point ' + point);
+      // let point = identifyPoint(e.pageX, e.pageY);
+      console.log('Grabbed piece on point ' + pt);
       game.currentMove.pieceId = piece.id;
       game.currentMove.player = game.currentTurn;
-      game.currentMove.from = point;
+      game.currentMove.from = pt;
       game.currentMove.to = 0;
 
       // Mark the piece as being moved
       board.onTheMove = piece.id;
-      board.contents[point].occupied.pop();
-      board.updatePointOccupation(point);
+      board.contents[pt].occupied.pop();
+      board.updatePointOccupation(pt);
 
       // Store the starting position
-      let startX = piece.style.left || '0px';
-      let startY = piece.style.top || '0px';
+      // let startX = piece.style.left || '0px';
+      // let startY = piece.style.top || '0px';
 
       // Set the global flag to indicate a piece is being dragged
       isPieceDragging = true;
