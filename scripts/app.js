@@ -465,6 +465,10 @@ document.querySelector('.test_button2').addEventListener('click', function () {
       ', game.currentTurn = ' +
       game.currentTurn
   );
+
+  game.myPlayer = 'r';
+  let result = mapper.findPointAndPos(585, 76);
+  result;
 });
 
 class CoordinateMapper {
@@ -480,7 +484,14 @@ class CoordinateMapper {
 
   // Find the exact point and pos for given x,y coordinates
   findPointAndPos(x, y) {
-    console.log('findPointAndPos called with x = ' + x + ', y = ' + y);
+    console.log(
+      'findPointAndPos called with game.myPlayer = ' +
+        game.myPlayer +
+        ', x = ' +
+        x +
+        ', y = ' +
+        y
+    );
     const key = `${x},${y}`;
     let result = this.coordinates.get(key);
     console.log('findPointAndPos, key found = ' + JSON.stringify(result));
