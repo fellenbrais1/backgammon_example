@@ -465,10 +465,6 @@ document.querySelector('.test_button2').addEventListener('click', function () {
       ', game.currentTurn = ' +
       game.currentTurn
   );
-
-  game.myPlayer = 'r';
-  let result = mapper.findPointAndPos(585, 76);
-  result;
 });
 
 class CoordinateMapper {
@@ -501,7 +497,7 @@ class CoordinateMapper {
     // reverse point when playing as red
     if (game.myPlayer == 'r') {
       // was game.currentTurn
-      result.pt = 25 - result.pt;
+      result = { ...result, pt: 25 - result.pt };
     }
 
     console.log('findPointAndPos returning ' + JSON.stringify(result));
