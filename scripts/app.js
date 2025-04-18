@@ -1048,6 +1048,14 @@ function animateMovePiece(pieceId, targetX, targetY, speed) {
 
 // Function to identify point from mouse coordinates
 function identifyPoint(x, y) {
+  console.log(
+    'in identifyPoint, game.myPlayer = ' +
+      game.myPlayer +
+      ', x = ' +
+      x +
+      ', y = ' +
+      y
+  );
   let point;
 
   if (
@@ -1134,6 +1142,7 @@ function identifyPoint(x, y) {
     }
   }
 
+  console('identifyPoint returning point ' + point);
   return point;
 }
 
