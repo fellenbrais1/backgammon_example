@@ -483,6 +483,8 @@ class CoordinateMapper {
     console.log('findPointAndPos called with x = ' + x + ', y = ' + y);
     const key = `${x},${y}`;
     let result = this.coordinates.get(key);
+    console.log('findPointAndPos, key found = ' + JSON.stringify(result));
+
     if (result === undefined) return { pt: 0, pos: 0 };
 
     // reverse point when playing as red
