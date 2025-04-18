@@ -1142,7 +1142,7 @@ function identifyPoint(x, y) {
     }
   }
 
-  console('identifyPoint returning point ' + point);
+  console.log('identifyPoint returning point ' + point);
   return point;
 }
 
