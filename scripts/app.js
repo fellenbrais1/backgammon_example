@@ -491,7 +491,7 @@ class CoordinateMapper {
       result.pt = 25 - result.pt;
     }
 
-    console.log('findPointAndPos returning ' + result);
+    console.log('findPointAndPos returning ' + JSON.stringify(result));
     return result;
   }
 }
