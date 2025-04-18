@@ -480,6 +480,7 @@ class CoordinateMapper {
 
   // Find the exact point and pos for given x,y coordinates
   findPointAndPos(x, y) {
+    console.log('findPointAndPos called with x = ' + x + ', y = ' + y);
     const key = `${x},${y}`;
     let result = this.coordinates.get(key);
     if (result === undefined) return { pt: 0, pos: 0 };
@@ -490,6 +491,7 @@ class CoordinateMapper {
       result.pt = 25 - result.pt;
     }
 
+    console.log('findPointAndPos returning ' + result);
     return result;
   }
 }
