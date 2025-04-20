@@ -451,6 +451,17 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         );
         stopCounter();
         removeModal();
+        enableChallenges();
+        return;
+      }
+
+      if (data === activeOpponentHere) {
+        console.log(
+          `Being challenged by the same player as you are playing against - cancelling!`
+        );
+        stopCounter();
+        removeModal();
+        enableChallenges();
         return;
       }
 
@@ -530,6 +541,17 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         );
         stopCounter();
         removeModal();
+        enableChallenges();
+        return;
+      }
+
+      if (data === activeOpponentHere) {
+        console.log(
+          `Being challenged by the same player as you are playing against - cancelling!`
+        );
+        stopCounter();
+        removeModal();
+        enableChallenges();
         return;
       }
 
