@@ -515,23 +515,23 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         break;
       }
 
-      // Code to automatically cancel the challenge modal after 20 seconds
-      if (cancelFlag === false) {
-        setTimeout(() => {
-          console.log(
-            `20 seconds have passed without challenge response, cancelling.`
-          );
-          playClickSound();
-          challengeInformation.textContent = 'Cancelling challenge...';
-          setTimeout(() => {
-            enableChallenges();
+    // Code to automatically cancel the challenge modal after 20 seconds
+    // if (cancelFlag === false) {
+    //   setTimeout(() => {
+    //     console.log(
+    //       `20 seconds have passed without challenge response, cancelling.`
+    //     );
+    //     playClickSound();
+    //     challengeInformation.textContent = 'Cancelling challenge...';
+    //     setTimeout(() => {
+    //       enableChallenges();
 
-            removeModal();
-          }, 1000);
-        }, 20000);
-        break;
-      }
-      break;
+    //       removeModal();
+    //     }, 1000);
+    //   }, 20000);
+    //   break;
+    // }
+    // break;
 
     case 'challengeReceived':
       // TODO - Blocks a player from processing an incoming challenge request if they are currently within a challenge event
@@ -617,6 +617,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       break;
 
     case 'challengeAccepted':
+      stopCounter();
+
       modalSection.innerHTML = challengeModalAcceptedHTML;
       modalSection.style.backgroundColor = 'lightgreen';
 
@@ -630,8 +632,6 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       challengerNameField2.textContent = `Challenging ${data}`;
       challengeInformation2.textContent = `Challenge has been accepted!`;
 
-      stopCounter();
-
       setTimeout(() => {
         playersSection.classList.remove('reveal');
         welcomeSection.classList.remove('reveal');
@@ -642,7 +642,6 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         const isChallenger = true;
         console.log(`Player is challenger for startGame: yes`);
 
-        // TODO - Test to see if pauseRefreshPopulatePLayers() actually runs
         pauseRefreshPopulatePlayers();
 
         playOpeningJingleSound();
@@ -651,6 +650,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       break;
 
     case 'challengeRejected':
+      stopCounter();
       modalSection.innerHTML = challengeModalRejectedHTML;
 
       const challengeInformation3 = document.getElementById(
