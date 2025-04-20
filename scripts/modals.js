@@ -449,6 +449,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         console.log(
           `Outgoing challenge request blocked as player is currently within a challenge`
         );
+        stopCounter();
         return;
       }
 
