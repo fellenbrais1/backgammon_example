@@ -618,6 +618,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         setTimeout(() => {
           restartRefreshPopulatePlayers();
           removeModal();
+          // BUG = At the moment I reload in the case of a rejected challenge so the player can more easily challenge again, otherwise this eventuality will block other conn.open events from happening for some reason, this needs to be fixed later
+          window.location.reload();
         }, 1000);
       });
       break;
