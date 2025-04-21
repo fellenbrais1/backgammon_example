@@ -489,15 +489,17 @@ class CoordinateMapper {
         y
     );
     const key = `${x},${y}`;
-    let result = this.coordinates.get(key);
-    console.log('findPointAndPos, key found = ' + JSON.stringify(result));
+    const originalResult = this.coordinates.get(key);
+    console.log('findPointAndPos, key found = ' + JSON.stringify(originalResult));
 
-    if (result === undefined) return { pt: 0, pos: 0 };
+    if (originalResult === undefined) return { pt: 0, pos: 0 };
 
+    // Create a new object with the values from originalResult
+    const result = { pt: originalResult.pt, pos: originalResult.pos };
+    
     // reverse point when playing as red
     if (game.myPlayer == 'r') {
-      // was game.currentTurn
-      result = { ...result, pt: 25 - result.pt };
+      result.pt = 25 - result.pt;
     }
 
     console.log('findPointAndPos returning ' + JSON.stringify(result));
