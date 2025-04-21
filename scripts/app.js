@@ -429,8 +429,8 @@ async function rollRedDice(param) {
   await sleep(100);
 
   // // ??? simulating a 5 and 3 rolled
-  finalIndex1 = 4;
-  finalIndex2 = 2;
+  // finalIndex1 = 4;
+  // finalIndex2 = 2;
 
   // Final roll
   dice_red1.src = diceFaces[finalIndex1];
@@ -490,14 +490,16 @@ class CoordinateMapper {
     );
     const key = `${x},${y}`;
     const originalResult = this.coordinates.get(key);
-    console.log('findPointAndPos, key found = ' + JSON.stringify(originalResult));
+    console.log(
+      'findPointAndPos, key found = ' + JSON.stringify(originalResult)
+    );
 
     if (originalResult === undefined) return { pt: 0, pos: 0 };
 
     // Return a new object with the values from originalResult without any transformation
     // The point transformation for red player is handled in identifyPoint only
     const result = { pt: originalResult.pt, pos: originalResult.pos };
-    
+
     console.log('findPointAndPos returning ' + JSON.stringify(result));
     return result;
   }
@@ -736,8 +738,18 @@ function setupMouseEvents() {
       const y = piece.offsetTop + PIECE_RADIUS;
       const { pt: originalPt, pos } = mapper.findPointAndPos(x, y);
       // Apply board point reversal for red player here, consistent with identifyPoint
-      const pt = game.myPlayer == 'r' && originalPt >= 1 && originalPt <= 24 ? 25 - originalPt : originalPt;
-      console.log('in mouseDown 1, originalPt = ' + originalPt + ', adjusted pt = ' + pt + ', pos = ' + pos);
+      const pt =
+        game.myPlayer == 'r' && originalPt >= 1 && originalPt <= 24
+          ? 25 - originalPt
+          : originalPt;
+      console.log(
+        'in mouseDown 1, originalPt = ' +
+          originalPt +
+          ', adjusted pt = ' +
+          pt +
+          ', pos = ' +
+          pos
+      );
 
       // Check if the piece is movable
       if (!isPieceMovable(piece, pt, pos)) {
