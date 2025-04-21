@@ -494,14 +494,10 @@ class CoordinateMapper {
 
     if (originalResult === undefined) return { pt: 0, pos: 0 };
 
-    // Create a new object with the values from originalResult
+    // Return a new object with the values from originalResult without any transformation
+    // The point transformation for red player is handled in identifyPoint only
     const result = { pt: originalResult.pt, pos: originalResult.pos };
     
-    // reverse point when playing as red
-    if (game.myPlayer == 'r') {
-      result.pt = 25 - result.pt;
-    }
-
     console.log('findPointAndPos returning ' + JSON.stringify(result));
     return result;
   }
@@ -738,8 +734,10 @@ function setupMouseEvents() {
       // Determine the piece's position
       const x = piece.offsetLeft + PIECE_RADIUS;
       const y = piece.offsetTop + PIECE_RADIUS;
-      const { pt, pos } = mapper.findPointAndPos(x, y);
-      console.log('in mouseDown 1, pt = ' + pt + ', pos = ' + pos);
+      const { pt: originalPt, pos } = mapper.findPointAndPos(x, y);
+      // Apply board point reversal for red player here, consistent with identifyPoint
+      const pt = game.myPlayer == 'r' && originalPt >= 1 && originalPt <= 24 ? 25 - originalPt : originalPt;
+      console.log('in mouseDown 1, originalPt = ' + originalPt + ', adjusted pt = ' + pt + ', pos = ' + pos);
 
       // Check if the piece is movable
       if (!isPieceMovable(piece, pt, pos)) {
