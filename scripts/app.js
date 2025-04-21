@@ -235,7 +235,7 @@ export async function playbackMove(move) {
 
     let barPoint = toColor == 'r' ? 25 : 26;
     let blotPieceId = board.contents[move.to].occupied[0];
-    board.contents[move.from].pop();
+    board.contents[move.from].occupied.pop();
 
     // snap into place
     let posToOccupy = 1; // by definition
