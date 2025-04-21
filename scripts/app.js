@@ -611,13 +611,13 @@ const board = {
 
     // Starting positions
     this.contents[1].occupied = ['r1', 'r2'];
-    this.contents[2].occupied = [];
-    this.contents[3].occupied = [];
-    this.contents[4].occupied = [];
-    this.contents[5].occupied = [];
-    this.contents[6].occupied = ['w1', 'w2', 'w3', 'w4', 'w5'];
-    this.contents[7].occupied = [];
-    this.contents[8].occupied = ['w6', 'w7', 'w8'];
+    this.contents[2].occupied = ['w1'];
+    this.contents[3].occupied = ['w2'];
+    this.contents[4].occupied = ['w3'];
+    this.contents[5].occupied = ['w4'];
+    this.contents[6].occupied = ['w5']; // should be ['w1', 'w2', 'w3', 'w4', 'w5']
+    this.contents[7].occupied = ['w6'];
+    this.contents[8].occupied = ['w7', 'w8']; // should be ['w6', 'w7', 'w8']
     this.contents[9].occupied = [];
     this.contents[10].occupied = [];
     this.contents[11].occupied = [];
