@@ -445,15 +445,15 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
     case 'challengeSent':
       // TODO - Blocks a player from sending another challenge request while within a challenge event
-      // if (challengeBlocker === true) {
-      //   console.log(
-      //     `Outgoing challenge request blocked as player is currently within a challenge`
-      //   );
-      //   stopCounter();
-      //   removeModal();
-      //   enableChallenges();
-      //   return;
-      // }
+      if (challengeBlocker === true) {
+        console.log(
+          `Outgoing challenge request blocked as player is currently within a challenge`
+        );
+        stopCounter();
+        removeModal();
+        enableChallenges();
+        return;
+      }
 
       if (data === activeOpponentHere) {
         console.log(
@@ -515,35 +515,19 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         break;
       }
 
-    // Code to automatically cancel the challenge modal after 20 seconds
-    // if (cancelFlag === false) {
-    //   setTimeout(() => {
-    //     console.log(
-    //       `20 seconds have passed without challenge response, cancelling.`
-    //     );
-    //     playClickSound();
-    //     challengeInformation.textContent = 'Cancelling challenge...';
-    //     setTimeout(() => {
-    //       enableChallenges();
-
-    //       removeModal();
-    //     }, 1000);
-    //   }, 20000);
-    //   break;
-    // }
-    // break;
+      break;
 
     case 'challengeReceived':
       // TODO - Blocks a player from processing an incoming challenge request if they are currently within a challenge event
-      // if (challengeBlocker === true) {
-      //   console.log(
-      //     `Incoming challenge request blocked as player is currently within a challenge`
-      //   );
-      //   stopCounter();
-      //   removeModal();
-      //   enableChallenges();
-      //   return;
-      // }
+      if (challengeBlocker === true) {
+        console.log(
+          `Incoming challenge request blocked as player is currently within a challenge`
+        );
+        stopCounter();
+        removeModal();
+        enableChallenges();
+        return;
+      }
 
       if (data === activeOpponentHere) {
         console.log(
