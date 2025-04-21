@@ -246,7 +246,7 @@ export async function playbackMove(move) {
     // let pieceId = board.contents[move.to].occupied[0];
     board.onTheMove = blotPieceId;
     board.completeMovePiece(barPoint);
-    board.contents[move.to].occupied = [blotPieceId];
+    board.contents[move.to].occupied = [move.pieceId]; // was [blotPieceId]
 
     [x, y] = getPieceCoords(game.myPlayer, barPoint, 1); // was move.player
     // let blotPiece = document.getElementById(blotPieceId);
@@ -920,7 +920,7 @@ async function applyMove(move) {
     // let pieceId = board.contents[move.to].occupied[0];
     board.onTheMove = blotPieceId;
     board.completeMovePiece(barPoint);
-    board.contents[move.to].occupied = [blotPieceId];
+    board.contents[move.to].occupied = [move.pieceId]; // was [blotPieceId]
 
     [x, y] = getPieceCoords(game.myPlayer, barPoint, 1);
     //let blotPiece = document.getElementById(pieceId);
