@@ -732,8 +732,6 @@ function setupMouseEvents() {
         return;
       }
 
-      // const type = piece.dataset.type;
-
       // Determine the piece's position
       const x = piece.offsetLeft + PIECE_RADIUS;
       const y = piece.offsetTop + PIECE_RADIUS;
@@ -758,11 +756,16 @@ function setupMouseEvents() {
         return; // Exit the handler if the piece cannot be moved
       }
 
+      // Calculate the offset between the cursor and the piece's top-left corner
+      // This ensures the piece moves with the cursor at the exact spot where it was clicked
+      const pieceRect = piece.getBoundingClientRect();
+      const offsetX = e.clientX - pieceRect.left;
+      const offsetY = e.clientY - pieceRect.top;
+
       // Bring the current piece to the front
       piece.style.zIndex = '1000'; // Set a high z-index value
 
       // Record the starting point of the move
-      // let point = identifyPoint(e.pageX, e.pageY);
       console.log('Grabbed piece on point ' + pt);
       game.currentMove.pieceId = piece.id;
       game.currentMove.player = game.currentTurn;
@@ -774,20 +777,16 @@ function setupMouseEvents() {
       board.contents[pt].occupied.pop();
       board.updatePointOccupation(pt);
 
-      // Store the starting position
-      // let startX = piece.style.left || '0px';
-      // let startY = piece.style.top || '0px';
-
       // Set the global flag to indicate a piece is being dragged
       isPieceDragging = true;
 
       // Define the mousemove event handler
       const onMouseMove = (event) => {
         // Update the piece's position based on mouse movement
-        piece.style.left =
-          event.pageX - piece.offsetWidth / 2 - boardLeftOffset + 'px';
-        piece.style.top =
-          event.pageY - piece.offsetHeight / 2 - boardTopOffset + 'px';
+        // Use the calculated offset to maintain the cursor's position relative to the piece
+        piece.style.left = event.pageX - offsetX - boardLeftOffset + 'px';
+        piece.style.top = event.pageY - offsetY - boardTopOffset + 'px';
+        
         let point = identifyPoint(event.pageX, event.pageY);
         console.log('in onMouseMove, point = ' + point);
         applyHighlight(point, 1);
