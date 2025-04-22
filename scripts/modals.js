@@ -451,6 +451,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       break;
 
     case 'challengeSent':
+      activeChallengeTimeStamp = Date.now();
+      console.log(`Now: ${activeChallengeTimeStamp}`);
+
       // TODO - Blocks a player from sending another challenge request while within a challenge event
       if (challengeBlocker === true) {
         console.log(
