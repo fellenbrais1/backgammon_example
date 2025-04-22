@@ -17,7 +17,7 @@ import {
   getOpponentName,
   opponentMessage,
 } from './messages.js';
-import { changeModalContent } from './modals.js';
+import { changeModalContent, getActiveChallengeTimeStamp } from './modals.js';
 import { playbackDiceRoll, playbackMove } from './app.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -464,10 +464,24 @@ function dispatchMessage(parsedData) {
 }
 
 async function eventChallengeSent(message) {
+  const activeChallengeTimeStamp = getActiveChallengeTimeStamp();
+  const timeStamp = Date.now();
+
+  // TODO - Should skip this handling if a new challenge message is newer than an old one being processed
+  if (activeChallengeTimeStamp !== 0) {
+    if (timeStamp > activeChallengeTimeStamp) {
+      return;
+    }
+  }
   activeOpponent = await fetchPlayerByKey(message);
   console.log(activeOpponent);
-  console.log(`Challenge received from ${activeOpponent.displayName}`);
-  changeModalContent('challengeReceived', activeOpponent.displayName);
+  console.log(
+    `Challenge received from ${activeOpponent.displayName} at ${timeStamp}`
+  );
+  changeModalContent('challengeReceived', [
+    activeOpponent.displayName,
+    timeStamp,
+  ]);
 }
 
 function eventChallengeAccepted() {

@@ -80,6 +80,7 @@ let counterInterval;
 let counterValue = 0;
 
 let challengeBlocker = false;
+let activeChallengeTimeStamp = 0;
 
 const otherGamesBackgammonButtonHTML = `<div class="game_button_backgammon" title="Backgammon">
     <img src="images/MOMABackgammon.png" alt="Backgammon game picture" />
@@ -452,9 +453,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
     case 'challengeSent':
       // TODO - Blocks a player from sending another challenge request while within a challenge event
       if (challengeBlocker === true) {
-        // console.log(
-        //   `Outgoing challenge request blocked as player is currently within a challenge`
-        // );
+        console.log(
+          `Outgoing challenge request ignored as player is currently within a challenge`
+        );
         // stopCounter();
         // removeModal();
         // enableChallenges();
@@ -487,7 +488,6 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
       challengerNameField.textContent = `Challenging ${data}`;
 
-      // TODO - Starts the counter to see how long the challenge has been active for
       startCounter();
 
       buttonChallengeCancel.addEventListener('click', () => {
@@ -524,8 +524,11 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       break;
 
     case 'challengeReceived':
+      activeChallengeTimeStamp = data[1];
       const storedObject = loadLocalStorage();
       const userKey = storedObject.userKey;
+      console.log(`Now: ${activeChallengeTimeStamp}`);
+      console.log(`Incoming: ${incomingTimeStamp}`);
 
       // TODO - Blocks a player from processing an incoming challenge request if they are currently within a challenge event
       if (challengeBlocker === true) {
@@ -538,7 +541,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         return;
       }
 
-      if (data === activeOpponentHere) {
+      if (data[0] === activeOpponentHere) {
         console.log(
           `Being challenged by the same player as you are playing against - cancelling!`
         );
@@ -562,9 +565,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       const acceptButton = modalSection.querySelector('.modal_section_button');
       const declineButton = modalSection.querySelector('.button_red');
 
-      challengerNameText.textContent = `${data} wants to play a game!`;
+      challengerNameText.textContent = `${data[0]} wants to play a game!`;
 
-      const opponentName = data;
+      const opponentName = data[0];
 
       acceptButton.addEventListener('click', async () => {
         try {
@@ -596,7 +599,6 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           const isChallenger = false;
           console.log(`Player is challenger for startGame: no`);
 
-          // TODO - Test to see if pauseRefreshPopulatePLayers() actually runs
           pauseRefreshPopulatePlayers();
 
           playOpeningJingleSound();
@@ -1008,6 +1010,10 @@ function blockChallenges() {
 
 function enableChallenges() {
   challengeBlocker = false;
+}
+
+export function getActiveChallengeTimeStamp() {
+  return activeChallengeTimeStamp;
 }
 
 addChatButtons();
