@@ -471,11 +471,11 @@ async function eventChallengeSent(message) {
   console.log(`Received TimeStamp: ${timeStamp}`);
 
   // TODO - Should skip this handling if a new challenge message is newer than an old one being processed
-  if (activeChallengeTimeStamp !== 0) {
-    if (timeStamp > activeChallengeTimeStamp) {
-      return;
-    }
-  }
+  // if (activeChallengeTimeStamp !== 0) {
+  //   if (timeStamp > activeChallengeTimeStamp) {
+  //     return;
+  //   }
+  // }
   activeOpponent = await fetchPlayerByKey(message);
   console.log(activeOpponent);
   console.log(
