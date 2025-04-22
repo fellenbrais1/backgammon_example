@@ -452,12 +452,12 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
     case 'challengeSent':
       // TODO - Blocks a player from sending another challenge request while within a challenge event
       if (challengeBlocker === true) {
-        console.log(
-          `Outgoing challenge request blocked as player is currently within a challenge`
-        );
-        stopCounter();
-        removeModal();
-        enableChallenges();
+        // console.log(
+        //   `Outgoing challenge request blocked as player is currently within a challenge`
+        // );
+        // stopCounter();
+        // removeModal();
+        // enableChallenges();
         return;
       }
 
