@@ -456,7 +456,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         console.log(
           `Outgoing challenge request ignored as player is currently within a challenge`
         );
-        // stopCounter();
+        stopCounter();
         // removeModal();
         // enableChallenges();
         return;
@@ -528,7 +528,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       const storedObject = loadLocalStorage();
       const userKey = storedObject.userKey;
       console.log(`Now: ${activeChallengeTimeStamp}`);
-      console.log(`Incoming: ${incomingTimeStamp}`);
+      // console.log(`Incoming: ${incomingTimeStamp}`);
 
       // TODO - Blocks a player from processing an incoming challenge request if they are currently within a challenge event
       if (challengeBlocker === true) {
