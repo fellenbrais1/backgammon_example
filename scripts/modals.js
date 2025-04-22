@@ -23,7 +23,13 @@ import {
   restartRefreshPopulatePlayers,
 } from './welcome.js';
 import { clearLocalStorage, loadLocalStorage } from './localStorage.js';
-import { sendRPC, assignConn, defineOpponent, shutDownRPC } from './chat.js';
+import {
+  sendRPC,
+  assignConn,
+  defineOpponent,
+  shutDownRPC,
+  changeInGameStatus,
+} from './chat.js';
 import { startGameMessages, forfeitMessage } from './messages.js';
 import { startGame } from './app.js';
 
@@ -518,6 +524,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       break;
 
     case 'challengeReceived':
+      const storedObject = loadLocalStorage();
+      const userKey = storedObject.userKey;
+
       // TODO - Blocks a player from processing an incoming challenge request if they are currently within a challenge event
       if (challengeBlocker === true) {
         console.log(
@@ -558,6 +567,14 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       const opponentName = data;
 
       acceptButton.addEventListener('click', async () => {
+        try {
+          await changeInGameStatus(userKey, true);
+        } catch (error) {
+          console.log(
+            `Updating user inGame status failed with error: ${error}`
+          );
+        }
+
         activeOpponentHere = activeOpponent;
         playClickSound();
         challengeReceivedText.textContent = `You have accepted this challenge!`;
@@ -601,6 +618,14 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       break;
 
     case 'challengeAccepted':
+      const storedObject2 = loadLocalStorage();
+      const userKey2 = storedObject2.userKey;
+      try {
+        changeInGameStatus(userKey2, true);
+      } catch (error) {
+        console.log(`Updating user inGame status failed with error: ${error}`);
+      }
+
       stopCounter();
 
       modalSection.innerHTML = challengeModalAcceptedHTML;

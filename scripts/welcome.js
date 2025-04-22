@@ -620,6 +620,7 @@ async function createUserData() {
       languages: sessionLanguages,
       languagesChosen: languagesChosen,
       peerID: peer.id,
+      inGame: false,
     };
     console.log(JSON.stringify(data));
 

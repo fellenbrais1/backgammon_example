@@ -123,6 +123,30 @@ export async function checkForName(playerName, allowedName = '') {
   }
 }
 
+export async function changeInGameStatus(key, bool) {
+  const playersRef = database.ref('players');
+
+  const existingPlayerRef = playersRef.child(key);
+  const existingSnapshot = await existingPlayerRef.once('value');
+  if (!existingSnapshot.exists()) {
+    console.error('Error: Player record does not exist');
+    return null;
+  }
+
+  const newInGame = bool;
+
+  await existingPlayerRef.update({
+    displayName: existingPlayerRef.displayName,
+    peerID: existingPlayerRef.peerID,
+    skillLevel: existingPlayerRef.skillLevel,
+    languages: existingPlayerRef.languages,
+    lastOnline: existingPlayerRef.lastOnline,
+    inGame: newInGame,
+  });
+  console.log(`Player status set to inGame = ${existingPlayerRef.inGame}`);
+  return;
+}
+
 export async function registerForChat(key, player, allowedName = '') {
   const playersRef = database.ref('players');
 
@@ -156,6 +180,7 @@ export async function registerForChat(key, player, allowedName = '') {
         skillLevel: player.skillLevel,
         languages: player.languages,
         lastOnline: Date.now(),
+        inGame: false,
       });
       console.log('Player registered successfully!');
       return newPlayerRef.key;
@@ -183,6 +208,7 @@ export async function registerForChat(key, player, allowedName = '') {
         skillLevel: player.skillLevel,
         languages: player.languages,
         lastOnline: Date.now(),
+        inGame: false,
       });
       console.log('Player updated successfully!');
       return key;
