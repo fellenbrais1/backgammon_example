@@ -136,14 +136,10 @@ export async function changeInGameStatus(key, bool) {
   const newInGame = bool;
 
   await existingPlayerRef.update({
-    displayName: existingPlayerRef.displayName,
-    peerID: existingPlayerRef.peerID,
-    skillLevel: existingPlayerRef.skillLevel,
-    languages: existingPlayerRef.languages,
-    lastOnline: existingPlayerRef.lastOnline,
     inGame: newInGame,
   });
   console.log(`Player status set to inGame = ${existingPlayerRef.inGame}`);
+  console.log(JSON.stringify(existingPlayerRef));
   return;
 }
 
