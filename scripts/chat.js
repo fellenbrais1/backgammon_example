@@ -467,6 +467,9 @@ async function eventChallengeSent(message) {
   const activeChallengeTimeStamp = getActiveChallengeTimeStamp();
   const timeStamp = Date.now();
 
+  console.log(`ActiveChallengeTimeStamp: ${activeChallengeTimeStamp}`);
+  console.log(`Received TimeStamp: ${timeStamp}`);
+
   // TODO - Should skip this handling if a new challenge message is newer than an old one being processed
   if (activeChallengeTimeStamp !== 0) {
     if (timeStamp > activeChallengeTimeStamp) {
