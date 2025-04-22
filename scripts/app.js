@@ -221,8 +221,6 @@ export async function playbackMove(move) {
   const toColor = board.colorOfPoint(move.to);
   const toOccupied = board.contents[move.to].occupied.length;
 
-  // TRANSPLANTED CODE FROM APPLYMOVE
-
   // TAKING A BLOT
   if (toColor != game.currentTurn && toOccupied == 1) {
     console.log(
@@ -258,8 +256,6 @@ export async function playbackMove(move) {
 
     return;
   }
-
-  // END OF TRANSPLANTED CODE FROM APPLYMOVE
 
   // animate the opponent's move
   let posToOccupy = board.contents[move.to].occupied.length + 1;
@@ -786,7 +782,7 @@ function setupMouseEvents() {
         // Use the calculated offset to maintain the cursor's position relative to the piece
         piece.style.left = event.pageX - offsetX - boardLeftOffset + 'px';
         piece.style.top = event.pageY - offsetY - boardTopOffset + 'px';
-        
+
         let point = identifyPoint(event.pageX, event.pageY);
         console.log('in onMouseMove, point = ' + point);
         applyHighlight(point, 1);
@@ -864,6 +860,17 @@ function consumeDiceMove(move) {
 async function applyMove(move) {
   // either snap or return depending on move legality
 
+  let barPoint, opponentHomeBoardStart, opponentHomeBoardEnd;
+  if (game.myPlayer === 'r') {
+    barPoint = 25;
+    opponentHomeBoardStart = 1;
+    opponentHomeBoardEnd = 6;
+  } else {
+    barPoint = 26;
+    opponentHomeBoardStart = 19;
+    opponentHomeBoardEnd = 24;
+  }
+
   // const toColor = board.contents[move.to].color;
   const toColor = board.colorOfPoint(move.to);
   const toOccupied = board.contents[move.to].occupied.length;
@@ -877,7 +884,12 @@ async function applyMove(move) {
     // (game.currentTurn == 'w' && move.to > move.from) ||
     // (game.currentTurn == 'r' && move.to < move.from) ||
     (toColor != '' && toColor != game.currentTurn && toOccupied > 1) ||
-    !isValidDiceMove(move) // moving an available throw
+    !isValidDiceMove(move) || // moving an available throw
+    (board.contents[barPoint].occupied.length &&
+      (move.from != barPoint ||
+        !(
+          move.to >= opponentHomeBoardStart && move.to <= opponentHomeBoardEnd
+        )))
   ) {
     console.log(
       'Returning piece: toColor = ' + toColor + ', toOccupied = ' + toOccupied
@@ -1348,6 +1360,14 @@ function defineCoordMap() {
 
 function isPieceMovable(piece, pt, pos) {
   console.log('isPieceMovable called for pt = ', pt, ' pos = ', pos);
+  const barPoint = game.myPlayer === 'r' ? 25 : 26;
+
+  // if piece is on the bar and you're trying to move somewhere else
+  if (board.contents[barPoint].occupied.length && pt != barPoint) {
+    // bar point occupied
+    console.log('Must move bar piece');
+    return false;
+  }
 
   // if piece is not being moved from a valid position
   if (piece == 0 && pos == 0) {
