@@ -858,7 +858,7 @@ export function populatePlayers(playerList, filter = 'none') {
           checkPlayerOnline(value.lastOnline)
             ? (() => {
                 checkPlayerInGame(value.inGame)
-                  ? (HTML = `<div class='player_online_display not_free ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${value.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`)
+                  ? (HTML = `<div class='player_online_display not_free no_select ${specificClass}'><p class='is_player_active player_ingame'></p><p class='player_text'>${value.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`)
                   : (HTML = `<div class='player_online_display ${specificClass}'><p class='is_player_active'></p><p class='player_text'>${value.displayName}</p><p class='player_text skill_marker'>${skillMarker}</p><p class='player_text'>${joinedPlayerFlags}</p></div>`);
                 playersDisplay.insertAdjacentHTML('afterbegin', HTML);
               })()
@@ -927,7 +927,7 @@ function addPlayerEventListeners(playerList) {
         `${status} Last Active: ${Math.floor(hours)} h, ${minutes} m ago`
       );
       if (current.classList.contains('not_free')) {
-        console.log(`Nothing to do for ${current.displayName} - In game`);
+        console.log(`Nothing to do for ${value.displayName} - In game`);
       } else {
         current.addEventListener('click', () => {
           playClickSound();
