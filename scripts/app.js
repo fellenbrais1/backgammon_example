@@ -253,6 +253,7 @@ export async function playbackMove(move) {
     board.updatePointOccupation(barPoint);
 
     consumeDiceMove(move);
+    game.applyControls(); // new
 
     return;
   }
@@ -794,7 +795,11 @@ function setupMouseEvents() {
         piece.style.left = newLeft + 'px';
         piece.style.top = newTop + 'px';
 
-        let point = identifyPoint(event.clientX, event.clientY, currentBoardRect);
+        let point = identifyPoint(
+          event.clientX,
+          event.clientY,
+          currentBoardRect
+        );
         // console.log('in onMouseMove, point = ' + point);
         applyHighlight(point, 1);
       };
@@ -868,11 +873,23 @@ function isValidDiceMove(move) {
 }
 
 function consumeDiceMove(move) {
-  const moveDistance =
-    game.currentTurn == 'w' ? move.from - move.to : move.to - move.from;
+  let effectiveMoveValue;
+
+  // special case - moving off the bar
+  if (move.from == 25 || move.from == 26) {
+    if (game.myPlayer == 'r') {
+      effectiveMoveValue = move.to;
+    } else {
+      effectiveMoveValue = 25 - move.to;
+    }
+  } else {
+    // ordinary move
+    effectiveMoveValue =
+      game.currentTurn == 'w' ? move.from - move.to : move.to - move.from;
+  }
 
   for (let i = 0; i < board.diceThrows.length; i++) {
-    if (board.diceThrows[i] == moveDistance) {
+    if (board.diceThrows[i] == effectiveMoveValue) {
       board.diceThrows[i] = 0;
       break;
     }
@@ -1111,7 +1128,7 @@ function identifyPoint(x, y, boardRect) {
   const currentBoardRect = boardRect || boardElement.getBoundingClientRect();
   const currentBoardLeft = currentBoardRect.left;
   const currentBoardTop = currentBoardRect.top;
-  
+
   // console.log(
   //   'in identifyPoint, game.myPlayer = ' +
   //     game.myPlayer +
