@@ -877,7 +877,7 @@ function consumeDiceMove(move) {
 
   // special case - moving off the bar
   if (move.from == 25 || move.from == 26) {
-    if (game.myPlayer == 'r') {
+    if (move.player == 'r') {
       effectiveMoveValue = move.to;
     } else {
       effectiveMoveValue = 25 - move.to;
