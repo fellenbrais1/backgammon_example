@@ -795,7 +795,7 @@ function setupMouseEvents() {
         piece.style.top = newTop + 'px';
 
         let point = identifyPoint(event.clientX, event.clientY);
-        console.log('in onMouseMove, point = ' + point);
+        // console.log('in onMouseMove, point = ' + point);
         applyHighlight(point, 1);
       };
 
@@ -1105,14 +1105,14 @@ function animateMovePiece(pieceId, targetX, targetY, speed) {
 
 // Function to identify point from mouse coordinates
 function identifyPoint(x, y) {
-  console.log(
-    'in identifyPoint, game.myPlayer = ' +
-      game.myPlayer +
-      ', x = ' +
-      x +
-      ', y = ' +
-      y
-  );
+  // console.log(
+  //   'in identifyPoint, game.myPlayer = ' +
+  //     game.myPlayer +
+  //     ', x = ' +
+  //     x +
+  //     ', y = ' +
+  //     y
+  // );
   let point;
 
   if (
