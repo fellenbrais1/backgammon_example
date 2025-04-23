@@ -392,6 +392,7 @@ export async function sendRPC(method, params) {
       console.log(`shutdownFlag = ${shutdownFlag}`);
       if (shutdownFlag === true) {
         console.log(`Shutting down RPC message process.`);
+        connOpen = false;
         shutdownFlag = false;
         return;
       }
@@ -495,6 +496,7 @@ function eventChallengeAccepted() {
 function eventChallengeRejected() {
   console.log(`Challenge rejected by ${challengerName}`);
   changeModalContent('challengeRejected', challengerName);
+  connOpen = false;
 }
 
 function eventForfeitGame(message) {
