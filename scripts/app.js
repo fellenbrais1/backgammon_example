@@ -903,9 +903,10 @@ function consumeDiceMove(move) {
   );
 
   // is the player's turn over?
-  if (board.diceThrows.every((element) => element === 0))
+  if (board.diceThrows.every((element) => element === 0)) {
     console.log('consumeDiceMove - about to call eventTurnFinished');
-  game.eventTurnFinished();
+    game.eventTurnFinished();
+  }
 }
 
 async function applyMove(move) {
