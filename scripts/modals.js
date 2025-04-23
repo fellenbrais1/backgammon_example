@@ -201,7 +201,7 @@ const challengeCancelModalHTML = `<section class="modal_message_section red_back
               {Other player} has rescinded their challenge!
             </p>
               <p
-                class="modal_section_button button button_red no_select"
+                class="modal_section_button button button_red no_select medium_margin_top"
                 title="Cancel Challenge"
               >
                 Ok

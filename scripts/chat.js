@@ -457,7 +457,7 @@ function dispatchMessage(parsedData) {
       break;
     case 'challengeCancel':
       console.log(`Calling eventChallengeCancel()`);
-      eventChallengeCancel();
+      eventChallengeCancel(parsedData.params);
       break;
     case 'forfeitGame':
       console.log('Send ' + parsedData.params + ' data to eventForfeitGame()');
@@ -510,7 +510,7 @@ function eventChallengeRejected() {
   return;
 }
 
-function eventChallengeCancel() {
+function eventChallengeCancel(challengerName) {
   console.log(`Challenge cancelled by ${challengerName}`);
   changeModalContent('challengeCancel', challengerName);
   closeConn();
