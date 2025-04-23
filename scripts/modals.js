@@ -694,6 +694,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         setTimeout(() => {
           enableChallenges();
 
+          resetActiveChallengeTimeStamp();
+
           restartRefreshPopulatePlayers();
           removeModal();
         }, 1000);
