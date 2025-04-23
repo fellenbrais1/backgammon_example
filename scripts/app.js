@@ -1406,8 +1406,13 @@ function isPieceMovable(piece, pt, pos) {
     return false;
   }
 
-  // don't move unless topmost piece
-  if (pos < board.contents[pt].occupied.length && pos < 5) {
+  // don't move unless topmost piece - except for bar points
+  if (
+    pos < board.contents[pt].occupied.length &&
+    pos < 5 &&
+    pt != 25 &&
+    pt != 26
+  ) {
     console.log('isPieceMovable: not topmost piece');
     return false;
   }
