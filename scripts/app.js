@@ -517,7 +517,7 @@ const game = {
   stage: Stage.DEMO,
 
   eventTurnFinished() {
-    console.log('EVENT TURN FINISHED');
+    console.log('In EVENT TURN FINISHED');
 
     // make it the other player's turn
     if (this.currentTurn == 'w') {
@@ -895,9 +895,17 @@ function consumeDiceMove(move) {
     }
   }
 
+  console.log(
+    'consumeDiceMove - consumed dice move ' +
+      effectiveMoveValue +
+      ' Remaining throws = ' +
+      board.diceThrows
+  );
+
   // is the player's turn over?
   if (board.diceThrows.every((element) => element === 0))
-    game.eventTurnFinished();
+    console.log('consumeDiceMove - about to call eventTurnFinished');
+  game.eventTurnFinished();
 }
 
 async function applyMove(move) {
