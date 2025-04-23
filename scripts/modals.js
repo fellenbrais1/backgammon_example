@@ -61,12 +61,12 @@ const step4Div = document.querySelector('.step4');
 
 const youName = document.querySelector('.you_name');
 const youSkill = document.querySelector('.you_skill');
-const youFlags = document.querySelector('.you_flags');
+// const youFlags = document.querySelector('.you_flags');
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
 
-let cancelFlag = false;
+// let cancelFlag = false;
 
 export let gamePlayers;
 let activeOpponentHere;

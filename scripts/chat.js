@@ -372,7 +372,7 @@ export function shutDownRPC() {
 
 // Added a looping delay that will retry sending the message until the connOpen variable is true, this is controlled by the conn.on(open) event
 export async function sendRPC(method, params) {
-  // shutdownFlag = false;
+  shutdownFlag = false;
   // TODO - TESTING IN PROGRESS
   // setTimeout before sending messages with conn.send currently set at 100ms, might need to raise if we encounter issues
 
@@ -488,17 +488,20 @@ async function eventChallengeSent(message) {
     activeOpponent.displayName,
     timeStamp,
   ]);
+  return;
 }
 
 function eventChallengeAccepted() {
   console.log(`Challenge accepted by ${challengerName}`);
   changeModalContent('challengeAccepted', challengerName);
+  return;
 }
 
 function eventChallengeRejected() {
   console.log(`Challenge rejected by ${challengerName}`);
   changeModalContent('challengeRejected', challengerName);
   connOpen = false;
+  return;
 }
 
 function eventForfeitGame(message) {
@@ -507,6 +510,7 @@ function eventForfeitGame(message) {
   forfeitMessage();
   console.log(`Game forfeitted by ${opponentName}`);
   changeModalContent('forfeitNotification', opponentName);
+  return;
 }
 
 function eventChatMessage(data) {
@@ -514,6 +518,7 @@ function eventChatMessage(data) {
   console.log(`Chat message received: ${chatMessage}`);
   const opponentName = getOpponentName();
   opponentMessage(opponentName, chatMessage);
+  return;
 }
 
 function eventGameOver(message) {
@@ -523,6 +528,7 @@ function eventGameOver(message) {
   gameOverMessage[1] = opponentName;
   console.log(`Chat message received: ${JSON.stringify(gameOverMessage)}`);
   changeModalContent('eventGameOverLose', gameOverMessage);
+  return;
 }
 
 export async function getOpponentUserKey(opponent) {
