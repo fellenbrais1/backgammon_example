@@ -778,15 +778,18 @@ function setupMouseEvents() {
 
       // Define the mousemove event handler
       const onMouseMove = (event) => {
+        // Get current board position - recalculate in case of scrolling or resize
+        const currentBoardRect = boardElement.getBoundingClientRect();
+        
         // Update the piece's position based on mouse movement
         // Use the calculated offset to maintain the cursor's position relative to the piece
-        let newLeft = event.pageX - offsetX - boardLeftOffset;
-        let newTop = event.pageY - offsetY - boardTopOffset;
+        let newLeft = event.clientX - offsetX - currentBoardRect.left;
+        let newTop = event.clientY - offsetY - currentBoardRect.top;
         
         piece.style.left = newLeft + 'px';
         piece.style.top = newTop + 'px';
 
-        let point = identifyPoint(event.pageX, event.pageY);
+        let point = identifyPoint(event.clientX, event.clientY);
         console.log('in onMouseMove, point = ' + point);
         applyHighlight(point, 1);
       };
