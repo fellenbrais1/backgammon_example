@@ -794,7 +794,7 @@ function setupMouseEvents() {
         piece.style.left = newLeft + 'px';
         piece.style.top = newTop + 'px';
 
-        let point = identifyPoint(event.clientX, event.clientY);
+        let point = identifyPoint(event.clientX, event.clientY, currentBoardRect);
         // console.log('in onMouseMove, point = ' + point);
         applyHighlight(point, 1);
       };
@@ -812,7 +812,9 @@ function setupMouseEvents() {
         applyHighlight(0, 0);
 
         // Record the ending point of the move
-        let point = identifyPoint(event.pageX, event.pageY);
+        // Get current board position for accurate coordinates
+        const finalBoardRect = boardElement.getBoundingClientRect();
+        let point = identifyPoint(event.clientX, event.clientY, finalBoardRect);
         game.currentMove.to = point;
         console.log(
           'On mouseup, move is from point ' +
@@ -1104,7 +1106,12 @@ function animateMovePiece(pieceId, targetX, targetY, speed) {
 }
 
 // Function to identify point from mouse coordinates
-function identifyPoint(x, y) {
+function identifyPoint(x, y, boardRect) {
+  // Get current board position if not provided
+  const currentBoardRect = boardRect || boardElement.getBoundingClientRect();
+  const currentBoardLeft = currentBoardRect.left;
+  const currentBoardTop = currentBoardRect.top;
+  
   // console.log(
   //   'in identifyPoint, game.myPlayer = ' +
   //     game.myPlayer +
@@ -1117,69 +1124,69 @@ function identifyPoint(x, y) {
 
   if (
     // upper left
-    x >= 72 + boardLeftOffset &&
-    x < 324 + boardLeftOffset &&
-    y >= 16 + boardTopOffset &&
-    y <= 226 + boardTopOffset + PIECE_RADIUS - VERTICAL_TOLERANCE
+    x >= 72 + currentBoardLeft &&
+    x < 324 + currentBoardLeft &&
+    y >= 16 + currentBoardTop &&
+    y <= 226 + currentBoardTop + PIECE_RADIUS - VERTICAL_TOLERANCE
   ) {
     // region = '18-13';
 
-    let n = Math.floor((x - boardLeftOffset - 72) / 42);
+    let n = Math.floor((x - currentBoardLeft - 72) / 42);
     point = 13 + n;
   } else if (
     // upper right
-    x >= 354 + boardLeftOffset &&
-    x < 604 + boardLeftOffset &&
-    y >= 16 + boardTopOffset &&
-    y <= 226 + boardTopOffset + PIECE_RADIUS - VERTICAL_TOLERANCE
+    x >= 354 + currentBoardLeft &&
+    x < 604 + currentBoardLeft &&
+    y >= 16 + currentBoardTop &&
+    y <= 226 + currentBoardTop + PIECE_RADIUS - VERTICAL_TOLERANCE
   ) {
     // region = '24-19';
 
-    let n = Math.floor((x - boardLeftOffset - 354) / 42);
+    let n = Math.floor((x - currentBoardLeft - 354) / 42);
     point = 19 + n;
   } else if (
     // lower left
-    x >= 72 + boardLeftOffset &&
-    x < 324 + boardLeftOffset &&
+    x >= 72 + currentBoardLeft &&
+    x < 324 + currentBoardLeft &&
     y >=
       272 +
-        boardTopOffset -
+        currentBoardTop -
         PIECE_RADIUS +
         VERTICAL_TOLERANCE +
         VERTICAL_TOLERANCE &&
-    y <= 478 + boardTopOffset + VERTICAL_TOLERANCE + VERTICAL_TOLERANCE
+    y <= 478 + currentBoardTop + VERTICAL_TOLERANCE + VERTICAL_TOLERANCE
   ) {
     // region = '12-7';
-    let n = Math.floor((x - boardLeftOffset - 72) / 42);
+    let n = Math.floor((x - currentBoardLeft - 72) / 42);
     point = 12 - n;
   } else if (
     // lower right
-    x >= 354 + boardLeftOffset &&
-    x < 604 + boardLeftOffset &&
+    x >= 354 + currentBoardLeft &&
+    x < 604 + currentBoardLeft &&
     y >=
       272 +
-        boardTopOffset -
+        currentBoardTop -
         PIECE_RADIUS +
         VERTICAL_TOLERANCE +
         VERTICAL_TOLERANCE &&
-    y <= 478 + boardTopOffset + VERTICAL_TOLERANCE + VERTICAL_TOLERANCE
+    y <= 478 + currentBoardTop + VERTICAL_TOLERANCE + VERTICAL_TOLERANCE
   ) {
     // region = '6-1';
-    let n = Math.floor((x - boardLeftOffset - 354) / 42);
+    let n = Math.floor((x - currentBoardLeft - 354) / 42);
     point = 6 - n;
   } else if (
-    x >= 314 + boardLeftOffset &&
-    x <= 364 + boardLeftOffset &&
-    y >= 220 + boardTopOffset &&
-    y <= 244 + boardTopOffset
+    x >= 314 + currentBoardLeft &&
+    x <= 364 + currentBoardLeft &&
+    y >= 220 + currentBoardTop &&
+    y <= 244 + currentBoardTop
   ) {
     // region = 'Red Bar';
     point = 25;
   } else if (
-    x >= 314 + boardLeftOffset &&
-    x <= 364 + boardLeftOffset &&
-    y >= 245 + boardTopOffset &&
-    y <= 268 + boardTopOffset
+    x >= 314 + currentBoardLeft &&
+    x <= 364 + currentBoardLeft &&
+    y >= 245 + currentBoardTop &&
+    y <= 268 + currentBoardTop
   ) {
     // region = 'White Bar';
     point = 26;
