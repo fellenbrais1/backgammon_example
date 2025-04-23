@@ -780,12 +780,12 @@ function setupMouseEvents() {
       const onMouseMove = (event) => {
         // Get current board position - recalculate in case of scrolling or resize
         const currentBoardRect = boardElement.getBoundingClientRect();
-        
+
         // Update the piece's position based on mouse movement
         // Use the calculated offset to maintain the cursor's position relative to the piece
         let newLeft = event.clientX - offsetX - currentBoardRect.left;
         let newTop = event.clientY - offsetY - currentBoardRect.top;
-        
+
         piece.style.left = newLeft + 'px';
         piece.style.top = newTop + 'px';
 
@@ -830,6 +830,8 @@ function setupMouseEvents() {
 }
 
 function isValidDiceMove(move) {
+  let effectiveMoveValue;
+
   console.log(
     'In isValidDiceMove turn = ' +
       game.currentTurn +
@@ -837,11 +839,22 @@ function isValidDiceMove(move) {
       JSON.stringify(move)
   );
 
-  const moveDistance =
-    game.currentTurn == 'w' ? move.from - move.to : move.to - move.from;
+  // special case - moving off the bar
+  if (move.from == 25 || move.from == 26) {
+    if (game.myPlayer == 'r') {
+      effectiveMoveValue = move.to;
+    } else {
+      effectiveMoveValue = 25 - move.to;
+    }
+  } else {
+    // ordinary move
+    effectiveMoveValue =
+      game.currentTurn == 'w' ? move.from - move.to : move.to - move.from;
+  }
 
+  // check if that was one of the dice values
   for (let i = 0; i < board.diceThrows.length; i++) {
-    if (board.diceThrows[i] == moveDistance) return true;
+    if (board.diceThrows[i] == effectiveMoveValue) return true;
   }
 
   return false;
