@@ -780,8 +780,11 @@ function setupMouseEvents() {
       const onMouseMove = (event) => {
         // Update the piece's position based on mouse movement
         // Use the calculated offset to maintain the cursor's position relative to the piece
-        piece.style.left = event.pageX - offsetX - boardLeftOffset + 'px';
-        piece.style.top = event.pageY - offsetY - boardTopOffset + 'px';
+        let newLeft = event.pageX - offsetX - boardLeftOffset;
+        let newTop = event.pageY - offsetY - boardTopOffset;
+        
+        piece.style.left = newLeft + 'px';
+        piece.style.top = newTop + 'px';
 
         let point = identifyPoint(event.pageX, event.pageY);
         console.log('in onMouseMove, point = ' + point);
