@@ -502,6 +502,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           restartRefreshPopulatePlayers();
           stopCounter();
           shutDownRPC();
+
+          resetActiveChallengeTimeStamp();
           closeConn();
 
           enableChallenges();
@@ -617,6 +619,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         sendRPC('challengeRejected', '');
 
         enableChallenges();
+
+        resetActiveChallengeTimeStamp();
         closeConn();
 
         setTimeout(() => {
@@ -1020,6 +1024,10 @@ function enableChallenges() {
 
 export function getActiveChallengeTimeStamp() {
   return activeChallengeTimeStamp;
+}
+
+export function resetActiveChallengeTimeStamp() {
+  activeChallengeTimeStamp = 0;
 }
 
 addChatButtons();
