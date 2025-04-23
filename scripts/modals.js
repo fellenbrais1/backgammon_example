@@ -194,6 +194,21 @@ const challengeReceivedModalHTML = `<section class="modal_message_section purple
             </div>
           </section>`;
 
+const challengeCancelModalHTML = `<section class="modal_message_section red_background">
+          <div class="challenge_received_block">
+            <p class="modal_section_text_big no_select" id='challenge_received_message_text'>CHALLENGE CANCELLED</p>
+            <p class="modal_section_text no_select" id='challenge_cancel_opponent_name'>
+              {Other player} has rescinded their challenge!
+            </p>
+              <p
+                class="modal_section_button button button_red no_select"
+                title="Cancel Challenge"
+              >
+                Ok
+              </p>
+          </div>
+        </section>`;
+
 const noChallengerHTML = `<section class='modal_message_section'><p class="modal_section_text medium_margin_top no_select">Please select a player to challenge, then press the challenge button, or, wait to be challenged!</p>
 <p class="modal_section_button button center_modal_button no_select" title='Ok'>Ok</p>
               </section>`;
@@ -499,6 +514,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         cancelFlag = true;
         challengeInformation.textContent = 'Cancelling challenge...';
         setTimeout(() => {
+          const storedObject = loadLocalStorage();
+          const displayName = storedObject.displayName;
+          sendRPC('challengeCancel', displayName);
           restartRefreshPopulatePlayers();
           stopCounter();
           shutDownRPC();
@@ -699,6 +717,29 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           restartRefreshPopulatePlayers();
           removeModal();
         }, 1000);
+      });
+      break;
+
+    case 'challengeCancel':
+      modalSection.innerHTML = challengeCancelModalHTML;
+      modalSection.classList.add('reveal');
+
+      const challengerNameElement = document.getElementById(
+        'challenge_cancel_opponent_name'
+      );
+
+      challengerNameElement.textContent = `${data} has rescinded their challenge!`;
+
+      const challengeCancelOkButton = modalSection.querySelector(
+        '.modal_section_button'
+      );
+
+      challengeCancelOkButton.addEventListener('click', () => {
+        playClickSound();
+        setTimeout(() => {
+          removeModal();
+        }, 1000);
+        return;
       });
       break;
 
