@@ -462,6 +462,11 @@ document.querySelector('.test_button2').addEventListener('click', function () {
       ', game.currentTurn = ' +
       game.currentTurn
   );
+
+  // print contents of board
+  for (let i = 0; i <= 26; i++) {
+    console.log('point [' + i + '] = ' + board.contents[i].occupied);
+  }
 });
 
 class CoordinateMapper {
