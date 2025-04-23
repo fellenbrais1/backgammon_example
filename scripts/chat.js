@@ -38,6 +38,7 @@ let attemptNo = 1;
 
 let shutdownFlag = false;
 let firstPlayerRefreshFlag = true;
+let blockProcessFlag = false;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // EVENT LISTENERS
@@ -422,6 +423,10 @@ function dispatchMessage(parsedData) {
   console.log('dispatchMessage() Method:', parsedData.method);
   console.log('dispatchMessage() Params:', parsedData.params);
 
+  if (blockProcessFlag) {
+    return;
+  }
+
   switch (parsedData.method) {
     case 'chat':
       console.log('Send ' + parsedData.params + ' data to eventChatMessage()');
@@ -512,6 +517,7 @@ function eventChallengeRejected() {
 
 function eventChallengeCancel(challengerName) {
   console.log(`Challenge cancelled by ${challengerName}`);
+  blockProcess();
   changeModalContent('challengeCancel', challengerName);
   closeConn();
   return;
@@ -610,6 +616,16 @@ export async function defineOpponent(opponentName) {
 
 export function closeConn() {
   connOpen = false;
+  return;
+}
+
+export function blockProcess() {
+  blockProcessFlag = true;
+  return;
+}
+
+export function enableProcess() {
+  blockProcessFlag = false;
   return;
 }
 

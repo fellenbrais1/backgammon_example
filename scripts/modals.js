@@ -30,6 +30,8 @@ import {
   shutDownRPC,
   changeInGameStatus,
   closeConn,
+  blockProcess,
+  enableProcess,
 } from './chat.js';
 import { startGameMessages, forfeitMessage } from './messages.js';
 import { startGame } from './app.js';
@@ -517,6 +519,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           const storedObject = loadLocalStorage();
           const displayName = storedObject.displayName;
           sendRPC('challengeCancel', displayName);
+          blockProcess();
           restartRefreshPopulatePlayers();
           stopCounter();
           shutDownRPC();
@@ -528,6 +531,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
           removeModal();
         }, 1000);
+        enableProcess();
       });
 
       gamePlayers = await playerPairingUserChallenge();
@@ -743,6 +747,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           restartRefreshPopulatePlayers();
 
           closeConn();
+          enableProcess();
 
           removeModal();
         }, 1000);
