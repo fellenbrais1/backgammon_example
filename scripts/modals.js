@@ -66,7 +66,7 @@ const youSkill = document.querySelector('.you_skill');
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
 
-// let cancelFlag = false;
+let cancelFlag = false;
 
 export let gamePlayers;
 let activeOpponentHere;
