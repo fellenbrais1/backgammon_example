@@ -60,7 +60,6 @@ const youFlags = document.querySelector('.you_flags');
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
 
-let sessionDisplayName = '';
 let cancelFlag = false;
 
 export let gamePlayers;
@@ -488,19 +487,19 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       }
 
       // Code to automatically cancel the challenge modal after 20 seconds
-      if (cancelFlag === false) {
-        setTimeout(() => {
-          console.log(
-            `20 seconds have passed without challenge response, cancelling.`
-          );
-          playClickSound();
-          challengeInformation.textContent = 'Cancelling challenge...';
-          setTimeout(() => {
-            removeModal();
-          }, 1000);
-        }, 20000);
-        break;
-      }
+      // if (cancelFlag === false) {
+      //   setTimeout(() => {
+      //     console.log(
+      //       `20 seconds have passed without challenge response, cancelling.`
+      //     );
+      //     playClickSound();
+      //     challengeInformation.textContent = 'Cancelling challenge...';
+      //     setTimeout(() => {
+      //       removeModal();
+      //     }, 1000);
+      //   }, 20000);
+      //   break;
+      // }
       break;
 
     case 'challengeReceived':
@@ -561,6 +560,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       break;
 
     case 'challengeAccepted':
+      stopCounter();
+
       modalSection.innerHTML = challengeModalAcceptedHTML;
       modalSection.style.backgroundColor = 'lightgreen';
 
@@ -573,8 +574,6 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
       challengerNameField2.textContent = `Challenging ${data}`;
       challengeInformation2.textContent = `Challenge has been accepted!`;
-
-      stopCounter();
 
       setTimeout(() => {
         playersSection.classList.remove('reveal');
@@ -595,6 +594,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       break;
 
     case 'challengeRejected':
+      stopCounter();
+
       modalSection.innerHTML = challengeModalRejectedHTML;
 
       const challengeInformation3 = document.getElementById(
@@ -617,6 +618,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         setTimeout(() => {
           restartRefreshPopulatePlayers();
           removeModal();
+          // BUG = At the moment I reload in the case of a rejected challenge so the player can more easily challenge again, otherwise this eventuality will block other conn.open events from happening for some reason, this needs to be fixed later
+          window.location.reload();
         }, 1000);
       });
       break;
