@@ -130,6 +130,24 @@
   left: 71px;
 }
 
+.piece::before {
+  content: attr(id); /* This will display the id attribute */
+  position: absolute;
+  top: 2px; /* Position near the top of the piece */
+  width: 100%;
+  font-size: 10px; /* Small font size */
+  text-align: center;
+  color: #444; /* Dark gray text for contrast */
+  pointer-events: none; /* Ensures clicks pass through to the piece */
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+/* If you need different colors for red pieces */
+.piece_red::before {
+  color: #fff; /* White text for better visibility on red pieces */
+}
+
 /* PIECE ELEMENTS */
 .piece {
   position: absolute;

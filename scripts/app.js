@@ -137,7 +137,12 @@ function canBearOff() {
 
     // Check if this position contains any pieces of the player's color
     const position = board.contents[i];
-    if (position && position.some((piece) => piece.startsWith(playerColor))) {
+    if (
+      Array.isArray(position) &&
+      position.some(
+        (piece) => typeof piece === 'string' && piece.startsWith(playerColor)
+      )
+    ) {
       return false; // Found a piece outside home board
     }
   }
@@ -155,7 +160,12 @@ function isHomeEmpty() {
     // Check if this position contains any pieces of the player's color
     const position = board.contents[i];
 
-    if (position && position.some((piece) => piece.startsWith(playerColor))) {
+    if (
+      Array.isArray(position) &&
+      position.some(
+        (piece) => typeof piece === 'string' && piece.startsWith(playerColor)
+      )
+    ) {
       return false; // Found a piece outside home board
     }
   }
@@ -208,6 +218,44 @@ export async function playbackDiceRoll(param) {
 
 export async function playbackMove(move) {
   console.log('In playbackMove, move = ' + JSON.stringify(move));
+  const toColor = board.colorOfPoint(move.to);
+  const toOccupied = board.contents[move.to].occupied.length;
+
+  // TAKING A BLOT
+  if (toColor != game.currentTurn && toOccupied == 1) {
+    console.log(
+      'In playbackMove, taking blot ' +
+        board.contents[move.to].occupied[0] +
+        ' with ' +
+        move.pieceId
+    );
+    // board.completeMovePiece(move.to); // NOT REQUIRED, MOVE IS FULLY FORMED
+
+    let barPoint = toColor == 'r' ? 25 : 26;
+    let blotPieceId = board.contents[move.to].occupied[0];
+    board.contents[move.from].occupied.pop();
+
+    // snap into place
+    let posToOccupy = 1; // by definition
+    let [x, y] = getPieceCoords(game.myPlayer, move.to, posToOccupy); // first param was move.player
+    await animateMovePiece(move.pieceId, x, y, 0.5);
+
+    // animate the blot to the bar. Red bar = 25, White bar = 26
+    // let barPoint = game.myPlayer == 'r' ? 26 : 25;
+    // let pieceId = board.contents[move.to].occupied[0];
+    board.onTheMove = blotPieceId;
+    board.completeMovePiece(barPoint);
+    board.contents[move.to].occupied = [move.pieceId]; // was [blotPieceId]
+
+    [x, y] = getPieceCoords(game.myPlayer, barPoint, 1); // was move.player
+    // let blotPiece = document.getElementById(blotPieceId);
+    await animateMovePiece(blotPieceId, x, y, 0.5);
+    board.updatePointOccupation(barPoint);
+
+    consumeDiceMove(move);
+
+    return;
+  }
 
   // animate the opponent's move
   let posToOccupy = board.contents[move.to].occupied.length + 1;
@@ -218,10 +266,10 @@ export async function playbackMove(move) {
   board.updatePointOccupation(move.from);
   board.updatePointOccupation(move.to);
 
-  let piece = document.getElementById(move.pieceId);
+  // let piece = document.getElementById(move.pieceId);
   consumeDiceMove(move);
 
-  await animateMovePiece(piece, x, y, 0.5);
+  await animateMovePiece(move.pieceId, x, y, 0.5);
   game.applyControls();
   // end of animate oppononent's move
 }
@@ -377,9 +425,9 @@ async function rollRedDice(param) {
   // Wait for some time before the final roll
   await sleep(100);
 
-  // // ??? simulating a 5 and 6 rolled
+  // // ??? simulating a 5 and 3 rolled
   // finalIndex1 = 4;
-  // finalIndex2 = 5;
+  // finalIndex2 = 2;
 
   // Final roll
   dice_red1.src = diceFaces[finalIndex1];
@@ -414,6 +462,11 @@ document.querySelector('.test_button2').addEventListener('click', function () {
       ', game.currentTurn = ' +
       game.currentTurn
   );
+
+  // print contents of board
+  for (let i = 0; i <= 26; i++) {
+    console.log('point [' + i + '] = ' + board.contents[i].occupied);
+  }
 });
 
 class CoordinateMapper {
@@ -429,15 +482,27 @@ class CoordinateMapper {
 
   // Find the exact point and pos for given x,y coordinates
   findPointAndPos(x, y) {
+    console.log(
+      'findPointAndPos called with game.myPlayer = ' +
+        game.myPlayer +
+        ', x = ' +
+        x +
+        ', y = ' +
+        y
+    );
     const key = `${x},${y}`;
-    let result = this.coordinates.get(key);
-    if (result === undefined) return { pt: 0, pos: 0 };
+    const originalResult = this.coordinates.get(key);
+    console.log(
+      'findPointAndPos, key found = ' + JSON.stringify(originalResult)
+    );
 
-    // reverse point when playing as red
-    if (game.currentTurn == 'r') {
-      result.pt = 25 - result.pt;
-    }
+    if (originalResult === undefined) return { pt: 0, pos: 0 };
 
+    // Return a new object with the values from originalResult without any transformation
+    // The point transformation for red player is handled in identifyPoint only
+    const result = { pt: originalResult.pt, pos: originalResult.pos };
+
+    console.log('findPointAndPos returning ' + JSON.stringify(result));
     return result;
   }
 }
@@ -554,7 +619,7 @@ const board = {
     this.contents[5].occupied = [];
     this.contents[6].occupied = ['w1', 'w2', 'w3', 'w4', 'w5'];
     this.contents[7].occupied = [];
-    this.contents[8].occupied = ['w6', 'w7', 'w8'];
+    this.contents[8].occupied = ['w6', 'w7', 'w8']; // should be ['w6', 'w7', 'w8']
     this.contents[9].occupied = [];
     this.contents[10].occupied = [];
     this.contents[11].occupied = [];
@@ -668,13 +733,23 @@ function setupMouseEvents() {
         return;
       }
 
-      const type = piece.dataset.type;
-
       // Determine the piece's position
       const x = piece.offsetLeft + PIECE_RADIUS;
       const y = piece.offsetTop + PIECE_RADIUS;
-      const { pt, pos } = mapper.findPointAndPos(x, y);
-      console.log('in mouseDown 1, pt = ' + pt + ', pos = ' + pos);
+      const { pt: originalPt, pos } = mapper.findPointAndPos(x, y);
+      // Apply board point reversal for red player here, consistent with identifyPoint
+      const pt =
+        game.myPlayer == 'r' && originalPt >= 1 && originalPt <= 24
+          ? 25 - originalPt
+          : originalPt;
+      console.log(
+        'in mouseDown 1, originalPt = ' +
+          originalPt +
+          ', adjusted pt = ' +
+          pt +
+          ', pos = ' +
+          pos
+      );
 
       // Check if the piece is movable
       if (!isPieceMovable(piece, pt, pos)) {
@@ -682,38 +757,45 @@ function setupMouseEvents() {
         return; // Exit the handler if the piece cannot be moved
       }
 
+      // Calculate the offset between the cursor and the piece's top-left corner
+      // This ensures the piece moves with the cursor at the exact spot where it was clicked
+      const pieceRect = piece.getBoundingClientRect();
+      const offsetX = e.clientX - pieceRect.left;
+      const offsetY = e.clientY - pieceRect.top;
+
       // Bring the current piece to the front
       piece.style.zIndex = '1000'; // Set a high z-index value
 
       // Record the starting point of the move
-      let point = identifyPoint(e.pageX, e.pageY);
-      console.log('Grabbed piece on point ' + point);
-      game.currentMove.piece = piece;
+      console.log('Grabbed piece on point ' + pt);
+      game.currentMove.pieceId = piece.id;
       game.currentMove.player = game.currentTurn;
-      game.currentMove.from = point;
+      game.currentMove.from = pt;
       game.currentMove.to = 0;
 
       // Mark the piece as being moved
       board.onTheMove = piece.id;
-      board.contents[point].occupied.pop();
-      board.updatePointOccupation(point);
-
-      // Store the starting position
-      let startX = piece.style.left || '0px';
-      let startY = piece.style.top || '0px';
+      board.contents[pt].occupied.pop();
+      board.updatePointOccupation(pt);
 
       // Set the global flag to indicate a piece is being dragged
       isPieceDragging = true;
 
       // Define the mousemove event handler
       const onMouseMove = (event) => {
+        // Get current board position - recalculate in case of scrolling or resize
+        const currentBoardRect = boardElement.getBoundingClientRect();
+
         // Update the piece's position based on mouse movement
-        piece.style.left =
-          event.pageX - piece.offsetWidth / 2 - boardLeftOffset + 'px';
-        piece.style.top =
-          event.pageY - piece.offsetHeight / 2 - boardTopOffset + 'px';
-        let point = identifyPoint(event.pageX, event.pageY);
-        console.log('in onMouseMove, point = ' + point);
+        // Use the calculated offset to maintain the cursor's position relative to the piece
+        let newLeft = event.clientX - offsetX - currentBoardRect.left;
+        let newTop = event.clientY - offsetY - currentBoardRect.top;
+
+        piece.style.left = newLeft + 'px';
+        piece.style.top = newTop + 'px';
+
+        let point = identifyPoint(event.clientX, event.clientY, currentBoardRect);
+        // console.log('in onMouseMove, point = ' + point);
         applyHighlight(point, 1);
       };
 
@@ -730,7 +812,9 @@ function setupMouseEvents() {
         applyHighlight(0, 0);
 
         // Record the ending point of the move
-        let point = identifyPoint(event.pageX, event.pageY);
+        // Get current board position for accurate coordinates
+        const finalBoardRect = boardElement.getBoundingClientRect();
+        let point = identifyPoint(event.clientX, event.clientY, finalBoardRect);
         game.currentMove.to = point;
         console.log(
           'On mouseup, move is from point ' +
@@ -753,6 +837,8 @@ function setupMouseEvents() {
 }
 
 function isValidDiceMove(move) {
+  let effectiveMoveValue;
+
   console.log(
     'In isValidDiceMove turn = ' +
       game.currentTurn +
@@ -760,11 +846,22 @@ function isValidDiceMove(move) {
       JSON.stringify(move)
   );
 
-  const moveDistance =
-    game.currentTurn == 'w' ? move.from - move.to : move.to - move.from;
+  // special case - moving off the bar
+  if (move.from == 25 || move.from == 26) {
+    if (game.myPlayer == 'r') {
+      effectiveMoveValue = move.to;
+    } else {
+      effectiveMoveValue = 25 - move.to;
+    }
+  } else {
+    // ordinary move
+    effectiveMoveValue =
+      game.currentTurn == 'w' ? move.from - move.to : move.to - move.from;
+  }
 
+  // check if that was one of the dice values
   for (let i = 0; i < board.diceThrows.length; i++) {
-    if (board.diceThrows[i] == moveDistance) return true;
+    if (board.diceThrows[i] == effectiveMoveValue) return true;
   }
 
   return false;
@@ -789,6 +886,17 @@ function consumeDiceMove(move) {
 async function applyMove(move) {
   // either snap or return depending on move legality
 
+  let barPoint, opponentHomeBoardStart, opponentHomeBoardEnd;
+  if (game.myPlayer === 'r') {
+    barPoint = 25;
+    opponentHomeBoardStart = 1;
+    opponentHomeBoardEnd = 6;
+  } else {
+    barPoint = 26;
+    opponentHomeBoardStart = 19;
+    opponentHomeBoardEnd = 24;
+  }
+
   // const toColor = board.contents[move.to].color;
   const toColor = board.colorOfPoint(move.to);
   const toOccupied = board.contents[move.to].occupied.length;
@@ -802,7 +910,12 @@ async function applyMove(move) {
     // (game.currentTurn == 'w' && move.to > move.from) ||
     // (game.currentTurn == 'r' && move.to < move.from) ||
     (toColor != '' && toColor != game.currentTurn && toOccupied > 1) ||
-    !isValidDiceMove(move) // moving an available throw
+    !isValidDiceMove(move) || // moving an available throw
+    (board.contents[barPoint].occupied.length &&
+      (move.from != barPoint ||
+        !(
+          move.to >= opponentHomeBoardStart && move.to <= opponentHomeBoardEnd
+        )))
   ) {
     console.log(
       'Returning piece: toColor = ' + toColor + ', toOccupied = ' + toOccupied
@@ -811,8 +924,8 @@ async function applyMove(move) {
     board.contents[move.from].occupied.push(board.onTheMove);
     board.onTheMove = '';
     let posToOccupy = board.contents[move.from].occupied.length;
-    let [x, y] = getPieceCoords(move.player, move.from, posToOccupy);
-    await animateMovePiece(move.piece, x, y, 0.5);
+    let [x, y] = getPieceCoords(game.myPlayer, move.from, posToOccupy);
+    await animateMovePiece(move.pieceId, x, y, 0.5);
     board.updatePointOccupation(move.from);
 
     updateGameStage();
@@ -822,31 +935,39 @@ async function applyMove(move) {
 
   // TAKING A BLOT
   if (toColor != game.currentTurn && toOccupied == 1) {
-    console.log('Taking blot ' + move.piece.id);
+    sendRPC('move', {
+      pieceId: move.pieceId,
+      player: game.currentTurn,
+      from: move.from,
+      to: move.to,
+    });
+
+    console.log('Taking blot ' + move.pieceId);
     board.completeMovePiece(move.to);
 
     let barPoint = game.myPlayer == 'r' ? 26 : 25;
-    let pieceId = board.contents[move.to].occupied[0];
+    let blotPieceId = board.contents[move.to].occupied[0];
 
-    // snap into place
+    // snap active piece into place
     let posToOccupy = 1; // by definition
-    let [x, y] = getPieceCoords(move.player, move.to, posToOccupy);
-    await animateMovePiece(move.piece, x, y, 0.5);
+    let [x, y] = getPieceCoords(game.myPlayer, move.to, posToOccupy);
+    await animateMovePiece(move.pieceId, x, y, 0.5);
 
     // animate the blot to the bar. Red bar = 25, White bar = 26
     // let barPoint = game.myPlayer == 'r' ? 26 : 25;
     // let pieceId = board.contents[move.to].occupied[0];
-    board.onTheMove = pieceId;
+    board.onTheMove = blotPieceId;
     board.completeMovePiece(barPoint);
-    board.contents[move.to].occupied = [pieceId];
+    board.contents[move.to].occupied = [move.pieceId]; // was [blotPieceId]
 
-    [x, y] = getPieceCoords(move.player, barPoint, 1);
-    let blotPiece = document.getElementById(pieceId);
-    await animateMovePiece(blotPiece, x, y, 0.5);
+    [x, y] = getPieceCoords(game.myPlayer, barPoint, 1);
+    //let blotPiece = document.getElementById(pieceId);
+    await animateMovePiece(blotPieceId, x, y, 0.5);
     board.updatePointOccupation(barPoint);
 
     consumeDiceMove(move);
 
+    updateGameStage();
     return;
   }
 
@@ -856,21 +977,14 @@ async function applyMove(move) {
   console.log('sending rpc for move, piece = ' + move.piece);
 
   sendRPC('move', {
-    pieceId: move.piece.id,
+    pieceId: move.pieceId,
     player: game.currentTurn,
     from: move.from,
     to: move.to,
   });
 
   let posToOccupy = board.contents[move.to].occupied.length + 1;
-  let [x, y] = getPieceCoords(move.player, move.to, posToOccupy);
-
-  // console.log(
-  //   'Before',
-  //   '\tOnTheMove: ' + board.onTheMove,
-  //   '\tAt ' + move.from + ': ' + board.contents[move.from].occupied,
-  //   '\tAt ' + move.to + ': ' + board.contents[move.to].occupied
-  // );
+  let [x, y] = getPieceCoords(game.myPlayer, move.to, posToOccupy);
 
   board.completeMovePiece(move.to);
 
@@ -883,7 +997,7 @@ async function applyMove(move) {
 
   board.updatePointOccupation(move.to);
   consumeDiceMove(move);
-  await animateMovePiece(move.piece, x, y, 0.5);
+  await animateMovePiece(move.pieceId, x, y, 0.5);
 }
 
 function applyHighlight(point, state) {
@@ -910,10 +1024,10 @@ async function drawBoardWithAnimation(player) {
     const occupiedList = board.contents[pt].occupied;
 
     for (let pos = 1; pos <= occupiedList.length; pos++) {
-      const id = occupiedList[pos - 1];
-      const piece = document.getElementById(id);
+      const pieceId = occupiedList[pos - 1];
+      // const piece = document.getElementById(id);
       let [x, y] = getPieceCoords(player, pt, pos);
-      await animateMovePiece(piece, x, y, 5);
+      await animateMovePiece(pieceId, x, y, 5);
     }
   }
 
@@ -957,8 +1071,9 @@ function drawBoardNoAnimation(player) {
 }
 
 // Function to move the piece back to its original position over a given duration
-function animateMovePiece(piece, targetX, targetY, speed) {
+function animateMovePiece(pieceId, targetX, targetY, speed) {
   return new Promise((resolve) => {
+    let piece = document.getElementById(pieceId);
     const initialX = parseFloat(piece.style.left) || 0;
     const initialY = parseFloat(piece.style.top) || 0;
     const deltaX = parseFloat(targetX) - PIECE_RADIUS - initialX;
@@ -991,74 +1106,87 @@ function animateMovePiece(piece, targetX, targetY, speed) {
 }
 
 // Function to identify point from mouse coordinates
-function identifyPoint(x, y) {
+function identifyPoint(x, y, boardRect) {
+  // Get current board position if not provided
+  const currentBoardRect = boardRect || boardElement.getBoundingClientRect();
+  const currentBoardLeft = currentBoardRect.left;
+  const currentBoardTop = currentBoardRect.top;
+  
+  // console.log(
+  //   'in identifyPoint, game.myPlayer = ' +
+  //     game.myPlayer +
+  //     ', x = ' +
+  //     x +
+  //     ', y = ' +
+  //     y
+  // );
   let point;
 
   if (
     // upper left
-    x >= 72 + boardLeftOffset &&
-    x < 324 + boardLeftOffset &&
-    y >= 16 + boardTopOffset &&
-    y <= 226 + boardTopOffset + PIECE_RADIUS - VERTICAL_TOLERANCE
+    x >= 72 + currentBoardLeft &&
+    x < 324 + currentBoardLeft &&
+    y >= 16 + currentBoardTop &&
+    y <= 226 + currentBoardTop + PIECE_RADIUS - VERTICAL_TOLERANCE
   ) {
     // region = '18-13';
 
-    let n = Math.floor((x - boardLeftOffset - 72) / 42);
+    let n = Math.floor((x - currentBoardLeft - 72) / 42);
     point = 13 + n;
   } else if (
     // upper right
-    x >= 354 + boardLeftOffset &&
-    x < 604 + boardLeftOffset &&
-    y >= 16 + boardTopOffset &&
-    y <= 226 + boardTopOffset + PIECE_RADIUS - VERTICAL_TOLERANCE
+    x >= 354 + currentBoardLeft &&
+    x < 604 + currentBoardLeft &&
+    y >= 16 + currentBoardTop &&
+    y <= 226 + currentBoardTop + PIECE_RADIUS - VERTICAL_TOLERANCE
   ) {
     // region = '24-19';
 
-    let n = Math.floor((x - boardLeftOffset - 354) / 42);
+    let n = Math.floor((x - currentBoardLeft - 354) / 42);
     point = 19 + n;
   } else if (
     // lower left
-    x >= 72 + boardLeftOffset &&
-    x < 324 + boardLeftOffset &&
+    x >= 72 + currentBoardLeft &&
+    x < 324 + currentBoardLeft &&
     y >=
       272 +
-        boardTopOffset -
+        currentBoardTop -
         PIECE_RADIUS +
         VERTICAL_TOLERANCE +
         VERTICAL_TOLERANCE &&
-    y <= 478 + boardTopOffset + VERTICAL_TOLERANCE + VERTICAL_TOLERANCE
+    y <= 478 + currentBoardTop + VERTICAL_TOLERANCE + VERTICAL_TOLERANCE
   ) {
     // region = '12-7';
-    let n = Math.floor((x - boardLeftOffset - 72) / 42);
+    let n = Math.floor((x - currentBoardLeft - 72) / 42);
     point = 12 - n;
   } else if (
     // lower right
-    x >= 354 + boardLeftOffset &&
-    x < 604 + boardLeftOffset &&
+    x >= 354 + currentBoardLeft &&
+    x < 604 + currentBoardLeft &&
     y >=
       272 +
-        boardTopOffset -
+        currentBoardTop -
         PIECE_RADIUS +
         VERTICAL_TOLERANCE +
         VERTICAL_TOLERANCE &&
-    y <= 478 + boardTopOffset + VERTICAL_TOLERANCE + VERTICAL_TOLERANCE
+    y <= 478 + currentBoardTop + VERTICAL_TOLERANCE + VERTICAL_TOLERANCE
   ) {
     // region = '6-1';
-    let n = Math.floor((x - boardLeftOffset - 354) / 42);
+    let n = Math.floor((x - currentBoardLeft - 354) / 42);
     point = 6 - n;
   } else if (
-    x >= 314 + boardLeftOffset &&
-    x <= 364 + boardLeftOffset &&
-    y >= 220 + boardTopOffset &&
-    y <= 244 + boardTopOffset
+    x >= 314 + currentBoardLeft &&
+    x <= 364 + currentBoardLeft &&
+    y >= 220 + currentBoardTop &&
+    y <= 244 + currentBoardTop
   ) {
     // region = 'Red Bar';
     point = 25;
   } else if (
-    x >= 314 + boardLeftOffset &&
-    x <= 364 + boardLeftOffset &&
-    y >= 245 + boardTopOffset &&
-    y <= 268 + boardTopOffset
+    x >= 314 + currentBoardLeft &&
+    x <= 364 + currentBoardLeft &&
+    y >= 245 + currentBoardTop &&
+    y <= 268 + currentBoardTop
   ) {
     // region = 'White Bar';
     point = 26;
@@ -1066,7 +1194,7 @@ function identifyPoint(x, y) {
     point = 0;
   }
 
-  if (game.currentTurn == 'r') {
+  if (game.myPlayer == 'r') {
     // reverse board
     if (point >= 1 && point <= 24) {
       point = 25 - point;
@@ -1078,6 +1206,7 @@ function identifyPoint(x, y) {
     }
   }
 
+  console.log('identifyPoint returning point ' + point);
   return point;
 }
 
@@ -1262,6 +1391,14 @@ function defineCoordMap() {
 
 function isPieceMovable(piece, pt, pos) {
   console.log('isPieceMovable called for pt = ', pt, ' pos = ', pos);
+  const barPoint = game.myPlayer === 'r' ? 25 : 26;
+
+  // if piece is on the bar and you're trying to move somewhere else
+  if (board.contents[barPoint].occupied.length && pt != barPoint) {
+    // bar point occupied
+    console.log('Must move bar piece');
+    return false;
+  }
 
   // if piece is not being moved from a valid position
   if (piece == 0 && pos == 0) {
@@ -1281,8 +1418,13 @@ function isPieceMovable(piece, pt, pos) {
     return false;
   }
 
-  // don't move unless topmost piece
-  if (pos < board.contents[pt].occupied.length && pos < 5) {
+  // don't move unless topmost piece - except for bar points
+  if (
+    pos < board.contents[pt].occupied.length &&
+    pos < 5 &&
+    pt != 25 &&
+    pt != 26
+  ) {
     console.log('isPieceMovable: not topmost piece');
     return false;
   }
