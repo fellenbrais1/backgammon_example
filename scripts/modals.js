@@ -737,8 +737,13 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       challengeCancelOkButton.addEventListener('click', () => {
         playClickSound();
         setTimeout(() => {
+          enableChallenges();
+
           resetActiveChallengeTimeStamp();
+          restartRefreshPopulatePlayers();
+
           closeConn();
+
           removeModal();
         }, 1000);
         return;
