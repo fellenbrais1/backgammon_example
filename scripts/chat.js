@@ -37,6 +37,7 @@ let connOpen = false;
 let attemptNo = 1;
 
 let shutdownFlag = false;
+let firstPlayerRefreshFlag = true;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // EVENT LISTENERS
@@ -282,8 +283,9 @@ export async function fetchRecentPlayers(languageFilter = 'none') {
     console.log(numberOfPlayers);
     if (numberOfPlayers < 2) {
       console.log('No players online in the last hour.');
-      // TODO - DISABLED FOR NOW/ UNNEEDED?
-      // changeModalContent('noPlayersOnline');
+      if (firstPlayerRefreshFlag === true);
+      changeModalContent('noPlayersOnline');
+      firstPlayerRefreshFlag = false;
       return [];
     }
 
@@ -402,7 +404,7 @@ export async function sendRPC(method, params) {
         );
         attemptNo++;
         sendRPC(method, params);
-      }, 5000);
+      }, 1000);
     } else {
       attemptNo = 1;
       console.log(`Error: Connection cannot be made with the other player.`);
