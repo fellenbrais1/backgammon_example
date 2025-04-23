@@ -29,6 +29,7 @@ import {
   defineOpponent,
   shutDownRPC,
   changeInGameStatus,
+  closeConn,
 } from './chat.js';
 import { startGameMessages, forfeitMessage } from './messages.js';
 import { startGame } from './app.js';
@@ -615,6 +616,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         sendRPC('challengeRejected', '');
 
         enableChallenges();
+        closeConn();
 
         setTimeout(() => {
           removeModal();

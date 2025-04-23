@@ -392,7 +392,7 @@ export async function sendRPC(method, params) {
       console.log(`shutdownFlag = ${shutdownFlag}`);
       if (shutdownFlag === true) {
         console.log(`Shutting down RPC message process.`);
-        connOpen = false;
+        closeConn();
         shutdownFlag = false;
         return;
       }
@@ -474,7 +474,7 @@ async function eventChallengeSent(message) {
   // TODO - Should skip this handling if a new challenge message is newer than an old one being processed
   if (activeChallengeTimeStamp !== 0) {
     if (timeStamp > activeChallengeTimeStamp) {
-      connOpen = false;
+      closeConn();
       return;
     }
   }
@@ -500,7 +500,7 @@ function eventChallengeAccepted() {
 function eventChallengeRejected() {
   console.log(`Challenge rejected by ${challengerName}`);
   changeModalContent('challengeRejected', challengerName);
-  connOpen = false;
+  closeConn();
   return;
 }
 
@@ -593,6 +593,11 @@ export async function defineOpponent(opponentName) {
     console.log(`Problem getting opponent record - ${error}`);
     return null;
   }
+}
+
+export function closeConn() {
+  connOpen = false;
+  return;
 }
 
 // CODE END
