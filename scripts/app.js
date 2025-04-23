@@ -613,30 +613,55 @@ const board = {
     }));
 
     // Starting positions
-    this.contents[1].occupied = ['r1', 'r2'];
-    this.contents[2].occupied = [];
-    this.contents[3].occupied = [];
-    this.contents[4].occupied = [];
-    this.contents[5].occupied = [];
+    this.contents[1].occupied = ['r1'];
+    this.contents[2].occupied = ['r2'];
+    this.contents[3].occupied = ['r3'];
+    this.contents[4].occupied = ['r4'];
+    this.contents[5].occupied = ['r5'];
     this.contents[6].occupied = ['w1', 'w2', 'w3', 'w4', 'w5'];
-    this.contents[7].occupied = [];
+    this.contents[7].occupied = ['r6'];
     this.contents[8].occupied = ['w6', 'w7', 'w8']; // should be ['w6', 'w7', 'w8']
     this.contents[9].occupied = [];
     this.contents[10].occupied = [];
     this.contents[11].occupied = [];
-    this.contents[12].occupied = ['r3', 'r4', 'r5', 'r6', 'r7'];
+    this.contents[12].occupied = ['r7'];
     this.contents[13].occupied = ['w9', 'w10', 'w11', 'w12', 'w13'];
     this.contents[14].occupied = [];
     this.contents[15].occupied = [];
     this.contents[16].occupied = [];
     this.contents[17].occupied = ['r8', 'r9', 'r10'];
     this.contents[18].occupied = [];
-    this.contents[19].occupied = ['r11', 'r12', 'r13', 'r14', 'r15'];
-    this.contents[20].occupied = [];
-    this.contents[21].occupied = [];
-    this.contents[22].occupied = [];
-    this.contents[23].occupied = [];
+    this.contents[19].occupied = ['r11'];
+    this.contents[20].occupied = ['r12'];
+    this.contents[21].occupied = ['r13'];
+    this.contents[22].occupied = ['r14'];
+    this.contents[23].occupied = ['r15'];
     this.contents[24].occupied = ['w14', 'w15'];
+
+    // this.contents[1].occupied = ['r1', 'r2'];
+    // this.contents[2].occupied = [];
+    // this.contents[3].occupied = [];
+    // this.contents[4].occupied = [];
+    // this.contents[5].occupied = [];
+    // this.contents[6].occupied = ['w1', 'w2', 'w3', 'w4', 'w5'];
+    // this.contents[7].occupied = [];
+    // this.contents[8].occupied = ['w6', 'w7', 'w8']; // should be ['w6', 'w7', 'w8']
+    // this.contents[9].occupied = [];
+    // this.contents[10].occupied = [];
+    // this.contents[11].occupied = [];
+    // this.contents[12].occupied = ['r3', 'r4', 'r5', 'r6', 'r7'];
+    // this.contents[13].occupied = ['w9', 'w10', 'w11', 'w12', 'w13'];
+    // this.contents[14].occupied = [];
+    // this.contents[15].occupied = [];
+    // this.contents[16].occupied = [];
+    // this.contents[17].occupied = ['r8', 'r9', 'r10'];
+    // this.contents[18].occupied = [];
+    // this.contents[19].occupied = ['r11', 'r12', 'r13', 'r14', 'r15'];
+    // this.contents[20].occupied = [];
+    // this.contents[21].occupied = [];
+    // this.contents[22].occupied = [];
+    // this.contents[23].occupied = [];
+    // this.contents[24].occupied = ['w14', 'w15'];
   },
 
   completeMovePiece(toPoint) {
