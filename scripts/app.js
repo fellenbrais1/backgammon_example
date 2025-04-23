@@ -221,8 +221,6 @@ export async function playbackMove(move) {
   const toColor = board.colorOfPoint(move.to);
   const toOccupied = board.contents[move.to].occupied.length;
 
-  // TRANSPLANTED CODE FROM APPLYMOVE
-
   // TAKING A BLOT
   if (toColor != game.currentTurn && toOccupied == 1) {
     console.log(
@@ -258,8 +256,6 @@ export async function playbackMove(move) {
 
     return;
   }
-
-  // END OF TRANSPLANTED CODE FROM APPLYMOVE
 
   // animate the opponent's move
   let posToOccupy = board.contents[move.to].occupied.length + 1;
@@ -466,6 +462,11 @@ document.querySelector('.test_button2').addEventListener('click', function () {
       ', game.currentTurn = ' +
       game.currentTurn
   );
+
+  // print contents of board
+  for (let i = 0; i <= 26; i++) {
+    console.log('point [' + i + '] = ' + board.contents[i].occupied);
+  }
 });
 
 class CoordinateMapper {
@@ -782,13 +783,19 @@ function setupMouseEvents() {
 
       // Define the mousemove event handler
       const onMouseMove = (event) => {
+        // Get current board position - recalculate in case of scrolling or resize
+        const currentBoardRect = boardElement.getBoundingClientRect();
+
         // Update the piece's position based on mouse movement
         // Use the calculated offset to maintain the cursor's position relative to the piece
-        piece.style.left = event.pageX - offsetX - boardLeftOffset + 'px';
-        piece.style.top = event.pageY - offsetY - boardTopOffset + 'px';
-        
-        let point = identifyPoint(event.pageX, event.pageY);
-        console.log('in onMouseMove, point = ' + point);
+        let newLeft = event.clientX - offsetX - currentBoardRect.left;
+        let newTop = event.clientY - offsetY - currentBoardRect.top;
+
+        piece.style.left = newLeft + 'px';
+        piece.style.top = newTop + 'px';
+
+        let point = identifyPoint(event.clientX, event.clientY, currentBoardRect);
+        // console.log('in onMouseMove, point = ' + point);
         applyHighlight(point, 1);
       };
 
@@ -805,7 +812,9 @@ function setupMouseEvents() {
         applyHighlight(0, 0);
 
         // Record the ending point of the move
-        let point = identifyPoint(event.pageX, event.pageY);
+        // Get current board position for accurate coordinates
+        const finalBoardRect = boardElement.getBoundingClientRect();
+        let point = identifyPoint(event.clientX, event.clientY, finalBoardRect);
         game.currentMove.to = point;
         console.log(
           'On mouseup, move is from point ' +
@@ -828,6 +837,8 @@ function setupMouseEvents() {
 }
 
 function isValidDiceMove(move) {
+  let effectiveMoveValue;
+
   console.log(
     'In isValidDiceMove turn = ' +
       game.currentTurn +
@@ -835,11 +846,22 @@ function isValidDiceMove(move) {
       JSON.stringify(move)
   );
 
-  const moveDistance =
-    game.currentTurn == 'w' ? move.from - move.to : move.to - move.from;
+  // special case - moving off the bar
+  if (move.from == 25 || move.from == 26) {
+    if (game.myPlayer == 'r') {
+      effectiveMoveValue = move.to;
+    } else {
+      effectiveMoveValue = 25 - move.to;
+    }
+  } else {
+    // ordinary move
+    effectiveMoveValue =
+      game.currentTurn == 'w' ? move.from - move.to : move.to - move.from;
+  }
 
+  // check if that was one of the dice values
   for (let i = 0; i < board.diceThrows.length; i++) {
-    if (board.diceThrows[i] == moveDistance) return true;
+    if (board.diceThrows[i] == effectiveMoveValue) return true;
   }
 
   return false;
@@ -864,6 +886,17 @@ function consumeDiceMove(move) {
 async function applyMove(move) {
   // either snap or return depending on move legality
 
+  let barPoint, opponentHomeBoardStart, opponentHomeBoardEnd;
+  if (game.myPlayer === 'r') {
+    barPoint = 25;
+    opponentHomeBoardStart = 1;
+    opponentHomeBoardEnd = 6;
+  } else {
+    barPoint = 26;
+    opponentHomeBoardStart = 19;
+    opponentHomeBoardEnd = 24;
+  }
+
   // const toColor = board.contents[move.to].color;
   const toColor = board.colorOfPoint(move.to);
   const toOccupied = board.contents[move.to].occupied.length;
@@ -877,7 +910,12 @@ async function applyMove(move) {
     // (game.currentTurn == 'w' && move.to > move.from) ||
     // (game.currentTurn == 'r' && move.to < move.from) ||
     (toColor != '' && toColor != game.currentTurn && toOccupied > 1) ||
-    !isValidDiceMove(move) // moving an available throw
+    !isValidDiceMove(move) || // moving an available throw
+    (board.contents[barPoint].occupied.length &&
+      (move.from != barPoint ||
+        !(
+          move.to >= opponentHomeBoardStart && move.to <= opponentHomeBoardEnd
+        )))
   ) {
     console.log(
       'Returning piece: toColor = ' + toColor + ', toOccupied = ' + toOccupied
@@ -1068,82 +1106,87 @@ function animateMovePiece(pieceId, targetX, targetY, speed) {
 }
 
 // Function to identify point from mouse coordinates
-function identifyPoint(x, y) {
-  console.log(
-    'in identifyPoint, game.myPlayer = ' +
-      game.myPlayer +
-      ', x = ' +
-      x +
-      ', y = ' +
-      y
-  );
+function identifyPoint(x, y, boardRect) {
+  // Get current board position if not provided
+  const currentBoardRect = boardRect || boardElement.getBoundingClientRect();
+  const currentBoardLeft = currentBoardRect.left;
+  const currentBoardTop = currentBoardRect.top;
+  
+  // console.log(
+  //   'in identifyPoint, game.myPlayer = ' +
+  //     game.myPlayer +
+  //     ', x = ' +
+  //     x +
+  //     ', y = ' +
+  //     y
+  // );
   let point;
 
   if (
     // upper left
-    x >= 72 + boardLeftOffset &&
-    x < 324 + boardLeftOffset &&
-    y >= 16 + boardTopOffset &&
-    y <= 226 + boardTopOffset + PIECE_RADIUS - VERTICAL_TOLERANCE
+    x >= 72 + currentBoardLeft &&
+    x < 324 + currentBoardLeft &&
+    y >= 16 + currentBoardTop &&
+    y <= 226 + currentBoardTop + PIECE_RADIUS - VERTICAL_TOLERANCE
   ) {
     // region = '18-13';
 
-    let n = Math.floor((x - boardLeftOffset - 72) / 42);
+    let n = Math.floor((x - currentBoardLeft - 72) / 42);
     point = 13 + n;
   } else if (
     // upper right
-    x >= 354 + boardLeftOffset &&
-    x < 604 + boardLeftOffset &&
-    y >= 16 + boardTopOffset &&
-    y <= 226 + boardTopOffset + PIECE_RADIUS - VERTICAL_TOLERANCE
+    x >= 354 + currentBoardLeft &&
+    x < 604 + currentBoardLeft &&
+    y >= 16 + currentBoardTop &&
+    y <= 226 + currentBoardTop + PIECE_RADIUS - VERTICAL_TOLERANCE
   ) {
     // region = '24-19';
 
-    let n = Math.floor((x - boardLeftOffset - 354) / 42);
+    let n = Math.floor((x - currentBoardLeft - 354) / 42);
     point = 19 + n;
   } else if (
     // lower left
-    x >= 72 + boardLeftOffset &&
-    x < 324 + boardLeftOffset &&
+    x >= 72 + currentBoardLeft &&
+    x < 324 + currentBoardLeft &&
     y >=
       272 +
-        boardTopOffset -
+        currentBoardTop -
         PIECE_RADIUS +
         VERTICAL_TOLERANCE +
         VERTICAL_TOLERANCE &&
-    y <= 478 + boardTopOffset + VERTICAL_TOLERANCE + VERTICAL_TOLERANCE
+    y <= 478 + currentBoardTop + VERTICAL_TOLERANCE + VERTICAL_TOLERANCE
   ) {
     // region = '12-7';
-    let n = Math.floor((x - boardLeftOffset - 72) / 42);
+    let n = Math.floor((x - currentBoardLeft - 72) / 42);
     point = 12 - n;
   } else if (
     // lower right
-    x >= 354 + boardLeftOffset &&
-    x < 604 + boardLeftOffset &&
+    x >= 354 + currentBoardLeft &&
+    x < 604 + currentBoardLeft &&
     y >=
       272 +
-        boardTopOffset -
+        currentBoardTop -
         PIECE_RADIUS +
         VERTICAL_TOLERANCE +
         VERTICAL_TOLERANCE &&
-    y <= 478 + boardTopOffset + VERTICAL_TOLERANCE + VERTICAL_TOLERANCE
+    y <= 478 + currentBoardTop + VERTICAL_TOLERANCE + VERTICAL_TOLERANCE
   ) {
     // region = '6-1';
-    let n = Math.floor((x - boardLeftOffset - 354) / 42);
+    let n = Math.floor((x - currentBoardLeft - 354) / 42);
     point = 6 - n;
   } else if (
-    x >= 314 + boardLeftOffset &&
-    x <= 364 + boardLeftOffset &&
-    y >= 220 + boardTopOffset &&
-    y <= 244 + boardTopOffset
+    x >= 314 + currentBoardLeft &&
+    x <= 364 + currentBoardLeft &&
+    y >= 220 + currentBoardTop &&
+    y <= 244 + currentBoardTop
   ) {
     // region = 'Red Bar';
     point = 25;
   } else if (
-    x >= 314 + boardLeftOffset &&
-    x <= 364 + boardLeftOffset &&
-    y >= 245 + boardTopOffset &&
-    y <= 268 + boardTopOffset
+    x >= 314 + currentBoardLeft &&
+    x <= 364 + currentBoardLeft &&
+    y >= 245 + currentBoardTop &&
+    y <= 268 + currentBoardTop
   ) {
     // region = 'White Bar';
     point = 26;
@@ -1348,6 +1391,14 @@ function defineCoordMap() {
 
 function isPieceMovable(piece, pt, pos) {
   console.log('isPieceMovable called for pt = ', pt, ' pos = ', pos);
+  const barPoint = game.myPlayer === 'r' ? 25 : 26;
+
+  // if piece is on the bar and you're trying to move somewhere else
+  if (board.contents[barPoint].occupied.length && pt != barPoint) {
+    // bar point occupied
+    console.log('Must move bar piece');
+    return false;
+  }
 
   // if piece is not being moved from a valid position
   if (piece == 0 && pos == 0) {
@@ -1367,8 +1418,13 @@ function isPieceMovable(piece, pt, pos) {
     return false;
   }
 
-  // don't move unless topmost piece
-  if (pos < board.contents[pt].occupied.length && pos < 5) {
+  // don't move unless topmost piece - except for bar points
+  if (
+    pos < board.contents[pt].occupied.length &&
+    pos < 5 &&
+    pt != 25 &&
+    pt != 26
+  ) {
     console.log('isPieceMovable: not topmost piece');
     return false;
   }
