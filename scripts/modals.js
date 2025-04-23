@@ -502,6 +502,7 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           restartRefreshPopulatePlayers();
           stopCounter();
           shutDownRPC();
+          closeConn();
 
           enableChallenges();
 
