@@ -948,6 +948,7 @@ html {
   outline: solid 2px white;
   border-radius: 5px;
   background-color: var(--topbar_light_blue);
+  cursor: pointer;
 }
 
 .game_button_backgammon img,

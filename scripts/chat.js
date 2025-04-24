@@ -17,7 +17,7 @@ import {
   getOpponentName,
   opponentMessage,
 } from './messages.js';
-import { changeModalContent } from './modals.js';
+import { changeModalContent, getActiveChallengeTimeStamp } from './modals.js';
 import { playbackDiceRoll, playbackMove } from './app.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -37,6 +37,8 @@ let connOpen = false;
 let attemptNo = 1;
 
 let shutdownFlag = false;
+let firstPlayerRefreshFlag = true;
+let blockProcessFlag = false;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // EVENT LISTENERS
@@ -123,6 +125,26 @@ export async function checkForName(playerName, allowedName = '') {
   }
 }
 
+export async function changeInGameStatus(key, bool) {
+  const playersRef = database.ref('players');
+
+  const existingPlayerRef = playersRef.child(key);
+  const existingSnapshot = await existingPlayerRef.once('value');
+  if (!existingSnapshot.exists()) {
+    console.error('Error: Player record does not exist');
+    return null;
+  }
+
+  const newInGame = bool;
+
+  await existingPlayerRef.update({
+    inGame: newInGame,
+  });
+  console.log(`Player status set to inGame = ${existingPlayerRef.inGame}`);
+  console.log(JSON.stringify(existingPlayerRef));
+  return;
+}
+
 export async function registerForChat(key, player, allowedName = '') {
   const playersRef = database.ref('players');
 
@@ -156,6 +178,7 @@ export async function registerForChat(key, player, allowedName = '') {
         skillLevel: player.skillLevel,
         languages: player.languages,
         lastOnline: Date.now(),
+        inGame: false,
       });
       console.log('Player registered successfully!');
       return newPlayerRef.key;
@@ -183,6 +206,7 @@ export async function registerForChat(key, player, allowedName = '') {
         skillLevel: player.skillLevel,
         languages: player.languages,
         lastOnline: Date.now(),
+        inGame: false,
       });
       console.log('Player updated successfully!');
       return key;
@@ -260,8 +284,9 @@ export async function fetchRecentPlayers(languageFilter = 'none') {
     console.log(numberOfPlayers);
     if (numberOfPlayers < 2) {
       console.log('No players online in the last hour.');
-      // TODO - DISABLED FOR NOW/ UNNEEDED?
-      // changeModalContent('noPlayersOnline');
+      if (firstPlayerRefreshFlag === true);
+      changeModalContent('noPlayersOnline');
+      firstPlayerRefreshFlag = false;
       return [];
     }
 
@@ -350,7 +375,7 @@ export function shutDownRPC() {
 
 // Added a looping delay that will retry sending the message until the connOpen variable is true, this is controlled by the conn.on(open) event
 export async function sendRPC(method, params) {
-  // shutdownFlag = false;
+  shutdownFlag = false;
   // TODO - TESTING IN PROGRESS
   // setTimeout before sending messages with conn.send currently set at 100ms, might need to raise if we encounter issues
 
@@ -370,6 +395,7 @@ export async function sendRPC(method, params) {
       console.log(`shutdownFlag = ${shutdownFlag}`);
       if (shutdownFlag === true) {
         console.log(`Shutting down RPC message process.`);
+        closeConn();
         shutdownFlag = false;
         return;
       }
@@ -379,7 +405,7 @@ export async function sendRPC(method, params) {
         );
         attemptNo++;
         sendRPC(method, params);
-      }, 5000);
+      }, 1000);
     } else {
       attemptNo = 1;
       console.log(`Error: Connection cannot be made with the other player.`);
@@ -396,6 +422,10 @@ function dispatchMessage(parsedData) {
   console.log(JSON.stringify(parsedData));
   console.log('dispatchMessage() Method:', parsedData.method);
   console.log('dispatchMessage() Params:', parsedData.params);
+
+  if (blockProcessFlag) {
+    return;
+  }
 
   switch (parsedData.method) {
     case 'chat':
@@ -430,6 +460,10 @@ function dispatchMessage(parsedData) {
       console.log('Calling eventChallengeRejected()');
       eventChallengeRejected();
       break;
+    case 'challengeCancel':
+      console.log(`Calling eventChallengeCancel()`);
+      eventChallengeCancel(parsedData.params);
+      break;
     case 'forfeitGame':
       console.log('Send ' + parsedData.params + ' data to eventForfeitGame()');
       eventForfeitGame(parsedData.params);
@@ -442,20 +476,51 @@ function dispatchMessage(parsedData) {
 }
 
 async function eventChallengeSent(message) {
+  const activeChallengeTimeStamp = getActiveChallengeTimeStamp();
+  const timeStamp = Date.now();
+
+  console.log(`ActiveChallengeTimeStamp: ${activeChallengeTimeStamp}`);
+  console.log(`Received TimeStamp: ${timeStamp}`);
+
+  // TODO - Should skip this handling if a new challenge message is newer than an old one being processed
+  if (activeChallengeTimeStamp !== 0) {
+    if (timeStamp > activeChallengeTimeStamp) {
+      closeConn();
+      return;
+    }
+  }
+
   activeOpponent = await fetchPlayerByKey(message);
   console.log(activeOpponent);
-  console.log(`Challenge received from ${activeOpponent.displayName}`);
-  changeModalContent('challengeReceived', activeOpponent.displayName);
+  console.log(
+    `Challenge received from ${activeOpponent.displayName} at ${timeStamp}`
+  );
+  changeModalContent('challengeReceived', [
+    activeOpponent.displayName,
+    timeStamp,
+  ]);
+  return;
 }
 
 function eventChallengeAccepted() {
   console.log(`Challenge accepted by ${challengerName}`);
   changeModalContent('challengeAccepted', challengerName);
+  return;
 }
 
 function eventChallengeRejected() {
   console.log(`Challenge rejected by ${challengerName}`);
   changeModalContent('challengeRejected', challengerName);
+  closeConn();
+  return;
+}
+
+function eventChallengeCancel(challengerName) {
+  console.log(`Challenge cancelled by ${challengerName}`);
+  blockProcess();
+  changeModalContent('challengeCancel', challengerName);
+  closeConn();
+  return;
 }
 
 function eventForfeitGame(message) {
@@ -464,6 +529,7 @@ function eventForfeitGame(message) {
   forfeitMessage();
   console.log(`Game forfeitted by ${opponentName}`);
   changeModalContent('forfeitNotification', opponentName);
+  return;
 }
 
 function eventChatMessage(data) {
@@ -471,6 +537,7 @@ function eventChatMessage(data) {
   console.log(`Chat message received: ${chatMessage}`);
   const opponentName = getOpponentName();
   opponentMessage(opponentName, chatMessage);
+  return;
 }
 
 function eventGameOver(message) {
@@ -480,6 +547,7 @@ function eventGameOver(message) {
   gameOverMessage[1] = opponentName;
   console.log(`Chat message received: ${JSON.stringify(gameOverMessage)}`);
   changeModalContent('eventGameOverLose', gameOverMessage);
+  return;
 }
 
 export async function getOpponentUserKey(opponent) {
@@ -544,6 +612,21 @@ export async function defineOpponent(opponentName) {
     console.log(`Problem getting opponent record - ${error}`);
     return null;
   }
+}
+
+export function closeConn() {
+  connOpen = false;
+  return;
+}
+
+export function blockProcess() {
+  blockProcessFlag = true;
+  return;
+}
+
+export function enableProcess() {
+  blockProcessFlag = false;
+  return;
 }
 
 // CODE END

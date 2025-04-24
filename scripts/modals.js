@@ -23,7 +23,16 @@ import {
   restartRefreshPopulatePlayers,
 } from './welcome.js';
 import { clearLocalStorage, loadLocalStorage } from './localStorage.js';
-import { sendRPC, assignConn, defineOpponent, shutDownRPC } from './chat.js';
+import {
+  sendRPC,
+  assignConn,
+  defineOpponent,
+  shutDownRPC,
+  changeInGameStatus,
+  closeConn,
+  blockProcess,
+  enableProcess,
+} from './chat.js';
 import { startGameMessages, forfeitMessage } from './messages.js';
 import { startGame, getDiceThrows, changeTurn } from './app.js';
 
@@ -55,7 +64,7 @@ const step4Div = document.querySelector('.step4');
 
 const youName = document.querySelector('.you_name');
 const youSkill = document.querySelector('.you_skill');
-const youFlags = document.querySelector('.you_flags');
+// const youFlags = document.querySelector('.you_flags');
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
@@ -74,6 +83,7 @@ let counterInterval;
 let counterValue = 0;
 
 let challengeBlocker = false;
+let activeChallengeTimeStamp = 0;
 
 const otherGamesBackgammonButtonHTML = `<div class="game_button_backgammon" title="Backgammon">
     <img src="images/MOMABackgammon.png" alt="Backgammon game picture" />
@@ -185,6 +195,21 @@ const challengeReceivedModalHTML = `<section class="modal_message_section purple
               </div>
             </div>
           </section>`;
+
+const challengeCancelModalHTML = `<section class="modal_message_section red_background">
+          <div class="challenge_received_block">
+            <p class="modal_section_text_big no_select" id='challenge_received_message_text'>CHALLENGE CANCELLED</p>
+            <p class="modal_section_text no_select" id='challenge_cancel_opponent_name'>
+              {Other player} has rescinded their challenge!
+            </p>
+              <p
+                class="modal_section_button button button_red no_select center_modal_button medium_margin_top"
+                title="Cancel Challenge"
+              >
+                Ok
+              </p>
+          </div>
+        </section>`;
 
 const noChallengerHTML = `<section class='modal_message_section'><p class="modal_section_text medium_margin_top no_select">Please select a player to challenge, then press the challenge button, or, wait to be challenged!</p>
 <p class="modal_section_button button center_modal_button no_select" title='Ok'>Ok</p>
@@ -447,11 +472,27 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       break;
 
     case 'challengeSent':
+      activeChallengeTimeStamp = Date.now();
+      console.log(`Now: ${activeChallengeTimeStamp}`);
+
       // TODO - Blocks a player from sending another challenge request while within a challenge event
       if (challengeBlocker === true) {
         console.log(
-          `Outgoing challenge request blocked as player is currently within a challenge`
+          `Outgoing challenge request ignored as player is currently within a challenge`
         );
+        stopCounter();
+        // removeModal();
+        // enableChallenges();
+        return;
+      }
+
+      if (data === activeOpponentHere) {
+        console.log(
+          `Being challenged by the same player as you are playing against - cancelling!`
+        );
+        stopCounter();
+        removeModal();
+        enableChallenges();
         return;
       }
 
@@ -471,7 +512,6 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
       challengerNameField.textContent = `Challenging ${data}`;
 
-      // TODO - Starts the counter to see how long the challenge has been active for
       startCounter();
 
       buttonChallengeCancel.addEventListener('click', () => {
@@ -479,14 +519,22 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         cancelFlag = true;
         challengeInformation.textContent = 'Cancelling challenge...';
         setTimeout(() => {
+          const storedObject = loadLocalStorage();
+          const displayName = storedObject.displayName;
+          sendRPC('challengeCancel', displayName);
+          blockProcess();
           restartRefreshPopulatePlayers();
           stopCounter();
           shutDownRPC();
+
+          resetActiveChallengeTimeStamp();
+          closeConn();
 
           enableChallenges();
 
           removeModal();
         }, 1000);
+        enableProcess();
       });
 
       gamePlayers = await playerPairingUserChallenge();
@@ -505,28 +553,33 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         break;
       }
 
-      // Code to automatically cancel the challenge modal after 20 seconds
-      // if (cancelFlag === false) {
-      //   setTimeout(() => {
-      //     console.log(
-      //       `20 seconds have passed without challenge response, cancelling.`
-      //     );
-      //     playClickSound();
-      //     challengeInformation.textContent = 'Cancelling challenge...';
-      //     setTimeout(() => {
-      //       removeModal();
-      //     }, 1000);
-      //   }, 20000);
-      //   break;
-      // }
       break;
 
     case 'challengeReceived':
+      activeChallengeTimeStamp = data[1];
+      const storedObject = loadLocalStorage();
+      const userKey = storedObject.userKey;
+      console.log(`Now: ${activeChallengeTimeStamp}`);
+      // console.log(`Incoming: ${incomingTimeStamp}`);
+
       // TODO - Blocks a player from processing an incoming challenge request if they are currently within a challenge event
       if (challengeBlocker === true) {
         console.log(
           `Incoming challenge request blocked as player is currently within a challenge`
         );
+        stopCounter();
+        removeModal();
+        enableChallenges();
+        return;
+      }
+
+      if (data[0] === activeOpponentHere) {
+        console.log(
+          `Being challenged by the same player as you are playing against - cancelling!`
+        );
+        stopCounter();
+        removeModal();
+        enableChallenges();
         return;
       }
 
@@ -544,11 +597,19 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       const acceptButton = modalSection.querySelector('.modal_section_button');
       const declineButton = modalSection.querySelector('.button_red');
 
-      challengerNameText.textContent = `${data} wants to play a game!`;
+      challengerNameText.textContent = `${data[0]} wants to play a game!`;
 
-      const opponentName = data;
+      const opponentName = data[0];
 
       acceptButton.addEventListener('click', async () => {
+        try {
+          await changeInGameStatus(userKey, true);
+        } catch (error) {
+          console.log(
+            `Updating user inGame status failed with error: ${error}`
+          );
+        }
+
         activeOpponentHere = activeOpponent;
         playClickSound();
         challengeReceivedText.textContent = `You have accepted this challenge!`;
@@ -570,7 +631,6 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
           const isChallenger = false;
           console.log(`Player is challenger for startGame: no`);
 
-          // TODO - Test to see if pauseRefreshPopulatePLayers() actually runs
           pauseRefreshPopulatePlayers();
 
           playOpeningJingleSound();
@@ -585,6 +645,9 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
         enableChallenges();
 
+        resetActiveChallengeTimeStamp();
+        closeConn();
+
         setTimeout(() => {
           removeModal();
         }, 1000);
@@ -592,6 +655,14 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       break;
 
     case 'challengeAccepted':
+      const storedObject2 = loadLocalStorage();
+      const userKey2 = storedObject2.userKey;
+      try {
+        changeInGameStatus(userKey2, true);
+      } catch (error) {
+        console.log(`Updating user inGame status failed with error: ${error}`);
+      }
+
       stopCounter();
 
       modalSection.innerHTML = challengeModalAcceptedHTML;
@@ -617,7 +688,6 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         const isChallenger = true;
         console.log(`Player is challenger for startGame: yes`);
 
-        // TODO - Test to see if pauseRefreshPopulatePLayers() actually runs
         pauseRefreshPopulatePlayers();
 
         playOpeningJingleSound();
@@ -627,7 +697,6 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
     case 'challengeRejected':
       stopCounter();
-
       modalSection.innerHTML = challengeModalRejectedHTML;
 
       const challengeInformation3 = document.getElementById(
@@ -650,11 +719,44 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
         setTimeout(() => {
           enableChallenges();
 
+          resetActiveChallengeTimeStamp();
+
           restartRefreshPopulatePlayers();
           removeModal();
           // BUG = At the moment I reload in the case of a rejected challenge so the player can more easily challenge again, otherwise this eventuality will block other conn.open events from happening for some reason, this needs to be fixed later
           window.location.reload();
         }, 1000);
+      });
+      break;
+
+    case 'challengeCancel':
+      modalSection.innerHTML = challengeCancelModalHTML;
+      modalSection.classList.add('reveal');
+
+      const challengerNameElement = document.getElementById(
+        'challenge_cancel_opponent_name'
+      );
+
+      challengerNameElement.textContent = `${data} has rescinded their challenge!`;
+
+      const challengeCancelOkButton = modalSection.querySelector(
+        '.modal_section_button'
+      );
+
+      challengeCancelOkButton.addEventListener('click', () => {
+        playClickSound();
+        setTimeout(() => {
+          enableChallenges();
+
+          resetActiveChallengeTimeStamp();
+          restartRefreshPopulatePlayers();
+
+          closeConn();
+          enableProcess();
+
+          removeModal();
+        }, 1000);
+        return;
       });
       break;
 
@@ -980,6 +1082,14 @@ function blockChallenges() {
 
 function enableChallenges() {
   challengeBlocker = false;
+}
+
+export function getActiveChallengeTimeStamp() {
+  return activeChallengeTimeStamp;
+}
+
+export function resetActiveChallengeTimeStamp() {
+  activeChallengeTimeStamp = 0;
 }
 
 addChatButtons();
