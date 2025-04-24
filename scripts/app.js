@@ -203,6 +203,15 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// for other code to be able to change the player's turn
+export function changeTurn() {
+  game.eventTurnFinished();
+}
+
+export function getDiceThrows() {
+  return board.diceThrows;
+}
+
 // Playback functions
 export async function playbackDiceRoll(param) {
   console.log('In playbackDiceRoll, param = ' + JSON.stringify(param));
@@ -253,6 +262,7 @@ export async function playbackMove(move) {
     board.updatePointOccupation(barPoint);
 
     consumeDiceMove(move);
+    game.applyControls(); // new
 
     return;
   }
@@ -516,7 +526,7 @@ const game = {
   stage: Stage.DEMO,
 
   eventTurnFinished() {
-    console.log('EVENT TURN FINISHED');
+    console.log('In EVENT TURN FINISHED');
 
     // make it the other player's turn
     if (this.currentTurn == 'w') {
@@ -612,12 +622,12 @@ const board = {
     }));
 
     // Starting positions
-    this.contents[1].occupied = ['r1', 'r2'];
+    this.contents[1].occupied = ['r2'];
     this.contents[2].occupied = [];
     this.contents[3].occupied = [];
     this.contents[4].occupied = [];
     this.contents[5].occupied = [];
-    this.contents[6].occupied = ['w1', 'w2', 'w3', 'w4', 'w5'];
+    this.contents[6].occupied = ['w2', 'w3', 'w4', 'w5'];
     this.contents[7].occupied = [];
     this.contents[8].occupied = ['w6', 'w7', 'w8']; // should be ['w6', 'w7', 'w8']
     this.contents[9].occupied = [];
@@ -636,6 +646,33 @@ const board = {
     this.contents[22].occupied = [];
     this.contents[23].occupied = [];
     this.contents[24].occupied = ['w14', 'w15'];
+    this.contents[25].occupied = ['r1'];
+    this.contents[26].occupied = ['w1'];
+
+    // this.contents[1].occupied = ['r1', 'r2'];
+    // this.contents[2].occupied = [];
+    // this.contents[3].occupied = [];
+    // this.contents[4].occupied = [];
+    // this.contents[5].occupied = [];
+    // this.contents[6].occupied = ['w1', 'w2', 'w3', 'w4', 'w5'];
+    // this.contents[7].occupied = [];
+    // this.contents[8].occupied = ['w6', 'w7', 'w8']; // should be ['w6', 'w7', 'w8']
+    // this.contents[9].occupied = [];
+    // this.contents[10].occupied = [];
+    // this.contents[11].occupied = [];
+    // this.contents[12].occupied = ['r3', 'r4', 'r5', 'r6', 'r7'];
+    // this.contents[13].occupied = ['w9', 'w10', 'w11', 'w12', 'w13'];
+    // this.contents[14].occupied = [];
+    // this.contents[15].occupied = [];
+    // this.contents[16].occupied = [];
+    // this.contents[17].occupied = ['r8', 'r9', 'r10'];
+    // this.contents[18].occupied = [];
+    // this.contents[19].occupied = ['r11', 'r12', 'r13', 'r14', 'r15'];
+    // this.contents[20].occupied = [];
+    // this.contents[21].occupied = [];
+    // this.contents[22].occupied = [];
+    // this.contents[23].occupied = [];
+    // this.contents[24].occupied = ['w14', 'w15'];
   },
 
   completeMovePiece(toPoint) {
@@ -794,7 +831,11 @@ function setupMouseEvents() {
         piece.style.left = newLeft + 'px';
         piece.style.top = newTop + 'px';
 
-        let point = identifyPoint(event.clientX, event.clientY, currentBoardRect);
+        let point = identifyPoint(
+          event.clientX,
+          event.clientY,
+          currentBoardRect
+        );
         // console.log('in onMouseMove, point = ' + point);
         applyHighlight(point, 1);
       };
@@ -868,19 +909,40 @@ function isValidDiceMove(move) {
 }
 
 function consumeDiceMove(move) {
-  const moveDistance =
-    game.currentTurn == 'w' ? move.from - move.to : move.to - move.from;
+  let effectiveMoveValue;
+
+  // special case - moving off the bar
+  if (move.from == 25 || move.from == 26) {
+    if (move.player == 'r') {
+      effectiveMoveValue = move.to;
+    } else {
+      effectiveMoveValue = 25 - move.to;
+    }
+  } else {
+    // ordinary move
+    effectiveMoveValue =
+      game.currentTurn == 'w' ? move.from - move.to : move.to - move.from;
+  }
 
   for (let i = 0; i < board.diceThrows.length; i++) {
-    if (board.diceThrows[i] == moveDistance) {
+    if (board.diceThrows[i] == effectiveMoveValue) {
       board.diceThrows[i] = 0;
       break;
     }
   }
 
+  console.log(
+    'consumeDiceMove - consumed dice move ' +
+      effectiveMoveValue +
+      ' Remaining throws = ' +
+      board.diceThrows
+  );
+
   // is the player's turn over?
-  if (board.diceThrows.every((element) => element === 0))
+  if (board.diceThrows.every((element) => element === 0)) {
+    console.log('consumeDiceMove - about to call eventTurnFinished');
     game.eventTurnFinished();
+  }
 }
 
 async function applyMove(move) {
@@ -1111,7 +1173,7 @@ function identifyPoint(x, y, boardRect) {
   const currentBoardRect = boardRect || boardElement.getBoundingClientRect();
   const currentBoardLeft = currentBoardRect.left;
   const currentBoardTop = currentBoardRect.top;
-  
+
   // console.log(
   //   'in identifyPoint, game.myPlayer = ' +
   //     game.myPlayer +
@@ -1177,16 +1239,16 @@ function identifyPoint(x, y, boardRect) {
   } else if (
     x >= 314 + currentBoardLeft &&
     x <= 364 + currentBoardLeft &&
-    y >= 220 + currentBoardTop &&
-    y <= 244 + currentBoardTop
+    y >= 231 - PIECE_RADIUS + currentBoardTop && // Centered on actual piece y-coord (231)
+    y <= 231 + PIECE_RADIUS + currentBoardTop // Full coverage for piece radius
   ) {
     // region = 'Red Bar';
     point = 25;
   } else if (
     x >= 314 + currentBoardLeft &&
     x <= 364 + currentBoardLeft &&
-    y >= 245 + currentBoardTop &&
-    y <= 268 + currentBoardTop
+    y >= 269 - PIECE_RADIUS + currentBoardTop && // Centered on actual piece y-coord (269)
+    y <= 269 + PIECE_RADIUS + currentBoardTop // Full coverage for piece radius
   ) {
     // region = 'White Bar';
     point = 26;
