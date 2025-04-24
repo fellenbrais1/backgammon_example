@@ -53,8 +53,8 @@ chatInput.addEventListener('keydown', (event) => {
 function addChatMessage() {
   const message = chatInput.value;
   const sanitisedMessage = message.replace(/<[^>]*>/g, '');
-  chatInput.value = '';
   const messageHTML = createChatMessage(sanitisedMessage);
+  chatInput.value = '';
   sendRPC('chat', message);
   postChatMessage(messageHTML);
   displayLatestMessage();
