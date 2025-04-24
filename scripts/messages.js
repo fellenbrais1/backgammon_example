@@ -52,12 +52,21 @@ chatInput.addEventListener('keydown', (event) => {
 // Called by an eventHandler when pressing enter in the chat input box
 function addChatMessage() {
   const message = chatInput.value;
-  const sanitisedMessage = message.replace(/<[^>]*>/g, '');
+  const sanitisedMessage = sanitizeMessage(message);
   const messageHTML = createChatMessage(sanitisedMessage);
   chatInput.value = '';
   sendRPC('chat', message);
   postChatMessage(messageHTML);
   displayLatestMessage();
+}
+
+function sanitizeMessage(message) {
+  return message
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
 }
 
 // Assembles and returns  an HTML literal string to add to the chat display element
