@@ -1230,16 +1230,16 @@ function identifyPoint(x, y, boardRect) {
   } else if (
     x >= 314 + currentBoardLeft &&
     x <= 364 + currentBoardLeft &&
-    y >= 202 + currentBoardTop && // was 220
-    y <= 244 + currentBoardTop
+    y >= 202 + currentBoardTop && 
+    y <= 250 + currentBoardTop // Expanded to ensure full piece coverage
   ) {
     // region = 'Red Bar';
     point = 25;
   } else if (
     x >= 314 + currentBoardLeft &&
     x <= 364 + currentBoardLeft &&
-    y >= 245 + currentBoardTop &&
-    y <= 268 + currentBoardTop
+    y >= 233 + currentBoardTop && // Expanded upward to overlap and cover entire piece
+    y <= 287 + currentBoardTop  // Expanded downward to ensure full piece coverage
   ) {
     // region = 'White Bar';
     point = 26;
