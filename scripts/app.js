@@ -203,6 +203,15 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// for other code to be able to change the player's turn
+export function changeTurn() {
+  game.eventTurnFinished();
+}
+
+export function getDiceThrows() {
+  return board.diceThrows;
+}
+
 // Playback functions
 export async function playbackDiceRoll(param) {
   console.log('In playbackDiceRoll, param = ' + JSON.stringify(param));
@@ -1230,16 +1239,16 @@ function identifyPoint(x, y, boardRect) {
   } else if (
     x >= 314 + currentBoardLeft &&
     x <= 364 + currentBoardLeft &&
-    y >= (231 - PIECE_RADIUS) + currentBoardTop && // Centered on actual piece y-coord (231)
-    y <= (231 + PIECE_RADIUS) + currentBoardTop     // Full coverage for piece radius
+    y >= 231 - PIECE_RADIUS + currentBoardTop && // Centered on actual piece y-coord (231)
+    y <= 231 + PIECE_RADIUS + currentBoardTop // Full coverage for piece radius
   ) {
     // region = 'Red Bar';
     point = 25;
   } else if (
     x >= 314 + currentBoardLeft &&
     x <= 364 + currentBoardLeft &&
-    y >= (269 - PIECE_RADIUS) + currentBoardTop && // Centered on actual piece y-coord (269)
-    y <= (269 + PIECE_RADIUS) + currentBoardTop     // Full coverage for piece radius
+    y >= 269 - PIECE_RADIUS + currentBoardTop && // Centered on actual piece y-coord (269)
+    y <= 269 + PIECE_RADIUS + currentBoardTop // Full coverage for piece radius
   ) {
     // region = 'White Bar';
     point = 26;
