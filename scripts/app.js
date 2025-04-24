@@ -1230,7 +1230,7 @@ function identifyPoint(x, y, boardRect) {
   } else if (
     x >= 314 + currentBoardLeft &&
     x <= 364 + currentBoardLeft &&
-    y >= 220 + currentBoardTop &&
+    y >= 202 + currentBoardTop && // was 220
     y <= 244 + currentBoardTop
   ) {
     // region = 'Red Bar';
