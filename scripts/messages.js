@@ -52,8 +52,9 @@ chatInput.addEventListener('keydown', (event) => {
 // Called by an eventHandler when pressing enter in the chat input box
 function addChatMessage() {
   const message = chatInput.value;
+  const sanitisedMessage = message.replace(/<[^>]*>/g, '');
   chatInput.value = '';
-  const messageHTML = createChatMessage(message);
+  const messageHTML = createChatMessage(sanitisedMessage);
   sendRPC('chat', message);
   postChatMessage(messageHTML);
   displayLatestMessage();
