@@ -25,7 +25,7 @@ import {
 import { clearLocalStorage, loadLocalStorage } from './localStorage.js';
 import { sendRPC, assignConn, defineOpponent, shutDownRPC } from './chat.js';
 import { startGameMessages, forfeitMessage } from './messages.js';
-import { startGame } from './app.js';
+import { startGame, getDiceThrows, changeTurn } from './app.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -304,11 +304,14 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
       movesRemainingYesButton.addEventListener('click', () => {
         playClickSound();
+
+        console.log(
+          'You have chosen to end your turn - call turn change logic'
+        );
+        changeTurn();
+
         setTimeout(() => {
           removeModal();
-          console.log(
-            'You have chosen to end your turn - call turn change logic'
-          );
         }, 1000);
       });
 
@@ -790,7 +793,9 @@ function addChatButtons() {
   endTurnButton.addEventListener('click', () => {
     console.log(`End turn flow`);
     // TODO - Call this with a variable containing moves remaining if we want this functionality
-    changeModalContent('movesRemaining');
+    const diceThrows = getDiceThrows();
+    const filteredDiceThrows = diceThrows.filter((value) => value !== 0);
+    changeModalContent('movesRemaining', filteredDiceThrows);
   });
 
   settingsButton.addEventListener('click', () => {
