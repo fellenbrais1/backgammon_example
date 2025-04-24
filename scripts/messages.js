@@ -55,7 +55,7 @@ function addChatMessage() {
   const sanitisedMessage = sanitizeMessage(message);
   const messageHTML = createChatMessage(sanitisedMessage);
   chatInput.value = '';
-  sendRPC('chat', message);
+  sendRPC('chat', sanitisedMessage);
   postChatMessage(messageHTML);
   displayLatestMessage();
 }
