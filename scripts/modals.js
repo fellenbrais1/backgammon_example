@@ -25,7 +25,7 @@ import {
 import { clearLocalStorage, loadLocalStorage } from './localStorage.js';
 import { sendRPC, assignConn, defineOpponent, shutDownRPC } from './chat.js';
 import { startGameMessages, forfeitMessage } from './messages.js';
-import { startGame } from './app.js';
+import { startGame, getDiceThrows, changeTurn } from './app.js';
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DOM ELEMENT SELECTION
@@ -306,11 +306,14 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
       movesRemainingYesButton.addEventListener('click', () => {
         playClickSound();
+
+        console.log(
+          'You have chosen to end your turn - call turn change logic'
+        );
+        changeTurn();
+
         setTimeout(() => {
           removeModal();
-          console.log(
-            'You have chosen to end your turn - call turn change logic'
-          );
         }, 1000);
       });
 
@@ -503,21 +506,19 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       }
 
       // Code to automatically cancel the challenge modal after 20 seconds
-      if (cancelFlag === false) {
-        setTimeout(() => {
-          console.log(
-            `20 seconds have passed without challenge response, cancelling.`
-          );
-          playClickSound();
-          challengeInformation.textContent = 'Cancelling challenge...';
-          setTimeout(() => {
-            enableChallenges();
-
-            removeModal();
-          }, 1000);
-        }, 20000);
-        break;
-      }
+      // if (cancelFlag === false) {
+      //   setTimeout(() => {
+      //     console.log(
+      //       `20 seconds have passed without challenge response, cancelling.`
+      //     );
+      //     playClickSound();
+      //     challengeInformation.textContent = 'Cancelling challenge...';
+      //     setTimeout(() => {
+      //       removeModal();
+      //     }, 1000);
+      //   }, 20000);
+      //   break;
+      // }
       break;
 
     case 'challengeReceived':
@@ -591,6 +592,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       break;
 
     case 'challengeAccepted':
+      stopCounter();
+
       modalSection.innerHTML = challengeModalAcceptedHTML;
       modalSection.style.backgroundColor = 'lightgreen';
 
@@ -603,8 +606,6 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
       challengerNameField2.textContent = `Challenging ${data}`;
       challengeInformation2.textContent = `Challenge has been accepted!`;
-
-      stopCounter();
 
       setTimeout(() => {
         playersSection.classList.remove('reveal');
@@ -625,6 +626,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
       break;
 
     case 'challengeRejected':
+      stopCounter();
+
       modalSection.innerHTML = challengeModalRejectedHTML;
 
       const challengeInformation3 = document.getElementById(
@@ -649,6 +652,8 @@ export async function changeModalContent(tag = 'challengeSent', data = '') {
 
           restartRefreshPopulatePlayers();
           removeModal();
+          // BUG = At the moment I reload in the case of a rejected challenge so the player can more easily challenge again, otherwise this eventuality will block other conn.open events from happening for some reason, this needs to be fixed later
+          window.location.reload();
         }, 1000);
       });
       break;
@@ -831,7 +836,9 @@ function addChatButtons() {
   endTurnButton.addEventListener('click', () => {
     console.log(`End turn flow`);
     // TODO - Call this with a variable containing moves remaining if we want this functionality
-    changeModalContent('movesRemaining');
+    const diceThrows = getDiceThrows();
+    const filteredDiceThrows = diceThrows.filter((value) => value !== 0);
+    changeModalContent('movesRemaining', filteredDiceThrows);
   });
 
   settingsButton.addEventListener('click', () => {
