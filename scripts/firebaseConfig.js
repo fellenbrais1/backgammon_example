@@ -11,7 +11,7 @@ console.log(`firebaseConfig.js running`);
 // IMPORTS
 
 // import { apiKey } from './config.js';
-import { apiKey } from '..index.js';
+import { apiKey } from '../index.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
