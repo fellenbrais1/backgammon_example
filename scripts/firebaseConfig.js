@@ -10,11 +10,17 @@ console.log(`firebaseConfig.js running`);
 /////////////////////////////////////////////////////////////////////////////////////////
 // IMPORTS
 
-import { apiKey } from './config.js';
+// import { apiKey } from './config.js';
+import { apiKey } from '../index.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
 
+// const apiKey = process.env.API_KEY;
+
+if (!apiKey || apiKey === undefined) {
+  console.error(`No apiKey value detected`);
+}
 const firebaseConfig = {
   apiKey: apiKey,
   authDomain: 'backgammon-b1e25.firebaseapp.com',
