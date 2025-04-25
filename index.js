@@ -1,6 +1,6 @@
 import { config } from '../config2.js'; // Import the config
 
-const apiKey = config.apiKey;
+export const apiKey = config.apiKey;
 
 const fetchData = async () => {
   try {

@@ -11,18 +11,10 @@ console.log(`firebaseConfig.js running`);
 // IMPORTS
 
 // import { apiKey } from './config.js';
+import { apiKey } from '..index.js';
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
-
-exports.handler = async function (event, context) {
-  const apiKey = process.env.API_KEY;
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ message: `Value of API_KEY is ${value}.` }),
-  };
-};
 
 // const apiKey = process.env.API_KEY;
 
