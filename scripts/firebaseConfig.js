@@ -15,7 +15,7 @@ console.log(`firebaseConfig.js running`);
 /////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
 
-const apiKey = process.env.apiKey;
+const apiKey = process.env.API_KEY;
 
 const firebaseConfig = {
   apiKey: apiKey,
