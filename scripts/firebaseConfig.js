@@ -15,6 +15,8 @@ console.log(`firebaseConfig.js running`);
 /////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
 
+const apiKey = process.env.apiKey;
+
 const firebaseConfig = {
   apiKey: apiKey,
   authDomain: 'backgammon-b1e25.firebaseapp.com',
