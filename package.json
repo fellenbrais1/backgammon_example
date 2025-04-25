@@ -4,6 +4,9 @@
   "description": "To load:\r In vscode, right click on index.html and 'Open with Live Server'",
   "main": "index.js",
   "scripts": {
+    "prebuild": "node build-env.js",
+    "build": "echo 'Building...' && cp index.html dist/index.html && node build.js",
+    "start": "serve dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -11,6 +14,8 @@
   "devDependencies": {
     "@eslint/js": "^9.20.0",
     "eslint": "^9.20.1",
-    "globals": "^15.15.0"
+    "globals": "^15.15.0",
+    "serve": "^14.2.1",
+    "browserify": "^17.0.0"
   }
 }
