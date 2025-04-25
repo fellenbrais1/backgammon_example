@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "build": "sed -i s/PLACEHOLDER/${API_KEY}/g webpack.config.js && webpack --mode=production --env.production",
   "author": "",
   "license": "ISC",
   "devDependencies": {

@@ -15,7 +15,7 @@ console.log(`firebaseConfig.js running`);
 /////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
 
-const apiKey = process.env.API_KEY;
+const apiKey = Netlify_API_KEY;
 
 if (!apiKey || apiKey === undefined) {
   console.error(`No apiKey value detected`);
