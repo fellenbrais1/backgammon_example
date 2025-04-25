@@ -17,6 +17,9 @@ console.log(`firebaseConfig.js running`);
 
 const apiKey = process.env.API_KEY;
 
+if (!apiKey || apiKey === undefined) {
+  console.error(`No apiKey value detected`);
+}
 const firebaseConfig = {
   apiKey: apiKey,
   authDomain: 'backgammon-b1e25.firebaseapp.com',
